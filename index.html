@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>UPLCC</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      #inp {
+        position: fixed;
+        bottom: -20px;
+        height: 100px;
+        width: 100vw;
+        left: 0;
+        box-shadow: 10px 10px 10px 10px rgba(0,0,0,0.1);
+        border-radius: 25px;
+        background-color: rgba(0,0,0,0.02);
+      }
+      #sr {
+        position: absolute;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        border-radius: 0px solid white;
+        border-radius: 25px;
+        padding: 10px;
+        box-sizing: border-box;
+      }
+      #ts {
+        position: absolute;
+        z-index: 2;
+        width: 60px;
+        height: 35px;
+        right: 10px;
+        bottom: 25px;
+        border: 0px solid white;
+        border-radius: 5px;
+        background-color: #c5ecff;
+      }
+      .userx {
+        position: relative;
+        padding: 10px;
+        margin: 10px;
+        box-sizing: border-box;
+        background-color: rgba(135,206,250,0.1);
+        border-radius: 13px;
+        max-width: 80vw;
+        margin-left: 15vw;
+      }
+      .fs {
+        position: relative;
+        max-width: 85vw;
+        margin-left: 5vw;
+        background-color: rgba(0,0,0,0.02);
+        margin: 10px;
+        padding: 10px;
+        box-sizing: border-box;
+        border-radius: 15px;
+      }
+      #xz {
+        position: fixed;
+        width: 100vw;
+        overflow: auto;
+      }
+    </style>
+  </head>
+  <body>	
+    <div id="xz">
+    </div>
+    <div id="inp">
+      <textarea id="sr"></textarea>
+      <button id="ts" onclick="give();">发送</button>
+    </div>
+
+    <script src="news.js"></script>
+    <script>
+      var ph, cx;
+      var fh = "";
+      const mb = [
+        "的处理器是",
+        "充电功率为",
+        "电池容量为",
+        "屏幕基材（或厂商）和分辨率和刷新率分别是"
+      ];
+      let gn = false;
+      let sj = false;
+      let maxl = 0;
+      let past = 0;
+      document.addEventListener("resize", () => {
+        xz.style.height = window.innerHeight - 80 + "px";
+      });
+      setInterval(() => {
+        xz.style.height = window.innerHeight - 80 + "px";
+      }, 200);
+      function give() {
+        if (!sr.value.trim()) {
+          return;
+        }
+        addUserMessage(sr.value);
+        gn = false;
+        sj = false;
+        maxl = 0;
+        cx = 0;
+        ph = 0;
+        const t = sr.value.toLowerCase().replace(/[\s]+/gi, "").trim();
+        if (sr.value == "随便说一个") {
+          const ra = Math.round(Math.random() * (a.length - 0.5));
+          const rb = Math.round(Math.random() * 3);
+          hd(`${a[ra].split(";")[0]}的${mb[rb]}${a[ra].split(";")[rb+1]}。`);
+          return;
+        }
+        for (var r = 0; r < a.length; r++) {
+          const aliases = a[r].split(";")[5].split(",");
+          for (var alias of aliases) {
+            if (p(alias, t)) {
+              if (maxl < alias.length) {
+                maxl = alias.length;
+                ph = r + 1;
+                past = ph;
+                sj = true;
+              }
+            }
+          }
+        }
+        if (past !== 0 && p("呢", t) || p("他", t) || p("她", t) || p("它", t)) {
+          ph = Number(past);
+          sj = true;
+        }
+        if(!sj&&p("你好",t)||p("哈喽",t)||p("哈咯",t)||p("hello",t)){
+          hd("你好！");
+          return;
+        }
+        if(!sj&&p("作者",t)||p("开发者",t)){
+          hd("这个工具的开发者是UPLCC，回答结果仅供参考，可能会有不对的地方，功能有点少，关键词支持的不多。");
+          return;
+        }
+        if (!sj) {
+          hd("这条命令还没有学习。");
+          return;
+        }
+        if (p("电池", t)) {
+          dd("电池容量", 3);
+          gn = true;
+        }
+        if (p("处理器", t) || p("soc", t) || p("芯片", t) || p("cpu", t) || p("gpu", t)) {
+          dd("处理器", 1);
+          gn = true;
+        }
+        if (p("充电", t) || p("功率", t)) {
+          dd("充电功率", 2);
+          gn = true;
+        }
+        if (p("基材", t) || p("屏幕", t)) {
+          dd("屏幕基本信息", 4);
+          gn = true;
+        }
+        if (!gn) {
+          all();
+        }
+      }
+      function p(value, t) {
+        return t.includes(value);
+      }
+      function addUserMessage(message) {
+        const userMsgDiv = document.createElement('div');
+        userMsgDiv.className = 'userx';
+        userMsgDiv.textContent = message;
+        xz.appendChild(userMsgDiv);
+        gx();
+      }
+      function hd(str) {
+        const botMsgDiv = document.createElement('div');
+        botMsgDiv.className = 'fs';
+        xz.appendChild(botMsgDiv);
+        typeWriter(botMsgDiv, str, 0, 10);
+      }
+      function typeWriter(element, text, index, speed) {
+        if (index < text.length) {
+          element.innerHTML = text.substring(0, index);
+          setTimeout(() => typeWriter(element, text, index + 1, speed), speed);
+        } else {
+          element.innerHTML = text;
+        }
+        gx();
+      }
+      
+      function dd(str, num) {
+        const aa = a[ph-1].split(";");
+        hd(`${aa[0]}的${str}是${aa[num]}。`);
+      }
+      function all() {
+        const aa = a[ph-1].split(";");
+        let fullText = aa[0];
+        for (var j = 1; j <= mb.length; ++j) {
+          fullText += mb[j-1] + aa[j];
+          if (j == mb.length) {
+            fullText += "。";
+          } else {
+            fullText += "，";
+          }
+        }
+        hd(fullText);
+      }
+      function gx() {
+        const box = document.getElementById("xz");
+        box.scrollTo({
+          top: box.scrollHeight,
+          behavior: 'smooth'
+        });
+      }
+    </script>
+  </body>
+</html>
