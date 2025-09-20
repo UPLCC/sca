@@ -17,16 +17,21 @@
         box-shadow: 10px 10px 10px 10px rgba(0,0,0,0.1);
         border-radius: 25px;
         background-color: rgba(0,0,0,0.02);
+        border: 0;
       }
       #sr {
         position: absolute;
         z-index: 1;
         width: 100%;
-        height: 100%;
-        border-radius: 0px solid white;
+        height: 80px;
+        border: 0;
         border-radius: 25px;
         padding: 10px;
         box-sizing: border-box;
+        outline: none;
+        resize: none;
+        box-shadow: none;
+        font-family: sans-serif;
       }
       #ts {
         position: absolute;
@@ -46,12 +51,18 @@
         box-sizing: border-box;
         background-color: rgba(135,206,250,0.1);
         border-radius: 13px;
+        min-width:10vw;
         max-width: 80vw;
-        margin-left: 15vw;
+        margin-right: 5vw;
+        margin-left:auto;
+        width:fit-content;
       }
       .fs {
         position: relative;
         max-width: 85vw;
+        min-width:10vw;
+        margin-right:auto;
+        width:fit-content;
         margin-left: 5vw;
         background-color: rgba(0,0,0,0.02);
         margin: 10px;
@@ -73,7 +84,6 @@
       <textarea id="sr"></textarea>
       <button id="ts" onclick="give();">发送</button>
     </div>
-
     <script src="news.js"></script>
     <script>
       var ph, cx;
@@ -88,6 +98,15 @@
       let sj = false;
       let maxl = 0;
       let past = 0;
+      var mapa=new Map([
+["APPLE A19 Pro",0],["APPLE A19 Pro UC",0],["APPLE A19",0],["SD 8 Elite",0],["XRING O1",0],["APPLE A18 Pro",0],["MTK 9400+",0],["MTK 9400",0],["APPLE A18",0],["APPLE A17 Pro",0],["APPLE A18 UC",0],["SD 8 Gen 3",0],
+["MTK 9300+",0],["MTK 9300",0],["SD 8 Gen 2",0],["APPLE A16",0],["MTK 9200+",0],["MTK 9200",0],["SD 888+",0],["SD 888",0],["SD 870",0]
+]);
+let ind=mapa.size;
+for(var key of mapa.keys()){
+mapa.set(key,ind);
+ind--;
+}
       document.addEventListener("resize", () => {
         xz.style.height = window.innerHeight - 80 + "px";
       });
@@ -108,7 +127,7 @@
         if (sr.value == "随便说一个") {
           const ra = Math.round(Math.random() * (a.length - 0.5));
           const rb = Math.round(Math.random() * 3);
-          hd(`${a[ra].split(";")[0]}的${mb[rb]}${a[ra].split(";")[rb+1]}。`);
+          hd(`${a[ra].split(";")[0]}${mb[rb]}${a[ra].split(";")[rb+1]}。`);
           return;
         }
         for (var r = 0; r < a.length; r++) {
@@ -124,9 +143,13 @@
             }
           }
         }
-        if (past !== 0 && p("呢", t) || p("他", t) || p("她", t) || p("它", t)) {
+        if (past !== 0 && p("呢", t) || p("他", t) || p("她", t) || p("它", t) || p("这", t)) {
           ph = Number(past);
           sj = true;
+        }
+        if(p("比",t)||p("哪个",t)){
+          db();
+          return;
         }
         if(!sj&&p("你好",t)||p("哈喽",t)||p("哈咯",t)||p("hello",t)){
           hd("你好！");
@@ -160,6 +183,54 @@
           all();
         }
       }
+function db() {
+    const input = sr.value.trim().toLowerCase().replace(/[\s]+/g, " ");
+    const rows = [];
+    const socdb=[];
+    for (let r = 0; r < a.length; r++) {
+        const aliases = a[r].split(";")[5].split(",");
+        let bestLen = 0;
+        for (let al of aliases) {
+            const re = new RegExp(`(^|[^a-z0-9])${al}([^a-z0-9]|$)`, 'i');
+            if (p(al,input)&&re.test(input) && al.length > bestLen) {
+                bestLen = al.length;
+            }
+        }
+        if (bestLen) rows.push(r);
+    }
+if(rows.length<2){
+hd(`对比最低需要2款机型，还需要至少${2-rows.length}个机型才能进行对比哦！`);
+return;
+}
+for(let aaa=0;aaa<rows.length;aaa++){
+socdb.push(Number(mapa.get(a[rows[aaa]].split(";")[1])));
+}
+var dx=0;
+var sy=0;
+var dxdc=0,sydc=0;
+var dxsd=0,sysd=0;
+for(var aac=0;aac<socdb.length;aac++){
+if(socdb[aac]>dx){
+dx=socdb[aac];
+sy=rows[aac];
+}
+if(Number(a[rows[aac]].split(";")[3].replace(/[a-z\s]+/gi,""))>Number(dxdc)){
+dxdc=Number(a[rows[aac]].split(";")[3].replace(/[a-z\s]+/gi,""));
+sydc=rows[aac];
+}
+if(Number(a[rows[aac]].split(";")[2].replace(/[a-z\s]+/gi,""))>Number(dxsd)){
+dxsd=Number(a[rows[aac]].split(";")[2].replace(/[a-z\s]+/gi,""));
+sysd=rows[aac];
+}
+}
+hd(`<h3>处理器：${a[sy].split(";")[0]}</h3>
+${a[sy].split(";")[0]}的处理器(${a[sy].split(";")[1]})相较于其他机型更好。
+<h3>电池：${a[sydc].split(";")[0]}</h3>
+${a[sydc].split(";")[0]}的电池容量(${a[sydc].split(";")[3]})相较于其他机型更高。
+<h3>充电功率：${a[sysd].split(";")[0]}</h3>
+${a[sysd].split(";")[0]}的充电功率(${a[sysd].split(";")[2]})相较于其他机型更高。
+`);
+}
       function p(value, t) {
         return t.includes(value);
       }
@@ -185,7 +256,6 @@
         }
         gx();
       }
-      
       function dd(str, num) {
         const aa = a[ph-1].split(";");
         hd(`${aa[0]}的${str}是${aa[num]}。`);
