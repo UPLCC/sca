@@ -31,6 +31,7 @@
         outline: none;
         resize: none;
         box-shadow: none;
+        background-color: rgba(0,0,0,0.005);
         font-family: sans-serif;
       }
       #ts {
@@ -75,16 +76,25 @@
         width: 100vw;
         overflow: auto;
       }
+      .codea{
+        position:relative;
+        width:97%;
+        background-color:rgba(0,0,0,0.05);
+        border-radius:7px;
+        padding:5px;
+        overflow-x:auto;
+      }
     </style>
   </head>
   <body>	
     <div id="xz">
     </div>
     <div id="inp">
-      <textarea id="sr"></textarea>
+      <textarea id="sr" placeholder="在这里输入问题..."></textarea>
       <button id="ts" onclick="give();">发送</button>
     </div>
     <script src="news.js"></script>
+    <script src="hum.js"></script>
     <script>
       var ph, cx;
       var fh = "";
@@ -99,8 +109,8 @@
       let maxl = 0;
       let past = 0;
       var mapa=new Map([
-["APPLE A19 Pro",0],["APPLE A19 Pro UC",0],["APPLE A19",0],["SD 8 Elite",0],["XRING O1",0],["APPLE A18 Pro",0],["MTK 9400+",0],["MTK 9400",0],["APPLE A18",0],["APPLE A17 Pro",0],["APPLE A18 UC",0],["SD 8 Gen 3",0],
-["MTK 9300+",0],["MTK 9300",0],["SD 8 Gen 2",0],["APPLE A16",0],["MTK 9200+",0],["MTK 9200",0],["SD 888+",0],["SD 888",0],["SD 870",0]
+["SD 8 Elite Gen 5",0],["MTK 9500",0],["APPLE A19 Pro",0],["APPLE A19 Pro UC",0],["APPLE A19",0],["SD 8 Elite",0],["XRING O1",0],["APPLE A18 Pro",0],["MTK 9400+",0],["MTK 9400",0],["APPLE A18",0],["APPLE A17 Pro",0],["APPLE A18 UC",0],["SD 8 Gen 3",0],
+["MTK 9300+",0],["MTK 9400e",0],["MTK 9300",0],["SD 8 Gen 2",0],["APPLE A16",0],["MTK 9200+",0],["MTK 9200",0],["SD 888+",0],["SD 888",0],["SD 870",0]
 ]);
 let ind=mapa.size;
 for(var key of mapa.keys()){
@@ -108,10 +118,10 @@ mapa.set(key,ind);
 ind--;
 }
       document.addEventListener("resize", () => {
-        xz.style.height = window.innerHeight - 80 + "px";
+        xz.style.height = window.innerHeight - sr.offsetHeight + "px";
       });
       setInterval(() => {
-        xz.style.height = window.innerHeight - 80 + "px";
+        xz.style.height = window.innerHeight - sr.offsetHeight + "px";
       }, 200);
       function give() {
         if (!sr.value.trim()) {
@@ -156,11 +166,23 @@ ind--;
           return;
         }
         if(!sj&&p("作者",t)||p("开发者",t)){
-          hd("这个工具的开发者是UPLCC，回答结果仅供参考，可能会有不对的地方，功能有点少，关键词支持的不多。");
+          hd("这个工具的开发者是UPLCC，回答结果仅供参考。");
+          return;
+        }
+        if(!sj&&p("全部数据",t)){
+          var codeaaa="";
+          for(var sjaaa=0;sjaaa<a.length;sjaaa++){
+            if(sjaaa!==a.length-1){
+            codeaaa+=`"`+a[sjaaa]+`",`+"<br>";
+            }else{
+            codeaaa+=`"`+a[sjaaa]+`"`+"<br>";
+            }
+          }
+          hd(`以下为本工具的全部手机数据，发现不对的数据可以指正~<br><div class="codea"><pre>var a=[<br>${codeaaa}];</pre></div>`);
           return;
         }
         if (!sj) {
-          hd("这条命令还没有学习。");
+          pe();
           return;
         }
         if (p("电池", t)) {
@@ -231,6 +253,30 @@ ${a[sydc].split(";")[0]}的电池容量(${a[sydc].split(";")[3]})相较于其他
 ${a[sysd].split(";")[0]}的充电功率(${a[sysd].split(";")[2]})相较于其他机型更高。
 `);
 }
+      function pe(){
+        const areaText=sr.value.toLowerCase().trim();
+        let ifhu=false;
+        var maxlen=0;
+        var maxsyaaa=0;
+        for (var huma = 0; huma < hu.length; huma++) {
+          const al = hu[huma].split(";")[2].split(",");
+          for (var ali of al) {
+            if (p(ali, areaText)) {
+              if(ali.length > maxlen){
+                maxlen=ali.length;
+                maxsyaaa=huma;
+              }
+              ifhu=true;
+            }
+          }
+        }
+        if(ifhu){
+          hd(`<h3>${hu[maxsyaaa].split(";")[0]}</h3>${hu[maxsyaaa].split(";")[1]}。`);
+        }
+        if(!ifhu){
+          hd("这条命令还没有学习。");
+        }
+      }
       function p(value, t) {
         return t.includes(value);
       }
