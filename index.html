@@ -52,7 +52,7 @@
         box-sizing: border-box;
         background-color: rgba(135,206,250,0.1);
         border-radius: 13px;
-        min-width:10vw;
+        min-width:40px;
         max-width: 80vw;
         margin-right: 5vw;
         margin-left:auto;
@@ -78,10 +78,10 @@
       }
       .codea{
         position:relative;
-        width:97%;
+        width:98%;
         background-color:rgba(0,0,0,0.05);
         border-radius:7px;
-        padding:5px;
+        padding:1%;
         overflow-x:auto;
       }
     </style>
@@ -91,12 +91,13 @@
     </div>
     <div id="inp">
       <textarea id="sr" placeholder="在这里输入问题..."></textarea>
-      <button id="ts" onclick="give();">发送</button>
+      <button id="ts" onclick="if(eisif){give();eis();}">发送</button>
     </div>
     <script src="news.js"></script>
     <script src="hum.js"></script>
     <script>
       var ph, cx;
+      const gxpx=100;
       var fh = "";
       const mb = [
         "的处理器是",
@@ -173,12 +174,20 @@ ind--;
           var codeaaa="";
           for(var sjaaa=0;sjaaa<a.length;sjaaa++){
             if(sjaaa!==a.length-1){
-            codeaaa+=`"`+a[sjaaa]+`",`+"<br>";
+            codeaaa+=`"`+a[sjaaa]+`",`+`
+`;
             }else{
-            codeaaa+=`"`+a[sjaaa]+`"`+"<br>";
+            codeaaa+=`"`+a[sjaaa]+`"`+`
+`;
             }
           }
-          hd(`以下为本工具的全部手机数据，发现不对的数据可以指正~<br><div class="codea"><pre>var a=[<br>${codeaaa}];</pre></div>`);
+          hd(`以下为本工具的全部手机数据，发现不对的数据可以指正~<br><div class="codea"><pre>var a=[
+${codeaaa}];</pre></div>`);
+          return;
+        }
+        if(!sj&&p("帧率",t)||p("fps",t)||p("屏幕刷新率",t)){
+          !iffps?hd("正在测量中..."):hd("你点的次数太多了。");
+          fpsnow(fnow=>hd("当前屏幕刷新率(仅供参考)："+fnow+"FPS。"));
           return;
         }
         if (!sj) {
@@ -285,7 +294,7 @@ ${a[sysd].split(";")[0]}的充电功率(${a[sysd].split(";")[2]})相较于其他
         userMsgDiv.className = 'userx';
         userMsgDiv.textContent = message;
         xz.appendChild(userMsgDiv);
-        gx();
+        if(xz.scrollHeight - xz.scrollTop - xz.clientHeight < gxpx)gx();
       }
       function hd(str) {
         const botMsgDiv = document.createElement('div');
@@ -300,7 +309,7 @@ ${a[sysd].split(";")[0]}的充电功率(${a[sysd].split(";")[2]})相较于其他
         } else {
           element.innerHTML = text;
         }
-        gx();
+        if(xz.scrollHeight - xz.scrollTop - xz.clientHeight < gxpx)gx();
       }
       function dd(str, num) {
         const aa = a[ph-1].split(";");
@@ -325,6 +334,33 @@ ${a[sysd].split(";")[0]}的充电功率(${a[sysd].split(";")[2]})相较于其他
           top: box.scrollHeight,
           behavior: 'smooth'
         });
+      }
+      let fpssz=0;
+      let iffps=false;
+      function fps(){
+        if(iffps){
+          requestAnimationFrame(fps);
+          fpssz++;
+        }
+      }
+      function fpsnow(cb){
+        if(iffps)return;
+        iffps=true;
+        fps();
+        setTimeout(()=>{
+          cb(fpssz);
+          fpssz=0;
+          iffps=false;
+        },1000);
+      }
+      let eisif=true;
+      function eis(){
+        if(eisif){
+          eisif=false;
+          setTimeout(()=>{eisif=true;},500);
+        }else{
+          return;
+        }
       }
     </script>
   </body>

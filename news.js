@@ -48,7 +48,7 @@ var a=[
 "iQOO Neo9 Pro;MTK 9300;120W;5160mAh;F1 1.5K 144Hz;n9p,neo9p",
 "iQOO Neo9S Pro;MTK 9300+;120W;5160mAh;F1 1.5K 144Hz;n9sp,neo9sp",
 "iQOO Neo9S Pro+;SD 8 Gen 3;120W;5500mAh;F1 1.5K 144Hz;n9spp,neo9spp,neo9spro+,neo9sprop",
-"一加13;SD 8 Elite;100W;6000mAh;X2 2K 120Hz;一加13,oneplus13",
+"一加13;SD 8 Elite;100W;6000mAh;X2 2K 120Hz;一加13,oneplus13,1+13",
 "真我GT7 Pro;SD 8 Elite;120W;6500mAh;三星 1.5K 120Hz;gt7p",
 "真我GT7 Pro 竞速版;SD 8 Elite;120W;6500mAh;京东方 1.5K 120Hz;gt7p竞,gt7pro竞",
 "真我GT7;MTK 9400+;100W;7200mAh;京东方 1.5K 144Hz;gt7",
