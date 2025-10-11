@@ -58,5 +58,6 @@ var a=[
 "一加Ace 5 竞速版;MTK 9400e;80W;7100mAh;京东方 1080P 120Hz;ace5竞,ace5j",
 "红米K40;SD 870;33W;4520mAh;E4 1080P 120Hz;k40",
 "红米K40 Pro;SD 888;33W;4520mAh;E4 1080P 120Hz;k40p",
-"红米K40 Pro+;SD 888;33W;4520mAh;E4 1080P 120Hz;k40pp,k40pro+,k40p+,k40proplus"
+"红米K40 Pro+;SD 888;33W;4520mAh;E4 1080P 120Hz;k40pp,k40pro+,k40p+,k40proplus",
+"iQOO 15;SD 8 Elite Gen 5;100W;7000mAh;M14(Samsung) 2K 144Hz;iqoo15"
 ];

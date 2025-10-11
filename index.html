@@ -42,7 +42,7 @@
         right: 10px;
         bottom: 25px;
         border: 0px solid white;
-        border-radius: 5px;
+        border-radius: 10px;
         background-color: #c5ecff;
       }
       .userx {
@@ -57,6 +57,9 @@
         margin-right: 5vw;
         margin-left:auto;
         width:fit-content;
+        opacity:0;
+        max-height:1000px;
+        overflow:auto;
       }
       .fs {
         position: relative;
@@ -84,14 +87,81 @@
         padding:1%;
         overflow-x:auto;
       }
+      @keyframes animate{
+        50%{
+          transform:scale(0.97);
+        }
+        to{
+          transform:scale(1);
+        }
+      }
+      @keyframes animateA{
+        50%{
+          transform:scale(0.99);
+        }
+        to{
+          transform:scale(1);
+        }
+      }
+      #bo{
+        position:fixed;
+        right:3%;
+        bottom:100px;
+        border-radius:10px;
+        box-shadow:0px 0px 10px 5px rgba(0,0,0,0.1);
+        width:80px;
+        text-align:center;
+        height:40px;
+        border:0px solid white;
+        background-color:rgba(255,255,255,0.1);
+        backdrop-filter:blur(3px);
+        display:none;
+        opacity:0;
+      }
+      @keyframes boa{
+        to{
+          opacity:1;
+        }
+      }
+      @keyframes bob{
+        to{
+          opacity:0;
+        }
+      }
+      .tip{
+        position: relative;
+        width: 85vw;
+        margin-right:auto;
+        margin-left: 5vw;
+        background-color: rgba(255,229,170,0.3);
+        margin: 10px;
+        padding: 10px;
+        box-sizing: border-box;
+        border-radius: 15px;
+      }
+      #hello{
+        background:linear-gradient(90deg,#ffc0dc,#ffd79b);
+        width:300px;
+        font-size:25px;
+        -webkit-background-clip:text;
+        background-clip:text;
+        -webkit-text-fill-color:transparent;
+        color:transparent;
+        position:absolute;
+        left:50%;
+        top:50%;
+        transform:translate(-50%,-50%);
+      }
     </style>
   </head>
   <body>	
     <div id="xz">
+    <h3 id="hello">你好！欢迎使用配置查询器</h3>
     </div>
+    <button id="bo" onclick="gx();bo.style.animationName='bob';bo.style.animationDuration='0.3s';setTimeout(()=>{bo.style.display='none';bo.style.opacity='0';},300);setTimeout(()=>{gxifa=false;},500);">回到底部</button>
     <div id="inp">
       <textarea id="sr" placeholder="在这里输入问题..."></textarea>
-      <button id="ts" onclick="if(eisif){give();eis();}">发送</button>
+      <button id="ts" onclick="if(eisif){give();eis();}this.style.animationName='animate';this.style.animationDuration='0.3s';setTimeout(()=>{this.style.animation='none';},300);">发送</button>
     </div>
     <script src="news.js"></script>
     <script src="hum.js"></script>
@@ -109,6 +179,8 @@
       let sj = false;
       let maxl = 0;
       let past = 0;
+      let deep=false;
+      let ifh=false;
       var mapa=new Map([
 ["SD 8 Elite Gen 5",0],["MTK 9500",0],["APPLE A19 Pro",0],["APPLE A19 Pro UC",0],["APPLE A19",0],["SD 8 Elite",0],["XRING O1",0],["APPLE A18 Pro",0],["MTK 9400+",0],["MTK 9400",0],["APPLE A18",0],["APPLE A17 Pro",0],["APPLE A18 UC",0],["SD 8 Gen 3",0],
 ["MTK 9300+",0],["MTK 9400e",0],["MTK 9300",0],["SD 8 Gen 2",0],["APPLE A16",0],["MTK 9200+",0],["MTK 9200",0],["SD 888+",0],["SD 888",0],["SD 870",0]
@@ -124,11 +196,34 @@ ind--;
       setInterval(() => {
         xz.style.height = window.innerHeight - sr.offsetHeight + "px";
       }, 200);
+      let gxifa=false;
+      setInterval(()=>{
+        if(!gxifa&&xz.scrollHeight - xz.scrollTop - xz.clientHeight > 300){
+          gxifa=true;
+          bo.style.display="block";
+          bo.style.animationName="boa";
+          bo.style.animationDuration="0.3s";
+          setTimeout(()=>{bo.style.opacity="1";},300);
+        }else if(xz.scrollHeight - xz.scrollTop - xz.clientHeight <= 300){
+          gxifa=false;
+          bo.style.animationName="bob";
+          bo.style.animationDuration="0.3s";
+          setTimeout(()=>{bo.style.display="none";bo.style.opacity="0";},300);
+        }
+      },500);
       function give() {
         if (!sr.value.trim()) {
           return;
         }
         addUserMessage(sr.value);
+        if(!ifh){
+          document.getElementById("hello").style.animationName="bob";
+          document.getElementById("hello").style.animationDuration="0.3s";
+          setTimeout(()=>{
+            document.getElementById("hello").style.display="none";
+          },300);
+          ifh=true;
+        }
         gn = false;
         sj = false;
         maxl = 0;
@@ -139,6 +234,15 @@ ind--;
           const ra = Math.round(Math.random() * (a.length - 0.5));
           const rb = Math.round(Math.random() * 3);
           hd(`${a[ra].split(";")[0]}${mb[rb]}${a[ra].split(";")[rb+1]}。`);
+          return;
+        }
+        if(!sj&&(p("deepseek",t)||p("深度求索",t))&&(p("关",t)||p("off",t))&&deep){
+          hd("已经关闭DeepSeek回答。");
+          deep=false;
+          return;
+        }
+        if(deep){
+          hddeep();
           return;
         }
         for (var r = 0; r < a.length; r++) {
@@ -181,13 +285,18 @@ ind--;
 `;
             }
           }
-          hd(`以下为本工具的全部手机数据，发现不对的数据可以指正~<br><div class="codea"><pre>var a=[
-${codeaaa}];</pre></div>`);
+          hd(`以下为本工具的全部手机数据，发现不对的数据可以指正~<br>CODE://var a=[
+${codeaaa}];//:CODE`);
           return;
         }
         if(!sj&&p("帧率",t)||p("fps",t)||p("屏幕刷新率",t)){
           !iffps?hd("正在测量中..."):hd("你点的次数太多了。");
           fpsnow(fnow=>hd("当前屏幕刷新率(仅供参考)："+fnow+"FPS。"));
+          return;
+        }
+        if(!sj&&p("deepseek",t)&&!deep){
+          hd("已经切换为DeepSeek-R1模型回答。");
+          deep=true;
           return;
         }
         if (!sj) {
@@ -240,27 +349,38 @@ var dx=0;
 var sy=0;
 var dxdc=0,sydc=0;
 var dxsd=0,sysd=0;
+let socword="",dcword="",cdword="";
 for(var aac=0;aac<socdb.length;aac++){
 if(socdb[aac]>dx){
 dx=socdb[aac];
 sy=rows[aac];
+socword=a[sy].split(";")[0];
+}else if(socdb[aac]==dx){
+socword+="、"+a[rows[aac]].split(";")[0];
 }
 if(Number(a[rows[aac]].split(";")[3].replace(/[a-z\s]+/gi,""))>Number(dxdc)){
 dxdc=Number(a[rows[aac]].split(";")[3].replace(/[a-z\s]+/gi,""));
 sydc=rows[aac];
+dcword=a[sydc].split(";")[0];
+}else if(Number(a[rows[aac]].split(";")[3].replace(/[a-z\s]+/gi,""))==Number(dxdc)){
+dcword+="、"+a[rows[aac]].split(";")[0];
 }
 if(Number(a[rows[aac]].split(";")[2].replace(/[a-z\s]+/gi,""))>Number(dxsd)){
 dxsd=Number(a[rows[aac]].split(";")[2].replace(/[a-z\s]+/gi,""));
 sysd=rows[aac];
+cdword=a[sysd].split(";")[0];
+}else if(Number(a[rows[aac]].split(";")[2].replace(/[a-z\s]+/gi,""))==Number(dxsd)){
+cdword+="、"+a[rows[aac]].split(";")[0];
 }
 }
-hd(`<h3>处理器：${a[sy].split(";")[0]}</h3>
-${a[sy].split(";")[0]}的处理器(${a[sy].split(";")[1]})相较于其他机型更好。
-<h3>电池：${a[sydc].split(";")[0]}</h3>
-${a[sydc].split(";")[0]}的电池容量(${a[sydc].split(";")[3]})相较于其他机型更高。
-<h3>充电功率：${a[sysd].split(";")[0]}</h3>
-${a[sysd].split(";")[0]}的充电功率(${a[sysd].split(";")[2]})相较于其他机型更高。
+hd(`<h3>处理器：${socword}</h3>
+${socword}的处理器(${a[sy].split(";")[1]})相较于其他机型更好。
+<h3>电池：${dcword}</h3>
+${dcword}的电池容量(${a[sydc].split(";")[3]})相较于其他机型更高。
+<h3>充电功率：${cdword}</h3>
+${cdword}的充电功率(${a[sysd].split(";")[2]})相较于其他机型更高。
 `);
+aitip("内容请仔细辨别。");
 }
       function pe(){
         const areaText=sr.value.toLowerCase().trim();
@@ -289,17 +409,36 @@ ${a[sysd].split(";")[0]}的充电功率(${a[sysd].split(";")[2]})相较于其他
       function p(value, t) {
         return t.includes(value);
       }
+      var ifgxa=0;
       function addUserMessage(message) {
         const userMsgDiv = document.createElement('div');
         userMsgDiv.className = 'userx';
         userMsgDiv.textContent = message;
+        userMsgDiv.style.animationName="boa";
+        userMsgDiv.style.animationDuration="0.15s";
+        setTimeout(()=>{userMsgDiv.style.opacity="1";},150);
+        userMsgDiv.onclick = function (){
+          if(userMsgDiv.offsetHeight<=300){userMsgDiv.style.animationName="animate";}else{
+            userMsgDiv.style.animationName="animateA";
+          }
+          userMsgDiv.style.animationDuration="0.2s";
+          setTimeout(()=>{userMsgDiv.style.animation="none"},200);
+        }
         xz.appendChild(userMsgDiv);
-        if(xz.scrollHeight - xz.scrollTop - xz.clientHeight < gxpx)gx();
+        if(xz.scrollHeight - xz.scrollTop - xz.clientHeight < gxpx&&xz.scrollHeight > ifgxa){gx();ifgxa=xz.scrollHeight}
       }
       function hd(str) {
         const botMsgDiv = document.createElement('div');
         botMsgDiv.className = 'fs';
+        botMsgDiv.onclick = function (){
+          if(botMsgDiv.offsetHeight<=300){botMsgDiv.style.animationName="animate";}else{
+            botMsgDiv.style.animationName="animateA";
+          }
+          botMsgDiv.style.animationDuration="0.2s";
+          setTimeout(()=>{botMsgDiv.style.animation="none"},200);
+        }
         xz.appendChild(botMsgDiv);
+        str=str.replace(/CODE:\/\/([\s\S]*?)\/\/:CODE/g, (_, c) => `<div class="codea"><pre>${c.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}</pre></div>`).replace(/BR:\/\//g, '<br>').replace(/\*\*(.*?)\*\*/g,`<h3 style="display:inline;">$1</h3>`);
         typeWriter(botMsgDiv, str, 0, 10);
       }
       function typeWriter(element, text, index, speed) {
@@ -310,6 +449,20 @@ ${a[sysd].split(";")[0]}的充电功率(${a[sysd].split(";")[2]})相较于其他
           element.innerHTML = text;
         }
         if(xz.scrollHeight - xz.scrollTop - xz.clientHeight < gxpx)gx();
+      }
+      function aitip(message){
+        const tipDiv = document.createElement('div');
+        tipDiv.className = 'tip';
+        tipDiv.textContent = message;
+        tipDiv.style.animationName="boa";
+        tipDiv.style.animationDuration="0.15s";
+        setTimeout(()=>{tipDiv.style.opacity="1";},150);
+        tipDiv.onclick = function (){
+          tipDiv.style.animationName="animateA";
+          tipDiv.style.animationDuration="0.2s";
+          setTimeout(()=>{tipDiv.style.animation="none"},200);
+        }
+        xz.appendChild(tipDiv);
       }
       function dd(str, num) {
         const aa = a[ph-1].split(";");
@@ -361,6 +514,34 @@ ${a[sysd].split(";")[0]}的充电功率(${a[sysd].split(";")[2]})相较于其他
         }else{
           return;
         }
+      }
+      async function adeep(e){
+        const api=`https://api.allorigins.win/raw?url=${encodeURIComponent(`https://api.fohok.xin/API/DeepSeek-R1.php?msg=${e}`)}`;
+        const r = await fetch(api);
+        const jsonData = await r.json();
+        if (jsonData.status === "success") {
+            return jsonData.data.response.replace(/### (\d+\. .+?)</g, "<h4>$1</h4><").replace(/- /g, "<li>");
+        }else{
+            return "Error";
+        }
+      }
+      async function hddeepa(e) {
+        if(!e)return;
+        const aiResponse = await adeep(e);
+          return aiResponse;
+      }
+      async function hddeep(){
+        if(!sr.value.trim())return;
+        hd("正在请求服务器数据，请稍等");
+        const result=await hddeepa(sr.value.trim());
+        hd(result
+        .replace(/```[\s\S]*?```/g,t=>{
+          return "CODE://"+t.replace(/```(\w+)?/gi,"```").slice(3,-3)+"//:CODE";
+        })
+        .replace(/(\n)/g,"BR://")
+        .replace(/\*\*(.*?)\*\*/g,`<h3 style="display:inline;">$1</h3>`)
+        .replace(/CODE:\/\/([\s\S]*?)\/\/:CODE/g, (_, c) => `<div class="codea"><pre>${c.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}</pre></div>`));
+        aitip("内容由AI生成，请仔细辨别。");
       }
     </script>
   </body>
