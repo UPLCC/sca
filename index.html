@@ -43,7 +43,8 @@
         bottom: 25px;
         border: 0px solid white;
         border-radius: 10px;
-        background-color: #c5ecff;
+        background-color: rgba(197,235,255,0.5);
+        backdrop-filter: blur(1px);
       }
       .userx {
         position: relative;
@@ -128,6 +129,14 @@
           opacity:0;
         }
       }
+      @keyframes boc{
+        50%{
+          opacity:0;
+        }
+        100%{
+          opacity:1;
+        }
+      }
       .tip{
         position: relative;
         width: 85vw;
@@ -152,15 +161,55 @@
         top:50%;
         transform:translate(-50%,-50%);
       }
+      #mdDiv{
+        position:absolute;
+        z-index:5;
+        width:80px;
+        height:35px;
+        border-radius:10px;
+        border:2px solid rgba(0,0,0,0.3);
+        overflow:auto;
+        right:80px;
+        bottom:25px;
+        box-sizing:border-box;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        flex-direction:column;
+        flex-wrap:wrap;
+        backdrop-filter:blur(1px);
+        padding:5px;
+      }
+      #mdDeepSeek,#mdGamma,#mdmr,#mdGammalink,#mdQwen,#mdGlm{
+        display:none;
+        margin:5px;
+      }
+      #ExmdD{
+        position:fixed;
+        z-index:0;
+        width:100vw;
+        height:100vh;
+        display:none;
+      }
     </style>
   </head>
   <body>	
     <div id="xz">
     <h3 id="hello">你好！欢迎使用配置查询器</h3>
     </div>
+    <div id="ExmdD" onclick="mdEx();"></div>
     <button id="bo" onclick="gx();bo.style.animationName='bob';bo.style.animationDuration='0.3s';setTimeout(()=>{bo.style.display='none';bo.style.opacity='0';},300);setTimeout(()=>{gxifa=false;},500);">回到底部</button>
     <div id="inp">
       <textarea id="sr" placeholder="在这里输入问题..."></textarea>
+      <div id="mdDiv" onclick="if(!mdif){mdOp();}">
+        <p id="mdDeepSeek" onclick="event.stopPropagation();deep=1;mdEx();">DeepSeek</p>
+        <p id="mdGamma" onclick="event.stopPropagation();deep=2;mdEx();">Gemma</p>
+        <p id="mdGammalink" onclick="event.stopPropagation();deep=3;mdEx();if(!aiida){aiida='u'+Math.round(Math.random()*99999);}else{const ifaiid=window.confirm('是否开启新对话？');if(ifaiid){aiida='u'+Math.round(Math.random()*99999);}}">Gemma(连续对话)</p>
+        <p id="mdQwen" onclick="event.stopPropagation();deep=4;mdEx();">Qwen</p>
+        <p id="mdGlm" onclick="event.stopPropagation();deep=5;mdEx();">GLM-4-Flash</p>
+        <p id="mdmr" onclick="event.stopPropagation();deep=0;mdEx();">默认</p>
+        <p id="mdDisplay">默认</p>
+      </div>
       <button id="ts" onclick="if(eisif){give();eis();}this.style.animationName='animate';this.style.animationDuration='0.3s';setTimeout(()=>{this.style.animation='none';},300);">发送</button>
     </div>
     <script src="news.js"></script>
@@ -179,8 +228,10 @@
       let sj = false;
       let maxl = 0;
       let past = 0;
-      let deep=false;
+      let deep=0;
+      let aiida;
       let ifh=false;
+      let mdif=false;
       var mapa=new Map([
 ["SD 8 Elite Gen 5",0],["MTK 9500",0],["APPLE A19 Pro",0],["APPLE A19 Pro UC",0],["APPLE A19",0],["SD 8 Elite",0],["XRING O1",0],["APPLE A18 Pro",0],["MTK 9400+",0],["MTK 9400",0],["APPLE A18",0],["APPLE A17 Pro",0],["APPLE A18 UC",0],["SD 8 Gen 3",0],
 ["MTK 9300+",0],["MTK 9400e",0],["MTK 9300",0],["SD 8 Gen 2",0],["APPLE A16",0],["MTK 9200+",0],["MTK 9200",0],["SD 888+",0],["SD 888",0],["SD 870",0]
@@ -236,12 +287,7 @@ ind--;
           hd(`${a[ra].split(";")[0]}${mb[rb]}${a[ra].split(";")[rb+1]}。`);
           return;
         }
-        if(!sj&&(p("deepseek",t)||p("深度求索",t))&&(p("关",t)||p("off",t))&&deep){
-          hd("已经关闭DeepSeek回答。");
-          deep=false;
-          return;
-        }
-        if(deep){
+        if(deep!==0){
           hddeep();
           return;
         }
@@ -292,11 +338,6 @@ ${codeaaa}];//:CODE`);
         if(!sj&&p("帧率",t)||p("fps",t)||p("屏幕刷新率",t)){
           !iffps?hd("正在测量中..."):hd("你点的次数太多了。");
           fpsnow(fnow=>hd("当前屏幕刷新率(仅供参考)："+fnow+"FPS。"));
-          return;
-        }
-        if(!sj&&p("deepseek",t)&&!deep){
-          hd("已经切换为DeepSeek-R1模型回答。");
-          deep=true;
           return;
         }
         if (!sj) {
@@ -516,13 +557,41 @@ aitip("内容请仔细辨别。");
         }
       }
       async function adeep(e){
-        const api=`https://api.allorigins.win/raw?url=${encodeURIComponent(`https://api.fohok.xin/API/DeepSeek-R1.php?msg=${e}`)}`;
-        const r = await fetch(api);
+        const api=[
+`https://api.fohok.xin/API/DeepSeek-R1.php?msg=${e}`,
+`https://api.fohok.xin/API/gemma.php?msg=${e}`,
+`https://api.fohok.xin/API/gemma.php?msg=${e}&id=${aiida}`,
+`https://api.fohok.xin/API/qwen.php?msg=${e}`,
+`https://api.fohok.xin/API/GLM_ai.php?msg=${e}`
+];
+        const r = await fetch(api[deep-1]);
         const jsonData = await r.json();
-        if (jsonData.status === "success") {
+        if(deep==1){
+          if(jsonData.status === "success") {
             return jsonData.data.response.replace(/### (\d+\. .+?)</g, "<h4>$1</h4><").replace(/- /g, "<li>");
-        }else{
+          }else{
             return "Error";
+          }
+        }else if(deep==2||deep==3){
+          if(jsonData.status === "success") {
+            return jsonData.reply.replace(/### (\d+\. .+?)</g, "<h4>$1</h4><").replace(/- /g, "<li>");
+          }else{
+            return "Error";
+          }
+        }else if(deep==4){
+          if(jsonData.status === "success") {
+            return jsonData.reply.replace(/### (\d+\. .+?)</g, "<h4>$1</h4><").replace(/- /g, "<li>");
+          }else{
+            return "Error";
+          }
+        }else if(deep==5){
+          if(jsonData.status === "success") {
+            return jsonData.data.choices[0].message.content.replace(/### (\d+\. .+?)</g, "<h4>$1</h4><").replace(/- /g, "<li>");
+          }else{
+            return "Error";
+          }
+        }else{
+          return "Error";
         }
       }
       async function hddeepa(e) {
@@ -542,6 +611,48 @@ aitip("内容请仔细辨别。");
         .replace(/\*\*(.*?)\*\*/g,`<h3 style="display:inline;">$1</h3>`)
         .replace(/CODE:\/\/([\s\S]*?)\/\/:CODE/g, (_, c) => `<div class="codea"><pre>${c.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}</pre></div>`));
         aitip("内容由AI生成，请仔细辨别。");
+      }
+      function mdOp(){
+        setTimeout(()=>{
+        mdDeepSeek.style.display="block";
+        mdGamma.style.display="block";
+        mdmr.style.display="block";
+        mdGammalink.style.display="block";
+        mdQwen.style.display="block";
+        mdGlm.style.display="block";
+        mdDisplay.style.display="none";
+        mdDiv.style.width="auto";
+        mdDiv.style.height="auto";
+        ExmdD.style.display="block";
+        },150);
+        mdDiv.style.animationName="boc";
+        mdDiv.style.animationDuration="0.3s";
+        setTimeout(()=>{
+          mdif=true;
+          mdDiv.style.animation="none";
+        },300);
+      }
+      function mdEx(){
+        setTimeout(()=>{
+        const mdD=["默认","DeepSeek","Gemma","Gemma(连续对话)","Qwen","GLM-4-Flash"];
+        mdDeepSeek.style.display="none";
+        mdGamma.style.display="none";
+        mdmr.style.display="none";
+        mdGammalink.style.display="none";
+        mdQwen.style.display="none";
+        mdGlm.style.display="none";
+        mdDisplay.style.display="block";
+        mdDisplay.textContent=mdD[deep];
+        mdDiv.style.width="80px";
+        mdDiv.style.height="35px";
+        ExmdD.style.display="none";
+        },150);
+        mdDiv.style.animationName="boc";
+        mdDiv.style.animationDuration="0.3s";
+        setTimeout(()=>{
+          mdif=false;
+          mdDiv.style.animation="none";
+        },300);
       }
     </script>
   </body>
