@@ -180,7 +180,7 @@
         backdrop-filter:blur(1px);
         padding:5px;
       }
-      #mdDeepSeek,#mdGamma,#mdmr,#mdGammalink,#mdQwen,#mdGlm{
+      #mdDeepSeek,#mdGamma,#mdmr,#mdGammalink,#mdQwen,#mdGlm,#mdDeepSeekliu{
         display:none;
         margin:5px;
       }
@@ -203,6 +203,7 @@
       <textarea id="sr" placeholder="在这里输入问题..."></textarea>
       <div id="mdDiv" onclick="if(!mdif){mdOp();}">
         <p id="mdDeepSeek" onclick="event.stopPropagation();deep=1;mdEx();">DeepSeek</p>
+        <p id="mdDeepSeekliu" onclick="event.stopPropagation();deep=6;mdEx();">DeepSeek(流式输出)</p>
         <p id="mdGamma" onclick="event.stopPropagation();deep=2;mdEx();">Gemma</p>
         <p id="mdGammalink" onclick="event.stopPropagation();deep=3;mdEx();if(!aiida){aiida='u'+Math.round(Math.random()*99999);}else{const ifaiid=window.confirm('是否开启新对话？');if(ifaiid){aiida='u'+Math.round(Math.random()*99999);}}">Gemma(连续对话)</p>
         <p id="mdQwen" onclick="event.stopPropagation();deep=4;mdEx();">Qwen</p>
@@ -285,6 +286,10 @@ ind--;
           const ra = Math.round(Math.random() * (a.length - 0.5));
           const rb = Math.round(Math.random() * 3);
           hd(`${a[ra].split(";")[0]}${mb[rb]}${a[ra].split(";")[rb+1]}。`);
+          return;
+        }
+        if(deep==6){
+          bdeep();
           return;
         }
         if(deep!==0){
@@ -479,7 +484,9 @@ aitip("内容请仔细辨别。");
           setTimeout(()=>{botMsgDiv.style.animation="none"},200);
         }
         xz.appendChild(botMsgDiv);
-        str=str.replace(/CODE:\/\/([\s\S]*?)\/\/:CODE/g, (_, c) => `<div class="codea"><pre>${c.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}</pre></div>`).replace(/BR:\/\//g, '<br>').replace(/\*\*(.*?)\*\*/g,`<h3 style="display:inline;">$1</h3>`);
+        str=str
+            .replace(/CODE:\/\/([\s\S]*?)\/\/:CODE/g, (_, c) => `<div class="codea"><pre>${c.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}</pre></div>`)
+            .replace(/BR:\/\//g, '<br>').replace(/\*\*(.*?)\*\*/g,`<h3 style="display:inline;">$1</h3>`);
         typeWriter(botMsgDiv, str, 0, 10);
       }
       function typeWriter(element, text, index, speed) {
@@ -568,25 +575,25 @@ aitip("内容请仔细辨别。");
         const jsonData = await r.json();
         if(deep==1){
           if(jsonData.status === "success") {
-            return jsonData.data.response.replace(/### (\d+\. .+?)</g, "<h4>$1</h4><").replace(/- /g, "<li>");
+            return jsonData.data.response;
           }else{
             return "Error";
           }
         }else if(deep==2||deep==3){
           if(jsonData.status === "success") {
-            return jsonData.reply.replace(/### (\d+\. .+?)</g, "<h4>$1</h4><").replace(/- /g, "<li>");
+            return jsonData.reply;
           }else{
             return "Error";
           }
         }else if(deep==4){
           if(jsonData.status === "success") {
-            return jsonData.reply.replace(/### (\d+\. .+?)</g, "<h4>$1</h4><").replace(/- /g, "<li>");
+            return jsonData.reply;
           }else{
             return "Error";
           }
         }else if(deep==5){
           if(jsonData.status === "success") {
-            return jsonData.data.choices[0].message.content.replace(/### (\d+\. .+?)</g, "<h4>$1</h4><").replace(/- /g, "<li>");
+            return jsonData.data.choices[0].message.content;
           }else{
             return "Error";
           }
@@ -612,9 +619,59 @@ aitip("内容请仔细辨别。");
         .replace(/CODE:\/\/([\s\S]*?)\/\/:CODE/g, (_, c) => `<div class="codea"><pre>${c.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}</pre></div>`));
         aitip("内容由AI生成，请仔细辨别。");
       }
+      let hdliuid;
+      function hdliu(str,num){
+        if(!num){
+          const botMsgDiv = document.createElement('div');
+          botMsgDiv.className = 'fs';
+          botMsgDiv.onclick = function (){
+            if(botMsgDiv.offsetHeight<=300){botMsgDiv.style.animationName="animate";}else{
+              botMsgDiv.style.animationName="animateA";
+            }
+            botMsgDiv.style.animationDuration="0.2s";
+            setTimeout(()=>{botMsgDiv.style.animation="none"},200);
+          }
+          hdliuid=botMsgDiv;
+          xz.appendChild(botMsgDiv);
+        }else{
+          str=str.replace(/CODE:\/\/([\s\S]*?)\/\/:CODE/g, (_, c) => `<div class="codea"><pre>${c.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}</pre></div>`).replace(/BR:\/\//g, '<br>').replace(/\*\*(.*?)\*\*/g,`<h3 style="display:inline;">$1</h3>`);
+          hdliuid.innerHTML=str;
+        }
+      }
+      async function bdeep() {
+      const msg = sr.value.trim();
+      if(!msg)return;
+      hd("正在请求服务器数据，请稍等");
+      let reason="";
+      const sse = new EventSource(`https://api.fohok.xin/API/DeepSeek-R1.php?msg=${msg}&flow=1`);
+      hdliu("",0);
+      sse.addEventListener('message', (e) => {
+        if (e.data === '[DONE]') {
+          sse.close();
+          aitip("内容由AI生成，请仔细辨别。");
+          return;
+        }
+        hdliu(reason
+              .replace(/```[\s\S]*?```/g,t=>{
+                return "CODE://"+t.replace(/```(\w+)?/gi,"```").slice(3,-3)+"//:CODE";
+              })
+              .replace(/(\n)/g,"BR://")
+              .replace(/\*\*(.*?)\*\*/g,`<h3 style="display:inline;">$1</h3>`)
+              .replace(/CODE:\/\/([\s\S]*?)\/\/:CODE/g, (_, c) => `<div class="codea"><pre>${c.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}</pre></div>`),1);
+          const chunk=JSON.parse(e.data);
+          const text=chunk.choices?.[0]?.delta?.content;
+          if(text){
+            reason+=text;
+          }
+      });
+      sse.addEventListener('error',()=>{
+        sse.close();
+      });
+    }
       function mdOp(){
         setTimeout(()=>{
         mdDeepSeek.style.display="block";
+        mdDeepSeekliu.style.display="block";
         mdGamma.style.display="block";
         mdmr.style.display="block";
         mdGammalink.style.display="block";
@@ -634,8 +691,9 @@ aitip("内容请仔细辨别。");
       }
       function mdEx(){
         setTimeout(()=>{
-        const mdD=["默认","DeepSeek","Gemma","Gemma(连续对话)","Qwen","GLM-4-Flash"];
+        const mdD=["默认","DeepSeek","Gemma","Gemma(连续对话)","Qwen","GLM-4-Flash","DeepSeek(流式输出)"];
         mdDeepSeek.style.display="none";
+        mdDeepSeekliu.style.display="none";
         mdGamma.style.display="none";
         mdmr.style.display="none";
         mdGammalink.style.display="none";
