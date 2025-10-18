@@ -74,6 +74,7 @@
         padding: 10px;
         box-sizing: border-box;
         border-radius: 15px;
+        overflow-x:auto;
       }
       #xz {
         position: fixed;
@@ -603,7 +604,7 @@ aitip("内容请仔细辨别。");
       }
       async function hddeepa(e) {
         if(!e)return;
-        const aiResponse = await adeep(e);
+        const aiResponse = await adeep(encodeURIComponent(e));
           return aiResponse;
       }
       async function hddeep(){
@@ -643,7 +644,7 @@ aitip("内容请仔细辨别。");
       if(!msg)return;
       hd("正在请求服务器数据，请稍等");
       let reason="";
-      const sse = new EventSource(`https://api.fohok.xin/API/DeepSeek-R1.php?msg=${msg}&flow=1`);
+      const sse = new EventSource(`https://api.fohok.xin/API/DeepSeek-R1.php?msg=${encodeURIComponent(msg)}&flow=1`);
       hdliu("",0);
       sse.addEventListener('message', (e) => {
         if (e.data === '[DONE]') {
