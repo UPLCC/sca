@@ -1,4 +1,6 @@
 var a=[
+"红米K90 Pro Max;SD 8 Elite Gen 5;100W;7650mAh;M10 1.5K(超级像素) 120Hz;k90pm,k90prom,k90promax",
+"红米K90;SD 8 Elite;100W;7100mAh;M10 1.5K(超级像素) 120Hz;k90",
 "红米K80 Pro;SD 8 Elite;120W;6000mAh;M9 2K 120Hz;k80p,k80pro",
 "红米K80;SD 8 Gen 3;90W;6550mAh;M9 2K 120Hz;k80",
 "红米K80 至尊版;MTK 9400+;90W;7550mAh;M9 1.5K 144Hz;k80u,k80至",
@@ -56,6 +58,8 @@ var a=[
 "真我GT7 Pro;SD 8 Elite;120W;6500mAh;三星 1.5K 120Hz;gt7p",
 "真我GT7 Pro 竞速版;SD 8 Elite;120W;6500mAh;京东方 1.5K 120Hz;gt7p竞,gt7pro竞",
 "真我GT7;MTK 9400+;100W;7200mAh;京东方 1.5K 144Hz;gt7",
+"真我GT8;SD 8 Elite;100W;7000mAh;Q10+ 2K 144Hz;gt8",
+"真我GT8 Pro;SD 8 Elite Gen 5;120W;7000mAh;Q10+ 2K 144Hz;gt8p,gt8pro",
 "一加Ace 5;SD 8 Gen 3;80W;6400mAh;X2 1.5K 120Hz;ace5",
 "一加Ace 5 Pro;SD 8 Elite;100W;6100mAh;X2 1.5K 120Hz;ace5p",
 "一加Ace 5 至尊版;MTK 9400+;100W;6700mAh;天马 1.5K 144Hz;ace5u,ace5至",

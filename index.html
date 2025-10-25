@@ -10,27 +10,30 @@
       }
       #inp {
         position: fixed;
-        bottom: -20px;
-        height: 100px;
-        width: 100vw;
-        left: 0;
-        box-shadow: 10px 10px 10px 10px rgba(0,0,0,0.1);
-        border-radius: 25px;
+        bottom: 10px;
+        height: 80px;
+        width: 96vw;
+        left:2vw;
+        right:2px;
+        border-radius: 15px;
         background-color: rgba(0,0,0,0.02);
         border: 0;
+        transition: height 0.2s ease;
       }
       #sr {
         position: absolute;
         z-index: 1;
         width: 100%;
-        height: 80px;
+        height: 60px;
+        bottom:20px;
         border: 0;
-        border-radius: 25px;
+        border-radius: 15px;
         padding: 10px;
         box-sizing: border-box;
         outline: none;
         resize: none;
         box-shadow: none;
+        transition: height 0.2s ease, bottom 0.2s ease;
         background-color: rgba(0,0,0,0.005);
         font-family: sans-serif;
       }
@@ -39,8 +42,8 @@
         z-index: 2;
         width: 60px;
         height: 35px;
-        right: 10px;
-        bottom: 25px;
+        right: 5px;
+        bottom: 5px;
         border: 0px solid white;
         border-radius: 10px;
         background-color: rgba(197,235,255,0.5);
@@ -138,6 +141,14 @@
           opacity:1;
         }
       }
+      @keyframes bod{
+        from{
+          opacity:0;
+        }
+        to{
+          opacity:1;
+        }
+      }
       .tip{
         position: relative;
         width: 85vw;
@@ -170,8 +181,8 @@
         border-radius:10px;
         border:2px solid rgba(0,0,0,0.3);
         overflow:auto;
-        right:80px;
-        bottom:25px;
+        right:70px;
+        bottom:5px;
         box-sizing:border-box;
         display:flex;
         align-items:center;
@@ -181,7 +192,7 @@
         backdrop-filter:blur(1px);
         padding:5px;
       }
-      #mdDeepSeek,#mdGamma,#mdmr,#mdGammalink,#mdQwen,#mdGlm,#mdDeepSeekliu,#mdQwenlink{
+      #mdDeepSeek,#mdGamma,#mdmr,#mdGammalink,#mdQwen,#mdGlm,#mdDeepSeekliu,#mdQwenlink,#mdCog{
         display:none;
         margin:5px;
       }
@@ -192,16 +203,44 @@
         height:100vh;
         display:none;
       }
+      .photos{
+        position:relative;
+        width:50vw;
+        border-radius:5px;
+        display:inline-block;
+        margin:0;
+        vertical-align:top;
+      }
+      #bigphoto{
+        position:absolute;
+        z-index:50;
+        left:50%;
+        top:50%;
+        transform:translate(-50%,-50%);
+        width:90vw;
+        display:none;
+      }
+      #phoex{
+        position:fixed;
+        z-index:30;
+        width:100vw;
+        height:100vh;
+        background-color:rgba(0,0,0,0.3);
+        backdrop-filter:blur(10px);
+        display:none;
+      }
     </style>
   </head>
   <body>	
     <div id="xz">
     <h3 id="hello">你好！欢迎使用配置查询器</h3>
     </div>
+    <img src="" id="bigphoto"/>
+    <div id="phoex" onclick="bigExit();"></div>
     <div id="ExmdD" onclick="mdEx();"></div>
     <button id="bo" onclick="gx();bo.style.animationName='bob';bo.style.animationDuration='0.3s';setTimeout(()=>{bo.style.display='none';bo.style.opacity='0';},300);setTimeout(()=>{gxifa=false;},500);">回到底部</button>
     <div id="inp">
-      <textarea id="sr" placeholder="在这里输入问题..."></textarea>
+      <textarea id="sr" placeholder="在这里输入问题..." onfocus="this.style.height='80px';this.style.bottom='40px';inp.style.height='120px';" onblur="this.style.height='80px';this.style.bottom='0px';inp.style.height='80px';"></textarea>
       <div id="mdDiv" onclick="if(!mdif){mdOp();}">
         <p id="mdDeepSeek" onclick="event.stopPropagation();deep=1;mdEx();">DeepSeek</p>
         <p id="mdDeepSeekliu" onclick="event.stopPropagation();deep=6;mdEx();">DeepSeek(流式输出)</p>
@@ -210,6 +249,7 @@
         <p id="mdQwen" onclick="event.stopPropagation();deep=4;mdEx();">Qwen</p>
         <p id="mdQwenlink" onclick="event.stopPropagation();deep=7;mdEx();if(!aiidb){aiidb='u'+Math.round(Math.random()*99999);}else{const ifaiida=window.confirm('是否开启新对话？(Qwen)');if(ifaiida){aiidb='u'+Math.round(Math.random()*99999);}}">Qwen(连续对话)</p>
         <p id="mdGlm" onclick="event.stopPropagation();deep=5;mdEx();">GLM-4-Flash</p>
+        <p id="mdCog" onclick="event.stopPropagation();deep=8;mdEx();">CogView</p>
         <p id="mdmr" onclick="event.stopPropagation();deep=0;mdEx();">默认</p>
         <p id="mdDisplay">默认</p>
       </div>
@@ -244,11 +284,11 @@ for(var key of mapa.keys()){
 mapa.set(key,ind);
 ind--;
 }
-      document.addEventListener("resize", () => {
-        xz.style.height = window.innerHeight - sr.offsetHeight + "px";
+      window.addEventListener("resize", () => {
+        xz.style.height = window.innerHeight - (window.innerHeight - inp.offsetTop) + "px";
       });
       setInterval(() => {
-        xz.style.height = window.innerHeight - sr.offsetHeight + "px";
+        xz.style.height = window.innerHeight - (window.innerHeight - inp.offsetTop) + "px";
       }, 200);
       let gxifa=false;
       setInterval(()=>{
@@ -595,7 +635,8 @@ aitip("内容请仔细辨别。");
 `https://api.fohok.xin/API/qwen.php?msg=${e}`,
 `https://api.fohok.xin/API/GLM_ai.php?msg=${e}`,
 null,
-`https://api.fohok.xin/API/qwen.php?msg=${e}&id=${aiidb}`
+`https://api.fohok.xin/API/qwen.php?msg=${e}&id=${aiidb}`,
+`https://api.fohok.xin/API/zpst.php?content=${e}&type=json`
 ];
         const r = await fetch(api[deep-1]);
         const jsonData = await r.json();
@@ -620,6 +661,14 @@ null,
         }else if(deep==5){
           if(jsonData.status === "success") {
             return jsonData.data.choices[0].message.content;
+          }else{
+            return "Error";
+          }
+        }else if(deep==8){
+          if(jsonData.status === "success") {
+            hdliu("",0);
+            hdliu(`<img src="${jsonData.data.image_url}" class="photos" onload="this.style.animation='none';this.style.animationName='bod';this.style.animationDuration='0.5s';" onclick="bigphoto.style.display='block';phoex.style.display='block';document.getElementById('bigphoto').src=this.src;bigphoto.style.animationName='bod';bigphoto.style.animationDuration='0.3s';phoex.style.animationName='bod';phoex.style.animationDuration='0.3s';"/>`,1);
+            return;
           }else{
             return "Error";
           }
@@ -670,12 +719,16 @@ null,
       hd("正在请求服务器数据，请稍等");
       let reason="";
       const sse = new EventSource(`https://api.fohok.xin/API/DeepSeek-R1.php?msg=${encodeURIComponent(msg)}&flow=1`);
-      hdliu("",0);
+      var ifbde=false;
       sse.addEventListener('message', (e) => {
         if (e.data === '[DONE]') {
           sse.close();
           aitip("内容由AI生成，请仔细辨别。");
           return;
+        }
+        if(!ifbde){
+          hdliu("",0);
+          ifbde=true;
         }
         hdliu(reason
               .replace(/```[\s\S]*?```/g,t=>{
@@ -711,6 +764,7 @@ null,
         mdQwen.style.display="block";
         mdQwenlink.style.display="block";
         mdGlm.style.display="block";
+        mdCog.style.display="block";
         mdDisplay.style.display="none";
         mdDiv.style.width="auto";
         mdDiv.style.height="auto";
@@ -725,7 +779,7 @@ null,
       }
       function mdEx(){
         setTimeout(()=>{
-        const mdD=["默认","DeepSeek","Gemma","Gemma(连续对话)","Qwen","GLM-4-Flash","DeepSeek(流式输出)","Qwen(连续对话)"];
+        const mdD=["默认","DeepSeek","Gemma","Gemma(连续对话)","Qwen","GLM-4-Flash","DeepSeek(流式输出)","Qwen(连续对话)","CogView"];
         mdDeepSeek.style.display="none";
         mdDeepSeekliu.style.display="none";
         mdGamma.style.display="none";
@@ -734,6 +788,7 @@ null,
         mdQwen.style.display="none";
         mdQwenlink.style.display="none";
         mdGlm.style.display="none";
+        mdCog.style.display="none";
         mdDisplay.style.display="block";
         mdDisplay.textContent=mdD[deep];
         mdDiv.style.width="80px";
@@ -745,6 +800,17 @@ null,
         setTimeout(()=>{
           mdif=false;
           mdDiv.style.animation="none";
+        },300);
+      }
+      function bigExit(){
+        bigphoto.style.animationName="bob";
+        bigphoto.style.animationDuration="0.3s";
+        phoex.style.animationName="bob";
+        phoex.style.animationDuration="0.3s";
+        setTimeout(()=>{
+          document.getElementById("bigphoto").src="";
+          bigphoto.style.display="none";
+          phoex.style.display="none";
         },300);
       }
     </script>
