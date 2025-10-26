@@ -229,6 +229,85 @@
         backdrop-filter:blur(10px);
         display:none;
       }
+      #set{
+        position:absolute;
+        z-index:2;
+        bottom:5px;
+        left:5px;
+        width:35px;
+        height:35px;
+        border-radius:10px;
+        border:2px solid rgba(0,0,0,0.1);
+        background-color:rgba(255,255,255,0.1);
+        backdrop-filter:blur(1px);
+      }
+      #setting{
+        position:absolute;
+        z-index:51;
+        left:50%;
+        top:50%;
+        transform:translate(-50%,-50%);
+        width:300px;
+        max-height:300px;
+        overflow-y:auto;
+        background-color:rgba(255,255,255,0.7);
+        box-shadow:0 0 20px 10px rgba(0,0,0,0.1);
+        backdrop-filter:blur(5px);
+        border-radius:15px;
+        padding:8px;
+        display:none;
+      }
+      .sett{
+        position:relative;
+        width:96%;
+        height:40px;
+        margin:2%;
+        background-color:rgba(0,0,0,0.02);
+        border-radius:10px;
+      }
+      .setp{
+        position:absolute;
+        top:50%;
+        transform:translate(0%,-50%);
+        margin-left:8px;
+      }
+      .settext{
+        position:absolute;
+        right:8px;
+        top:50%;
+        transform:translate(0%,-50%);
+        margin-left:auto;
+        color:gray;
+      }
+      .setx{
+        position:absolute;
+        right:8px;
+        top:50%;
+        transform:translate(0%,-50%);
+        width:35px;
+        height:20px;
+        border-radius:100px;
+        background-color:rgba(0,0,0,0.1);
+        transition:all 0.2s ease;
+      }
+      .setxa{
+        position:relative;
+        width:16px;
+        height:16px;
+        left:2px;
+        top:50%;
+        transform:translate(0%,-50%);
+        background-color:white;
+        border-radius:100px;
+        transition:all 0.2s ease;
+      }
+      #setex{
+        position:fixed;
+        z-index:31;
+        width:100vw;
+        height:100vh;
+        display:none;
+      }
     </style>
   </head>
   <body>	
@@ -237,17 +316,26 @@
     </div>
     <img src="" id="bigphoto"/>
     <div id="phoex" onclick="bigExit();"></div>
+    <div id="setting">
+      <h3 style="margin-left:2%;">设置</h3>
+      <div id="seten" class="sett"><p id="setenp" class="setp">回车发送</p><div id="ststa" class="setx" onclick="if(!sttta){ststb.style.left='17px';this.style.backgroundColor='#56a9ff';sttta=true;}else{ststb.style.left='2px';this.style.backgroundColor='rgba(0,0,0,0.1)';sttta=false;}"><div id="ststb" class="setxa"></div></div></div>
+      <div id="setgid" class="sett"><p id="setgidp" class="setp" style="display:inline;">Gemma对话ID</p><p id="gaid" style="display:inline;" class="settext" onclick="let gaigem=window.prompt('修改Gemma的连续对话id');if(gaigem){aiida=gaigem;}"></p></div>
+      <div id="setqid" class="sett"><p id="setqwdp" class="setp" style="display:inline;">Qwen对话ID</p><p id="qwid" style="display:inline;" class="settext" onclick="let gaiqwen=window.prompt('修改Qwen的连续对话id');if(gaiqwen){aiidb=gaiqwen;}"></p></div>
+      <div id="setaread" class="sett"><p id="setareap" class="setp" style="display:inline;">天气查询地区</p><p id="ar" style="display:inline;" class="settext" onclick="temarea=window.prompt('修改查询天气的地区');">没有设置</p></div>
+    </div>
+    <div id="setex" onclick="setting.style.animationName='bob';setting.style.animationDuration='0.3s';setTimeout(()=>{setting.style.display='none';this.style.display='none';},300);"></div>
     <div id="ExmdD" onclick="mdEx();"></div>
     <button id="bo" onclick="gx();bo.style.animationName='bob';bo.style.animationDuration='0.3s';setTimeout(()=>{bo.style.display='none';bo.style.opacity='0';},300);setTimeout(()=>{gxifa=false;},500);">回到底部</button>
     <div id="inp">
       <textarea id="sr" placeholder="在这里输入问题..." onfocus="this.style.height='80px';this.style.bottom='40px';inp.style.height='120px';" onblur="this.style.height='80px';this.style.bottom='0px';inp.style.height='80px';"></textarea>
+      <button id="set" onclick="setting.style.display='block';setting.style.animationName='bod';setting.style.animationDuration='0.3s';setex.style.display='block';">设置</button>
       <div id="mdDiv" onclick="if(!mdif){mdOp();}">
         <p id="mdDeepSeek" onclick="event.stopPropagation();deep=1;mdEx();">DeepSeek</p>
         <p id="mdDeepSeekliu" onclick="event.stopPropagation();deep=6;mdEx();">DeepSeek(流式输出)</p>
         <p id="mdGamma" onclick="event.stopPropagation();deep=2;mdEx();">Gemma</p>
-        <p id="mdGammalink" onclick="event.stopPropagation();deep=3;mdEx();if(!aiida){aiida='u'+Math.round(Math.random()*99999);}else{const ifaiid=window.confirm('是否开启新对话？(Gemma)');if(ifaiid){aiida='u'+Math.round(Math.random()*99999);}}">Gemma(连续对话)</p>
+        <p id="mdGammalink" onclick="event.stopPropagation();deep=3;mdEx();if(!aiida){aiida='u'+Math.round(Math.random()*9999999);}else{const ifaiid=window.confirm('是否开启新对话？(Gemma)');if(ifaiid){aiida='u'+Math.round(Math.random()*9999999);}}">Gemma(连续对话)</p>
         <p id="mdQwen" onclick="event.stopPropagation();deep=4;mdEx();">Qwen</p>
-        <p id="mdQwenlink" onclick="event.stopPropagation();deep=7;mdEx();if(!aiidb){aiidb='u'+Math.round(Math.random()*99999);}else{const ifaiida=window.confirm('是否开启新对话？(Qwen)');if(ifaiida){aiidb='u'+Math.round(Math.random()*99999);}}">Qwen(连续对话)</p>
+        <p id="mdQwenlink" onclick="event.stopPropagation();deep=7;mdEx();if(!aiidb){aiidb='u'+Math.round(Math.random()*9999999);}else{const ifaiida=window.confirm('是否开启新对话？(Qwen)');if(ifaiida){aiidb='u'+Math.round(Math.random()*9999999);}}">Qwen(连续对话)</p>
         <p id="mdGlm" onclick="event.stopPropagation();deep=5;mdEx();">GLM-4-Flash</p>
         <p id="mdCog" onclick="event.stopPropagation();deep=8;mdEx();">CogView</p>
         <p id="mdmr" onclick="event.stopPropagation();deep=0;mdEx();">默认</p>
@@ -273,8 +361,10 @@
       let past = 0;
       let deep=0;
       let aiida,aiidb;
+      let temarea="没有设置";
       let ifh=false;
       let mdif=false;
+      var sttta=false;
       var mapa=new Map([
 ["SD 8 Elite Gen 5",0],["MTK 9500",0],["APPLE A19 Pro",0],["APPLE A19 Pro UC",0],["APPLE A19",0],["SD 8 Elite",0],["XRING O1",0],["APPLE A18 Pro",0],["MTK 9400+",0],["MTK 9400",0],["APPLE A18",0],["APPLE A17 Pro",0],["APPLE A18 UC",0],["SD 8 Gen 3",0],
 ["MTK 9300+",0],["MTK 9400e",0],["MTK 9300",0],["Kirin 9020",0],["SD 8 Gen 2",0],["APPLE A16",0],["MTK 9200+",0],["MTK 9200",0],["Kirin 9010S",0],["SD 888+",0],["SD 888",0],["SD 870",0]
@@ -290,6 +380,14 @@ ind--;
       setInterval(() => {
         xz.style.height = window.innerHeight - (window.innerHeight - inp.offsetTop) + "px";
       }, 200);
+      setInterval(()=>{
+        document.getElementById("gaid").innerText=aiida;
+        document.getElementById("qwid").innerText=aiidb;
+        document.getElementById("ar").innerText=temarea;
+        if(!temarea||(/[<>\/\s\.,\[\]\{\}%\*"'`´]/).test(temarea))temarea="没有设置";
+        if((/[<>\/\s\.,\[\]\{\}%\*"'`´]/).test(aiida))aiida='u'+Math.round(Math.random()*9999999);
+        if((/[<>\/\s\.,\[\]\{\}%\*"'`´]/).test(aiidb))aiidb='u'+Math.round(Math.random()*9999999);
+      },1500);
       let gxifa=false;
       setInterval(()=>{
         if(!gxifa&&xz.scrollHeight - xz.scrollTop - xz.clientHeight > 300){
@@ -305,6 +403,15 @@ ind--;
           setTimeout(()=>{bo.style.display="none";bo.style.opacity="0";},300);
         }
       },500);
+      document.getElementById("sr").addEventListener("keydown",(e)=>{
+        if(sttta&&e.key==="Enter"){
+          e.preventDefault();
+          if(eisif){
+            give();
+            eis();
+          }
+        }
+      });
       function give() {
         if (!sr.value.trim()) {
           return;
@@ -388,7 +495,13 @@ ${codeaaa}];//:CODE`);
           return;
         }
         if(!sj&&(p("天气",t)||p("温度",t)||p("气温",t))){
-          const tem=window.prompt("请输入城市");
+          let tem;
+          if(temarea=="没有设置"||!temarea){
+            tem=window.prompt("请输入城市");
+            if(!tem)return;
+          }else{
+            tem=temarea;
+          }
           if(p("现在",t)||p("当前",t)){
             fetch(`https://api.fohok.xin/API/hftq.php?city=${tem.trim().replace(/\s,.<>\/\"\'&/,"")}`)
               .then(data => data.json())
