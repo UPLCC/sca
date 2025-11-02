@@ -64,6 +64,7 @@
         opacity:0;
         max-height:1000px;
         overflow:auto;
+        overflow-wrap:break-word;
       }
       .fs {
         position: relative;
@@ -78,6 +79,7 @@
         box-sizing: border-box;
         border-radius: 15px;
         overflow-x:auto;
+        overflow-wrap:break-word;
       }
       #xz {
         position: fixed;
@@ -147,6 +149,11 @@
         }
         to{
           opacity:1;
+        }
+      }
+      @keyframes boe{
+        to{
+          margin-left:0px;
         }
       }
       .tip{
@@ -250,10 +257,11 @@
         width:300px;
         max-height:300px;
         overflow-y:auto;
+        overflow-x:hidden;
         background-color:rgba(255,255,255,0.7);
         box-shadow:0 0 20px 10px rgba(0,0,0,0.1);
         backdrop-filter:blur(5px);
-        border-radius:15px;
+        border-radius:20px;
         padding:8px;
         display:none;
       }
@@ -308,6 +316,72 @@
         height:100vh;
         display:none;
       }
+      .settwo{
+        position:absolute;
+        z-index:53;
+        left:100%;
+        background-color:white;
+        width:100%;
+        height:100%;
+        border-radius:20px;
+        padding:8px;
+        box-sizing:border-box;
+        top:0;
+        opacity:0;
+        overflow-y:auto;
+        overflow-x:hidden;
+        transition:left 0.5s ease,opacity 0.2s ease;
+      }
+      .twoex{
+        position:fixed;
+        z-index:55;
+        border:0px solid rgba(0,0,0,0.1);
+        background-color:rgba(255,255,255,0.3);
+        border-radius:16px;
+        backdrop-filter:blur(5px);
+        padding:4px;
+        width:30px;
+        height:30px;
+        background-image:url("exit.png");
+        background-repeat:no-repeat;
+        background-position:center;
+        background-size:20px;
+
+      }
+      .settt{
+        position:relative;
+        margin:2%;
+        margin-top:5px;
+        margin-left:2%;
+        margin-right:2%;
+        width:96%;
+        height:40px;
+        background-color:rgba(0,0,0,0.02);
+        border-radius:10px;
+      }
+      #stcta{
+        background-color:#56a9ff;
+      }
+      #stctb{
+        left:17px;
+      }
+      #includeDiv{
+        position:relative;
+        top:0;
+        left:0;
+        transition:left 0.5s ease;
+      }
+      #inczz{
+        position:absolute;
+        z-index:52;
+        pointer-events:none;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        background-color:rgba(0,0,0,0);
+        transition:background-color 0.5s ease;
+      }
     </style>
   </head>
   <body>	
@@ -317,18 +391,29 @@
     <img src="" id="bigphoto"/>
     <div id="phoex" onclick="bigExit();"></div>
     <div id="setting">
-      <h3 style="margin-left:2%;">设置</h3>
-      <div id="seten" class="sett"><p id="setenp" class="setp">回车发送</p><div id="ststa" class="setx" onclick="if(!sttta){ststb.style.left='17px';this.style.backgroundColor='#56a9ff';sttta=true;}else{ststb.style.left='2px';this.style.backgroundColor='rgba(0,0,0,0.1)';sttta=false;}"><div id="ststb" class="setxa"></div></div></div>
-      <div id="setgid" class="sett"><p id="setgidp" class="setp" style="display:inline;">Gemma对话ID</p><p id="gaid" style="display:inline;" class="settext" onclick="let gaigem=window.prompt('修改Gemma的连续对话id');if(gaigem){aiida=gaigem;}"></p></div>
-      <div id="setqid" class="sett"><p id="setqwdp" class="setp" style="display:inline;">Qwen对话ID</p><p id="qwid" style="display:inline;" class="settext" onclick="let gaiqwen=window.prompt('修改Qwen的连续对话id');if(gaiqwen){aiidb=gaiqwen;}"></p></div>
-      <div id="setaread" class="sett"><p id="setareap" class="setp" style="display:inline;">天气查询地区</p><p id="ar" style="display:inline;" class="settext" onclick="temarea=window.prompt('修改查询天气的地区');">没有设置</p></div>
+      <div id="inczz"></div>
+      <div id="includeDiv">
+        <h3 style="margin-left:2%;">设置</h3>
+        <div id="seten" class="sett"><p id="setenp" class="setp">回车发送</p><div id="ststa" class="setx" onclick="if(!sttta){ststb.style.left='17px';this.style.backgroundColor='#56a9ff';sttta=true;}else{ststb.style.left='2px';this.style.backgroundColor='rgba(0,0,0,0.1)';sttta=false;}"><div id="ststb" class="setxa"></div></div></div>
+        <div id="setgid" class="sett"><p id="setgidp" class="setp" style="display:inline;">Gemma对话ID</p><p id="gaid" style="display:inline;" class="settext" onclick="let gaigem=window.prompt('修改Gemma的连续对话id');if(gaigem){aiida=gaigem;}"></p></div>
+        <div id="setqid" class="sett"><p id="setqwdp" class="setp" style="display:inline;">Qwen对话ID</p><p id="qwid" style="display:inline;" class="settext" onclick="let gaiqwen=window.prompt('修改Qwen的连续对话id');if(gaiqwen){aiidb=gaiqwen;}"></p></div>
+        <div id="setaread" class="sett"><p id="setareap" class="setp" style="display:inline;">天气查询地区</p><p id="ar" style="display:inline;" class="settext" onclick="temarea=window.prompt('修改查询天气的地区');">没有设置</p></div>
+        <div id="setnews" class="sett" onclick="settw('newsa');"><p id="setnewsp" class="setp">消息</p></div>
+      </div>
+      <div id="newsa" class="settwo">
+        <button id="newsex" class="twoex" onclick="settw('newsa',1);"></button>
+        <h3 style="margin-left:2%;margin-top:40px;">消息</h3>
+        <div id="setct" class="settt"><p id="setctp" class="setp">记录消息</p><div id="stcta" class="setx" onclick="if(!ctwzif){stctb.style.left='17px';this.style.backgroundColor='#56a9ff';ctwzif=true;}else{stctb.style.left='2px';this.style.backgroundColor='rgba(0,0,0,0.1)';ctwzif=false;}"><div id="stctb" class="setxa"></div></div></div>
+        <div id="setctshow" class="settt" onclick="const thisifa=window.confirm('是否跳转查看消息？\n提示：本页面的消息可能会被重置。');if(thisifa){localStorage.setItem('uplccnews',ctwz.join('NEXT://'));window.open('show.html');}"><p id="setctpa" class="setp">查看记录的消息</p></div>
+        <div id="setctshow" class="settt" onclick="const thisifb=window.confirm('确定删除记录的消息？');if(thisifb){localStorage.removeItem('uplccnews');ctwzp='';ctwz=[];alert('成功删除记录的消息。');}"><p id="setctpb" class="setp">删除记录的消息</p></div>
+      </div>
     </div>
     <div id="setex" onclick="setting.style.animationName='bob';setting.style.animationDuration='0.3s';setTimeout(()=>{setting.style.display='none';this.style.display='none';},300);"></div>
     <div id="ExmdD" onclick="mdEx();"></div>
     <button id="bo" onclick="gx();bo.style.animationName='bob';bo.style.animationDuration='0.3s';setTimeout(()=>{bo.style.display='none';bo.style.opacity='0';},300);setTimeout(()=>{gxifa=false;},500);">回到底部</button>
     <div id="inp">
       <textarea id="sr" placeholder="在这里输入问题..." onfocus="this.style.height='80px';this.style.bottom='40px';inp.style.height='120px';" onblur="this.style.height='80px';this.style.bottom='0px';inp.style.height='80px';"></textarea>
-      <button id="set" onclick="setting.style.display='block';setting.style.animationName='bod';setting.style.animationDuration='0.3s';setex.style.display='block';">设置</button>
+      <button id="set" onclick="setting.style.display='block';setting.style.animationName='bod';setting.style.animationDuration='0.3s';settingcz();setex.style.display='block';">设置</button>
       <div id="mdDiv" onclick="if(!mdif){mdOp();}">
         <p id="mdDeepSeek" onclick="event.stopPropagation();deep=1;mdEx();">DeepSeek</p>
         <p id="mdDeepSeekliu" onclick="event.stopPropagation();deep=6;mdEx();">DeepSeek(流式输出)</p>
@@ -364,6 +449,12 @@
       let temarea="没有设置";
       let ifh=false;
       let mdif=false;
+      let ctwzif=true;
+      let ctwzp=localStorage.getItem("uplccnews");
+      let ctwz=[];
+      if(ctwzp){
+        ctwz=ctwzp.split("NEXT://");
+      }
       var sttta=false;
       var mapa=new Map([
 ["SD 8 Elite Gen 5",0],["MTK 9500",0],["APPLE A19 Pro",0],["APPLE A19 Pro UC",0],["APPLE A19",0],["SD 8 Elite",0],["XRING O1",0],["APPLE A18 Pro",0],["MTK 9400+",0],["MTK 9400",0],["APPLE A18",0],["APPLE A17 Pro",0],["APPLE A18 UC",0],["SD 8 Gen 3",0],
@@ -374,6 +465,19 @@ for(var key of mapa.keys()){
 mapa.set(key,ind);
 ind--;
 }
+      function tb(){
+        requestAnimationFrame(tb);
+        const elem=document.getElementsByClassName("sett")[0];
+        const high=elem.offsetHeight+parseFloat(getComputedStyle(elem).marginTop)*elem.length+parseFloat(getComputedStyle(elem).marginBottom)*elem.length;
+        if(includeDiv.scrollTop>=high){
+          includeDiv.scrollTop=high;
+        }
+        document.querySelectorAll(".settwo").forEach((ele)=>{
+          ele.style.top=setting.scrollTop+"px";
+          ele.style.height=setting.offsetHeight+"px";
+        });
+      }
+      tb();
       window.addEventListener("resize", () => {
         xz.style.height = window.innerHeight - (window.innerHeight - inp.offsetTop) + "px";
       });
@@ -499,6 +603,7 @@ ${codeaaa}];//:CODE`);
           if(temarea=="没有设置"||!temarea){
             tem=window.prompt("请输入城市");
             if(!tem)return;
+            temarea=tem;
           }else{
             tem=temarea;
           }
@@ -645,6 +750,7 @@ aitip("内容请仔细辨别。");
           setTimeout(()=>{userMsgDiv.style.animation="none"},200);
         }
         xz.appendChild(userMsgDiv);
+        if(ctwzif)ctwz.push(`USER://${message}`);
         if(xz.scrollHeight - xz.scrollTop - xz.clientHeight < gxpx&&xz.scrollHeight > ifgxa){gx();ifgxa=xz.scrollHeight}
       }
       function hd(str) {
@@ -665,6 +771,7 @@ aitip("内容请仔细辨别。");
               return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
             });
         typeWriter(botMsgDiv, str, 0, 10);
+        if(ctwzif)ctwz.push(`${str}`);
       }
       function typeWriter(element, text, index, speed) {
         if (index < text.length) {
@@ -781,6 +888,7 @@ null,
           if(jsonData.status === "success") {
             hdliu("",0);
             hdliu(`<img src="${jsonData.data.image_url}" class="photos" onload="this.style.animation='none';this.style.animationName='bod';this.style.animationDuration='0.5s';" onclick="bigphoto.style.display='block';phoex.style.display='block';document.getElementById('bigphoto').src=this.src;bigphoto.style.animationName='bod';bigphoto.style.animationDuration='0.3s';phoex.style.animationName='bod';phoex.style.animationDuration='0.3s';"/>`,1);
+            if(ctwzif)ctwz.push(`${jsonData.data.image_url}`);
             return;
           }else{
             return "Error";
@@ -808,6 +916,7 @@ null,
         aitip("内容由AI生成，请仔细辨别。");
       }
       let hdliuid;
+      let hdliustr;
       function hdliu(str,num){
         if(!num){
           const botMsgDiv = document.createElement('div');
@@ -824,6 +933,7 @@ null,
         }else{
           str=str.replace(/CODE:\/\/([\s\S]*?)\/\/:CODE/g, (_, c) => `<div class="codea"><pre>${c.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}</pre></div>`).replace(/BR:\/\//g, '<br>').replace(/\*\*(.*?)\*\*/g,`<h3 style="display:inline;">$1</h3>`);
           hdliuid.innerHTML=str;
+          hdliustr=str;
         }
       }
       async function bdeep() {
@@ -837,6 +947,7 @@ null,
         if (e.data === '[DONE]') {
           sse.close();
           aitip("内容由AI生成，请仔细辨别。");
+          if(ctwzif)ctwz.push(`${hdliustr}`);
           return;
         }
         if(!ifbde){
@@ -865,6 +976,7 @@ null,
       });
       sse.addEventListener('error',()=>{
         sse.close();
+        if(ctwzif&&hdliustr)ctwz.push(`${hdliustr}`);
       });
     }
       function mdOp(){
@@ -926,6 +1038,73 @@ null,
           phoex.style.display="none";
         },300);
       }
+      let ifsetex=false;
+      var setexid;
+      function settw(str,num){
+        if(!num){
+          if(!ifsetex){
+            document.getElementById(str).style.opacity="1";
+            document.getElementById(str).style.left="0";
+            document.getElementById(str).style.marginLeft="0";
+            document.getElementById("includeDiv").style.left="-60px";
+            document.getElementById("inczz").style.backgroundColor="rgba(0,0,0,0.3)";
+            setting.style.overflowY="hidden";
+            setTimeout(()=>{
+              ifsetex=true;
+              setTimeout(()=>{setexid=str;},200);
+            },300);
+          }
+        }else if(ifsetex){
+          setTimeout(()=>{
+            document.getElementById(str).style.opacity="0";
+            ifsetex=false;
+            setTimeout(()=>{setexid="";},200);
+          },300);
+          document.getElementById(str).style.left="100%";
+          document.getElementById("includeDiv").style.left="0";
+          document.getElementById("inczz").style.backgroundColor="rgba(0,0,0,0)";
+          setting.style.overflowY="auto";
+        }
+      }
+      function settingcz(){
+        document.querySelectorAll(".settwo").forEach((ele)=>{
+          ele.style.left="100%";
+          ele.style.opacity="0";
+          ele.style.marginLeft="0";
+        });
+        document.getElementById("includeDiv").style.left="0";
+        document.getElementById("inczz").style.backgroundColor="rgba(0,0,0,0)";
+        ifsetex=false;
+      }
+      var staxzb,stayzb;
+      var ifsetexhd=false;
+      document.body.addEventListener("touchstart",(e)=>{
+        const zb=e.touches[0];
+        if(setexid&&(zb.clientY<window.innerHeight/2+setting.offsetHeight/2)&&(zb.clientY>window.innerHeight/2-setting.offsetHeight/2)&&(zb.clientX>window.innerWidth/2-setting.offsetWidth/2)&&(zb.clientX<window.innerWidth/2-setting.offsetWidth/2+30)){
+          staxzb=zb.clientX;
+          stayzb=zb.clientY;
+          ifsetexhd=true;
+        }
+      });
+      document.body.addEventListener("touchmove",(e)=>{
+        const xzba=e.touches[0].clientX;
+        if(ifsetexhd&&xzba-staxzb>=0){
+          document.getElementById(setexid).style.marginLeft=xzba-staxzb+"px";
+        }
+      });
+      document.body.addEventListener("touchend",(e)=>{
+        const xzbb=e.changedTouches[0].clientX;
+        if(ifsetexhd&&xzbb-staxzb>=100){
+          settw(setexid,1);
+        }else if(ifsetexhd&&xzbb-staxzb<100){
+          document.getElementById(setexid).style.animationName="boe";
+          document.getElementById(setexid).style.animationDuration="0.3s";
+          setTimeout(()=>{
+            document.getElementById(setexid).style.marginLeft="0px";
+            document.getElementById(setexid).style.animation="none";
+          },300);
+        }
+      });
     </script>
   </body>
 </html>

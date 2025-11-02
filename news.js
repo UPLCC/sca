@@ -47,6 +47,7 @@ var a=[
 "红米Turbo 4 Pro;SD 8s Gen 4;90W;7550mAh;M9 1.5K 120Hz;t4p,turbo4p",
 "红米Turbo 4;MTK 8400-Ultra;90W;6550mAh;C8 1.5K 120Hz;t4,turbo4",
 "iQOO 13;SD 8 Elite;120W;6150mAh;Q10 2K 144Hz;iqoo13",
+"iQOO Neo11;SD 8 Elite;120W;7500mAh;Q10+ 2K 144Hz;neo11,n11",
 "iQOO Neo10;SD 8 Gen 3;120W;6100mAh;F1 1.5K 144Hz;n10,neo10",
 "iQOO Neo10 Pro;MTK 9400;120W;6100mAh;F1 1.5K 144Hz;n10p,neo10p",
 "iQOO Neo10 Pro+;SD 8 Elite;120W;6800mAh;Q10 2K 144Hz;n10pp,n10p+,neo10pp,n10pro+,n10prop,neo10p+,neo10pro+,neo10prop",
