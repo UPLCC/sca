@@ -36,18 +36,23 @@
         transition: height 0.2s ease, bottom 0.2s ease;
         background-color: rgba(0,0,0,0.005);
         font-family: sans-serif;
+        font-size:15px;
       }
       #ts {
         position: absolute;
         z-index: 2;
-        width: 60px;
+        width: 35px;
         height: 35px;
         right: 5px;
         bottom: 5px;
         border: 0px solid white;
-        border-radius: 10px;
-        background-color: rgba(197,235,255,0.5);
-        backdrop-filter: blur(1px);
+        border-radius: 100px;
+        background-color: rgba(0,0,0,0.5);
+        background-image:url("top.png");
+        background-repeat:no-repeat;
+        background-position:center;
+        background-size:20px;
+        transition:background-color 0.3s ease;
       }
       .userx {
         position: relative;
@@ -180,29 +185,6 @@
         top:50%;
         transform:translate(-50%,-50%);
       }
-      #mdDiv{
-        position:absolute;
-        z-index:5;
-        width:80px;
-        height:35px;
-        border-radius:10px;
-        border:2px solid rgba(0,0,0,0.3);
-        overflow:auto;
-        right:70px;
-        bottom:5px;
-        box-sizing:border-box;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        flex-direction:column;
-        flex-wrap:wrap;
-        backdrop-filter:blur(1px);
-        padding:5px;
-      }
-      #mdDeepSeek,#mdGamma,#mdmr,#mdGammalink,#mdQwen,#mdGlm,#mdDeepSeekliu,#mdQwenlink,#mdCog{
-        display:none;
-        margin:5px;
-      }
       #ExmdD{
         position:fixed;
         z-index:0;
@@ -255,7 +237,7 @@
         top:50%;
         transform:translate(-50%,-50%);
         width:300px;
-        max-height:300px;
+        max-height:260px;
         overflow-y:auto;
         overflow-x:hidden;
         background-color:rgba(255,255,255,0.7);
@@ -338,7 +320,6 @@
         border:0px solid rgba(0,0,0,0.1);
         background-color:rgba(255,255,255,0.3);
         border-radius:16px;
-        backdrop-filter:blur(5px);
         padding:4px;
         width:30px;
         height:30px;
@@ -346,7 +327,6 @@
         background-repeat:no-repeat;
         background-position:center;
         background-size:20px;
-
       }
       .settt{
         position:relative;
@@ -358,6 +338,7 @@
         height:40px;
         background-color:rgba(0,0,0,0.02);
         border-radius:10px;
+        transition:background-color 0.3s ease;
       }
       #stcta{
         background-color:#56a9ff;
@@ -382,6 +363,9 @@
         background-color:rgba(0,0,0,0);
         transition:background-color 0.5s ease;
       }
+      #mdv0{
+        background-color:rgba(255,231,183,0.3);
+      }
     </style>
   </head>
   <body>	
@@ -397,8 +381,10 @@
         <div id="seten" class="sett"><p id="setenp" class="setp">回车发送</p><div id="ststa" class="setx" onclick="if(!sttta){ststb.style.left='17px';this.style.backgroundColor='#56a9ff';sttta=true;}else{ststb.style.left='2px';this.style.backgroundColor='rgba(0,0,0,0.1)';sttta=false;}"><div id="ststb" class="setxa"></div></div></div>
         <div id="setgid" class="sett"><p id="setgidp" class="setp" style="display:inline;">Gemma对话ID</p><p id="gaid" style="display:inline;" class="settext" onclick="let gaigem=window.prompt('修改Gemma的连续对话id');if(gaigem){aiida=gaigem;}"></p></div>
         <div id="setqid" class="sett"><p id="setqwdp" class="setp" style="display:inline;">Qwen对话ID</p><p id="qwid" style="display:inline;" class="settext" onclick="let gaiqwen=window.prompt('修改Qwen的连续对话id');if(gaiqwen){aiidb=gaiqwen;}"></p></div>
+        <div id="setcid" class="sett"><p id="setchdp" class="setp" style="display:inline;">ChatGPT对话ID</p><p id="chid" style="display:inline;" class="settext" onclick="let gaichat=window.prompt('修改ChatGPT的连续对话id');if(gaichat&&gaichat.length>=6){aiidc=gaichat;}"></p></div>
         <div id="setaread" class="sett"><p id="setareap" class="setp" style="display:inline;">天气查询地区</p><p id="ar" style="display:inline;" class="settext" onclick="temarea=window.prompt('修改查询天气的地区');">没有设置</p></div>
         <div id="setnews" class="sett" onclick="settw('newsa');"><p id="setnewsp" class="setp">消息</p></div>
+        <div id="setmd" class="sett" onclick="settw('mdDiv');"><p id="mdxz" class="setp">回答模型</p><p id="mdDisplay" style="display:inline;" class="settext">默认</p></div>
       </div>
       <div id="newsa" class="settwo">
         <button id="newsex" class="twoex" onclick="settw('newsa',1);"></button>
@@ -407,26 +393,28 @@
         <div id="setctshow" class="settt" onclick="const thisifa=window.confirm('是否跳转查看消息？\n提示：本页面的消息可能会被重置。');if(thisifa){localStorage.setItem('uplccnews',ctwz.join('NEXT://'));window.open('show.html');}"><p id="setctpa" class="setp">查看记录的消息</p></div>
         <div id="setctshow" class="settt" onclick="const thisifb=window.confirm('确定删除记录的消息？');if(thisifb){localStorage.removeItem('uplccnews');ctwzp='';ctwz=[];alert('成功删除记录的消息。');}"><p id="setctpb" class="setp">删除记录的消息</p></div>
       </div>
+      <div id="mdDiv" class="settwo">
+        <button id="mdex" class="twoex" onclick="settw('mdDiv',1);"></button>
+        <h3 style="margin-left:2%;margin-top:40px;">回答模型</h3>
+        <div class="settt" id="mdv0" onclick="deep=0;mdEx();"><p id="mdmr" class="setp">默认</p></div>
+        <div class="settt" id="mdv1" onclick="deep=1;mdEx();"><p id="mdDeepSeek" class="setp">DeepSeek</p></div>
+        <div class="settt" id="mdv6" onclick="deep=6;mdEx();"><p id="mdDeepSeekliu" class="setp">DeepSeek(流式输出)</p></div>
+        <div class="settt" id="mdv2" onclick="deep=2;mdEx();"><p id="mdGamma" class="setp">Gemma</p></div>
+        <div class="settt" id="mdv3" onclick="deep=3;mdEx();if(!aiida){aiida='u'+Math.round(Math.random()*9999999);}else{const ifaiid=window.confirm('是否开启新对话？(Gemma)');if(ifaiid){aiida='u'+Math.round(Math.random()*9999999);}}"><p id="mdGammalink" class="setp">Gemma(连续对话)</p></div>
+        <div class="settt" id="mdv4" onclick="deep=4;mdEx();"><p id="mdQwen" class="setp">Qwen</p></div>
+        <div class="settt" id="mdv7" onclick="deep=7;mdEx();if(!aiidb){aiidb='u'+Math.round(Math.random()*9999999);}else{const ifaiida=window.confirm('是否开启新对话？(Qwen)');if(ifaiida){aiidb='u'+Math.round(Math.random()*9999999);}}"><p id="mdQwenlink" class="setp">Qwen(连续对话)</p></div>
+        <div class="settt" id="mdv5" onclick="deep=5;mdEx();"><p id="mdGlm" class="setp">GLM-4-Flash</p></div>
+        <div class="settt" id="mdv8" onclick="deep=8;mdEx();"><p id="mdCog" class="setp">CogView(文生图模型)</p></div>
+        <div class="settt" id="mdv9" onclick="deep=9;mdEx();if(!aiidc){aiidc='u'+Math.round(Math.random()*9999999);}else{const ifaiidb=window.confirm('是否开启新对话？(ChatGPT)');if(ifaiidb){aiidc='u'+Math.round(Math.random()*9999999);}}"><p id="mdGptf" class="setp">ChatGPT-4(连续对话)</p></div>
+      </div>
     </div>
     <div id="setex" onclick="setting.style.animationName='bob';setting.style.animationDuration='0.3s';setTimeout(()=>{setting.style.display='none';this.style.display='none';},300);"></div>
     <div id="ExmdD" onclick="mdEx();"></div>
     <button id="bo" onclick="gx();bo.style.animationName='bob';bo.style.animationDuration='0.3s';setTimeout(()=>{bo.style.display='none';bo.style.opacity='0';},300);setTimeout(()=>{gxifa=false;},500);">回到底部</button>
     <div id="inp">
-      <textarea id="sr" placeholder="在这里输入问题..." onfocus="this.style.height='80px';this.style.bottom='40px';inp.style.height='120px';" onblur="this.style.height='80px';this.style.bottom='0px';inp.style.height='80px';"></textarea>
+      <textarea id="sr" placeholder="在这里输入问题..." onfocus="this.style.height='80px';this.style.bottom='40px';inp.style.height='120px';" onblur="this.style.height='80px';this.style.bottom='0px';inp.style.height='80px';" oninput="if(this.value.trim()!==''){ts.style.backgroundColor='rgba(0,0,0,1)';}else{ts.style.backgroundColor='rgba(0,0,0,0.5)';}"></textarea>
       <button id="set" onclick="setting.style.display='block';setting.style.animationName='bod';setting.style.animationDuration='0.3s';settingcz();setex.style.display='block';">设置</button>
-      <div id="mdDiv" onclick="if(!mdif){mdOp();}">
-        <p id="mdDeepSeek" onclick="event.stopPropagation();deep=1;mdEx();">DeepSeek</p>
-        <p id="mdDeepSeekliu" onclick="event.stopPropagation();deep=6;mdEx();">DeepSeek(流式输出)</p>
-        <p id="mdGamma" onclick="event.stopPropagation();deep=2;mdEx();">Gemma</p>
-        <p id="mdGammalink" onclick="event.stopPropagation();deep=3;mdEx();if(!aiida){aiida='u'+Math.round(Math.random()*9999999);}else{const ifaiid=window.confirm('是否开启新对话？(Gemma)');if(ifaiid){aiida='u'+Math.round(Math.random()*9999999);}}">Gemma(连续对话)</p>
-        <p id="mdQwen" onclick="event.stopPropagation();deep=4;mdEx();">Qwen</p>
-        <p id="mdQwenlink" onclick="event.stopPropagation();deep=7;mdEx();if(!aiidb){aiidb='u'+Math.round(Math.random()*9999999);}else{const ifaiida=window.confirm('是否开启新对话？(Qwen)');if(ifaiida){aiidb='u'+Math.round(Math.random()*9999999);}}">Qwen(连续对话)</p>
-        <p id="mdGlm" onclick="event.stopPropagation();deep=5;mdEx();">GLM-4-Flash</p>
-        <p id="mdCog" onclick="event.stopPropagation();deep=8;mdEx();">CogView</p>
-        <p id="mdmr" onclick="event.stopPropagation();deep=0;mdEx();">默认</p>
-        <p id="mdDisplay">默认</p>
-      </div>
-      <button id="ts" onclick="if(eisif){give();eis();}this.style.animationName='animate';this.style.animationDuration='0.3s';setTimeout(()=>{this.style.animation='none';},300);">发送</button>
+      <button id="ts" onclick="if(eisif){give();eis();}this.style.animationName='animate';this.style.animationDuration='0.3s';setTimeout(()=>{this.style.animation='none';},300);"></button>
     </div>
     <script src="news.js"></script>
     <script src="hum.js"></script>
@@ -445,7 +433,7 @@
       let maxl = 0;
       let past = 0;
       let deep=0;
-      let aiida,aiidb;
+      let aiida,aiidb,aiidc;
       let temarea="没有设置";
       let ifh=false;
       let mdif=false;
@@ -476,6 +464,7 @@ ind--;
           ele.style.top=setting.scrollTop+"px";
           ele.style.height=setting.offsetHeight+"px";
         });
+        inczz.style.top=setting.scrollTop+"px";
       }
       tb();
       window.addEventListener("resize", () => {
@@ -487,6 +476,7 @@ ind--;
       setInterval(()=>{
         document.getElementById("gaid").innerText=aiida;
         document.getElementById("qwid").innerText=aiidb;
+        document.getElementById("chid").innerText=aiidc;
         document.getElementById("ar").innerText=temarea;
         if(!temarea||(/[<>\/\s\.,\[\]\{\}%\*"'`´]/).test(temarea))temarea="没有设置";
         if((/[<>\/\s\.,\[\]\{\}%\*"'`´]/).test(aiida))aiida='u'+Math.round(Math.random()*9999999);
@@ -544,8 +534,7 @@ ind--;
         if(deep==6){
           bdeep();
           return;
-        }
-        if(deep!==0){
+        }else if(deep!==0){
           hddeep();
           return;
         }
@@ -736,9 +725,10 @@ aitip("内容请仔细辨别。");
       }
       var ifgxa=0;
       function addUserMessage(message) {
+        message=message.trim().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g,"<br>");
         const userMsgDiv = document.createElement('div');
         userMsgDiv.className = 'userx';
-        userMsgDiv.textContent = message;
+        userMsgDiv.innerHTML = message;
         userMsgDiv.style.animationName="boa";
         userMsgDiv.style.animationDuration="0.15s";
         setTimeout(()=>{userMsgDiv.style.opacity="1";},150);
@@ -856,7 +846,8 @@ aitip("内容请仔细辨别。");
 `https://api.fohok.xin/API/GLM_ai.php?msg=${e}`,
 null,
 `https://api.fohok.xin/API/qwen.php?msg=${e}&id=${aiidb}`,
-`https://api.fohok.xin/API/zpst.php?content=${e}&type=json`
+`https://api.fohok.xin/API/zpst.php?content=${e}&type=json`,
+`https://api.xiaoy.asia/api/v1/?name=ai_chat_chatgpt&chatid=${aiidc}&msg=${e}`
 ];
         const r = await fetch(api[deep-1]);
         const jsonData = await r.json();
@@ -890,6 +881,12 @@ null,
             hdliu(`<img src="${jsonData.data.image_url}" class="photos" onload="this.style.animation='none';this.style.animationName='bod';this.style.animationDuration='0.5s';" onclick="bigphoto.style.display='block';phoex.style.display='block';document.getElementById('bigphoto').src=this.src;bigphoto.style.animationName='bod';bigphoto.style.animationDuration='0.3s';phoex.style.animationName='bod';phoex.style.animationDuration='0.3s';"/>`,1);
             if(ctwzif)ctwz.push(`${jsonData.data.image_url}`);
             return;
+          }else{
+            return "Error";
+          }
+        }else if(deep==9){
+          if(jsonData.msg==="success"){
+            return jsonData.chatmsg;
           }else{
             return "Error";
           }
@@ -937,95 +934,58 @@ null,
         }
       }
       async function bdeep() {
-      const msg = sr.value.trim();
-      if(!msg)return;
-      hd("正在请求服务器数据，请稍等");
-      let reason="";
-      const sse = new EventSource(`https://api.fohok.xin/API/DeepSeek-R1.php?msg=${encodeURIComponent(msg)}&flow=1`);
-      var ifbde=false;
-      sse.addEventListener('message', (e) => {
-        if (e.data === '[DONE]') {
-          sse.close();
-          aitip("内容由AI生成，请仔细辨别。");
-          if(ctwzif)ctwz.push(`${hdliustr}`);
-          return;
+        const msg = sr.value.trim();
+        if(!msg)return;
+        hd("正在请求服务器数据，请稍等");
+        let reason="";
+        let sse;
+        if(deep==6){
+          sse=new EventSource(`https://api.fohok.xin/API/DeepSeek-R1.php?msg=${encodeURIComponent(msg)}&flow=1`);
         }
-        if(!ifbde){
-          hdliu("",0);
-          ifbde=true;
-        }
-        hdliu(reason
-              .replace(/```[\s\S]*?```/g,t=>{
-                return "CODE://"+t.replace(/```(\w+)?/gi,"```").slice(3,-3)+"//:CODE";
-              })
-              .replace(/(\n)/g,"BR://")
-              .replace(/\*\*(.*?)\*\*/g,`<h3 style="display:inline;">$1</h3>`)
-              .replace(/CODE:\/\/([\s\S]*?)\/\/:CODE/g, (_, c) => `<div class="codea"><pre>${c.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}</pre></div>`),1);
-          const chunk=JSON.parse(e.data);
-          const text=chunk.choices?.[0]?.delta?.content;
-          if(text){
-            reason+=text;
-            hdliu(reason
-              .replace(/```[\s\S]*?```/g,t=>{
-                return "CODE://"+t.replace(/```(\w+)?/gi,"```").slice(3,-3)+"//:CODE";
-              })
-              .replace(/(\n)/g,"BR://")
-              .replace(/\*\*(.*?)\*\*/g,`<h3 style="display:inline;">$1</h3>`)
-              .replace(/CODE:\/\/([\s\S]*?)\/\/:CODE/g, (_, c) => `<div class="codea"><pre>${c.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}</pre></div>`),1);
+        var ifbde=false;
+        sse.addEventListener('message',(e)=>{
+          if (e.data === '[DONE]') {
+            sse.close();
+            aitip("内容由AI生成，请仔细辨别。");
+            if(ctwzif)ctwz.push(`${hdliustr}`);
+            return;
           }
-      });
-      sse.addEventListener('error',()=>{
-        sse.close();
-        if(ctwzif&&hdliustr)ctwz.push(`${hdliustr}`);
-      });
-    }
-      function mdOp(){
-        setTimeout(()=>{
-        mdDeepSeek.style.display="block";
-        mdDeepSeekliu.style.display="block";
-        mdGamma.style.display="block";
-        mdmr.style.display="block";
-        mdGammalink.style.display="block";
-        mdQwen.style.display="block";
-        mdQwenlink.style.display="block";
-        mdGlm.style.display="block";
-        mdCog.style.display="block";
-        mdDisplay.style.display="none";
-        mdDiv.style.width="auto";
-        mdDiv.style.height="auto";
-        ExmdD.style.display="block";
-        },150);
-        mdDiv.style.animationName="boc";
-        mdDiv.style.animationDuration="0.3s";
-        setTimeout(()=>{
-          mdif=true;
-          mdDiv.style.animation="none";
-        },300);
+          if(!ifbde){
+            hdliu("",0);
+            ifbde=true;
+          }
+          hdliu(reason
+                .replace(/```[\s\S]*?```/g,t=>{
+                  return "CODE://"+t.replace(/```(\w+)?/gi,"```").slice(3,-3)+"//:CODE";
+                })
+                .replace(/(\n)/g,"BR://")
+                .replace(/\*\*(.*?)\*\*/g,`<h3 style="display:inline;">$1</h3>`)
+                .replace(/CODE:\/\/([\s\S]*?)\/\/:CODE/g, (_, c) => `<div class="codea"><pre>${c.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}</pre></div>`),1);
+            const chunk=JSON.parse(e.data);
+            const text=chunk.choices?.[0]?.delta?.content;
+            if(text){
+              reason+=text;
+              hdliu(reason
+                .replace(/```[\s\S]*?```/g,t=>{
+                  return "CODE://"+t.replace(/```(\w+)?/gi,"```").slice(3,-3)+"//:CODE";
+                })
+                .replace(/(\n)/g,"BR://")
+                .replace(/\*\*(.*?)\*\*/g,`<h3 style="display:inline;">$1</h3>`)
+                .replace(/CODE:\/\/([\s\S]*?)\/\/:CODE/g, (_, c) => `<div class="codea"><pre>${c.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}</pre></div>`),1);
+            }
+        });
+        sse.addEventListener('error',()=>{
+          sse.close();
+          if(ctwzif&&hdliustr)ctwz.push(`${hdliustr}`);
+        });
       }
       function mdEx(){
-        setTimeout(()=>{
-        const mdD=["默认","DeepSeek","Gemma","Gemma(连续对话)","Qwen","GLM-4-Flash","DeepSeek(流式输出)","Qwen(连续对话)","CogView"];
-        mdDeepSeek.style.display="none";
-        mdDeepSeekliu.style.display="none";
-        mdGamma.style.display="none";
-        mdmr.style.display="none";
-        mdGammalink.style.display="none";
-        mdQwen.style.display="none";
-        mdQwenlink.style.display="none";
-        mdGlm.style.display="none";
-        mdCog.style.display="none";
-        mdDisplay.style.display="block";
+        const mdD=["默认","DeepSeek","Gemma","Gemma(连续对话)","Qwen","GLM-4-Flash","DeepSeek(流式输出)","Qwen(连续对话)","CogView","ChatGPT-4"];
         mdDisplay.textContent=mdD[deep];
-        mdDiv.style.width="80px";
-        mdDiv.style.height="35px";
-        ExmdD.style.display="none";
-        },150);
-        mdDiv.style.animationName="boc";
-        mdDiv.style.animationDuration="0.3s";
-        setTimeout(()=>{
-          mdif=false;
-          mdDiv.style.animation="none";
-        },300);
+        for(var mdfor=0;mdfor<mdD.length;mdfor++){
+          document.getElementById(`mdv${mdfor}`).style.backgroundColor="rgba(0,0,0,0.02)";
+        }
+        document.getElementById("mdv"+deep).style.backgroundColor="rgba(255,231,183,0.3)";
       }
       function bigExit(){
         bigphoto.style.animationName="bob";
@@ -1040,15 +1000,17 @@ null,
       }
       let ifsetex=false;
       var setexid;
+      var ifdjtwo=true;
       function settw(str,num){
         if(!num){
-          if(!ifsetex){
+          if(!ifsetex&&ifdjtwo){
             document.getElementById(str).style.opacity="1";
             document.getElementById(str).style.left="0";
             document.getElementById(str).style.marginLeft="0";
             document.getElementById("includeDiv").style.left="-60px";
             document.getElementById("inczz").style.backgroundColor="rgba(0,0,0,0.3)";
             setting.style.overflowY="hidden";
+            ifdjtwo=false;
             setTimeout(()=>{
               ifsetex=true;
               setTimeout(()=>{setexid=str;},200);
@@ -1064,6 +1026,7 @@ null,
           document.getElementById("includeDiv").style.left="0";
           document.getElementById("inczz").style.backgroundColor="rgba(0,0,0,0)";
           setting.style.overflowY="auto";
+          ifdjtwo=true;
         }
       }
       function settingcz(){
@@ -1072,9 +1035,11 @@ null,
           ele.style.opacity="0";
           ele.style.marginLeft="0";
         });
+        setting.style.overflowY="auto";
         document.getElementById("includeDiv").style.left="0";
         document.getElementById("inczz").style.backgroundColor="rgba(0,0,0,0)";
         ifsetex=false;
+        ifdjtwo=true;
       }
       var staxzb,stayzb;
       var ifsetexhd=false;
