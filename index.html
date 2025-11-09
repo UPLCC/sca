@@ -754,12 +754,7 @@ aitip("内容请仔细辨别。");
           setTimeout(()=>{botMsgDiv.style.animation="none"},200);
         }
         xz.appendChild(botMsgDiv);
-        str=str
-            .replace(/CODE:\/\/([\s\S]*?)\/\/:CODE/g, (_, c) => `<div class="codea"><pre>${c.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}</pre></div>`)
-            .replace(/BR:\/\//g, '<br>').replace(/\*\*(.*?)\*\*/g,`<h3 style="display:inline;">$1</h3>`)
-            .replace(/`([\s\S]*?)`/g,(t)=>{
-              return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-            });
+        str=changeString(str);
         typeWriter(botMsgDiv, str, 0, 10);
         if(ctwzif)ctwz.push(`${str}`);
       }
@@ -903,13 +898,7 @@ null,
         if(!sr.value.trim())return;
         hd("正在请求服务器数据，请稍等");
         const result=await hddeepa(sr.value.trim());
-        hd(result
-        .replace(/```[\s\S]*?```/g,t=>{
-          return "CODE://"+t.replace(/```(\w+)?/gi,"```").slice(3,-3)+"//:CODE";
-        })
-        .replace(/(\n)/g,"BR://")
-        .replace(/\*\*(.*?)\*\*/g,`<h3 style="display:inline;">$1</h3>`)
-        .replace(/CODE:\/\/([\s\S]*?)\/\/:CODE/g, (_, c) => `<div class="codea"><pre>${c.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}</pre></div>`));
+        hd(result);
         aitip("内容由AI生成，请仔细辨别。");
       }
       let hdliuid;
@@ -928,7 +917,7 @@ null,
           hdliuid=botMsgDiv;
           xz.appendChild(botMsgDiv);
         }else{
-          str=str.replace(/CODE:\/\/([\s\S]*?)\/\/:CODE/g, (_, c) => `<div class="codea"><pre>${c.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}</pre></div>`).replace(/BR:\/\//g, '<br>').replace(/\*\*(.*?)\*\*/g,`<h3 style="display:inline;">$1</h3>`);
+          str=changeString(str);
           hdliuid.innerHTML=str;
           hdliustr=str;
         }
@@ -954,24 +943,12 @@ null,
             hdliu("",0);
             ifbde=true;
           }
-          hdliu(reason
-                .replace(/```[\s\S]*?```/g,t=>{
-                  return "CODE://"+t.replace(/```(\w+)?/gi,"```").slice(3,-3)+"//:CODE";
-                })
-                .replace(/(\n)/g,"BR://")
-                .replace(/\*\*(.*?)\*\*/g,`<h3 style="display:inline;">$1</h3>`)
-                .replace(/CODE:\/\/([\s\S]*?)\/\/:CODE/g, (_, c) => `<div class="codea"><pre>${c.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}</pre></div>`),1);
+          hdliu(reason,1);
             const chunk=JSON.parse(e.data);
             const text=chunk.choices?.[0]?.delta?.content;
             if(text){
               reason+=text;
-              hdliu(reason
-                .replace(/```[\s\S]*?```/g,t=>{
-                  return "CODE://"+t.replace(/```(\w+)?/gi,"```").slice(3,-3)+"//:CODE";
-                })
-                .replace(/(\n)/g,"BR://")
-                .replace(/\*\*(.*?)\*\*/g,`<h3 style="display:inline;">$1</h3>`)
-                .replace(/CODE:\/\/([\s\S]*?)\/\/:CODE/g, (_, c) => `<div class="codea"><pre>${c.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}</pre></div>`),1);
+              hdliu(reason,1);
             }
         });
         sse.addEventListener('error',()=>{
@@ -1071,6 +1048,38 @@ null,
         }
         ifsetexhd=false;
       });
+      function changeString(str){
+        str=str
+            .replace(/```[\s\S]*?```/g,t=>{
+              return "CODE://"+t.replace(/```(\w+)?/gi,"```").slice(3,-3)+"//:CODE";
+            })
+            .replace(/```(\w+)([\s\S]+)(?!```)$/gi,(t,l,c)=>{
+              return "CODE://"+c+"//:CODE";
+            })
+            .replace(/\n/g,"BR://")
+            .replace(/CODE:\/\/([\s\S]*?)\/\/:CODE/g,(_, c)=>{
+              return `<div class="codea"><pre>${c
+                .replace(/[&<>]/g,(m)=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))
+                .replace(/\*\*(.*?)\*\*/g,`TRING://$1//:TRING`)
+                .replace(/#/g,`JINGHAO://`)
+                .replace(/&/g,`AHAO://`)}</pre></div>`;
+            })
+            .replace(/BR:\/\//g, '<br>')
+            .replace(/\*\*(.*?)\*\*/g,`<span style="font-weight:900;">$1</span>`)
+            .replace(/`([\s\S]*?)`/g,(t)=>{
+              return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+            })
+            .replace(/######(.*?)(?:$|<br>|BR:\/\/)/gm,`<h3 style="font-size:17px;">$1</h3>`)
+            .replace(/#####(.*?)(?:$|<br>|BR:\/\/)/gm,`<h3 style="font-size:18px;">$1</h3>`)
+            .replace(/####(.*?)(?:$|<br>|BR:\/\/)/gm,`<h3 style="font-size:19px;">$1</h3>`)
+            .replace(/###(.*?)(?:$|<br>|BR:\/\/)/gm,`<h3 style="font-size:20px;">$1</h3>`)
+            .replace(/##(.*?)(?:$|<br>|BR:\/\/)/gm,`<h3 style="font-size:21px;">$1</h3>`)
+            .replace(/#(.*?)(?:$|<br>|BR:\/\/)/gm,`<h3 style="font-size:22px;">$1</h3>`)
+            .replace(/TRING:\/\/([\s\S]*?)\/\/:TRING/g,`**$1**`)
+            .replace(/JINGHAO:\/\//g,`#`)
+            .replace(/AHAO:\/\//g,`&`);
+        return str;
+      }
     </script>
   </body>
 </html>
