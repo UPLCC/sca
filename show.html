@@ -35,6 +35,11 @@
       overflow-x:auto;
       font-size:15px;
     }
+    .codeb{
+      display:inline-block;
+      background-color:rgba(0,0,0,0.05);
+      border-radius:5px;
+    }
   </style>
   <body>	
 	<p id="information"></p>
@@ -52,6 +57,9 @@
       for(let thisnews of news){
         num++;
         thisnews=thisnews
+          .replace(/&amp;/g,"&")
+          .replace(/&lt;/g,"<")
+          .replace(/&gt;/g,">")
           .replace(/&/,"&amp")
           .replace(/</,"&lt;")
           .replace(/>/,"&gt;");
