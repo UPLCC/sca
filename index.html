@@ -392,12 +392,36 @@
         background-color:rgba(0,0,0,0.05);
         border-radius:5px;
       }
+      #tipdiv{
+        position:fixed;
+        top:3%;
+        left:-50px;
+        opacity:0;
+        padding:8px;
+        min-width:50px;
+        max-width:60vw;
+        min-height:25px;
+        background-color:rgba(0,0,0,0.4);
+        backdrop-filter:blur(10px);
+        box-sizing:border-box;
+        border-radius:15px;
+        transition:all 0.3s ease;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        pointer-events:none;
+      }
+      #tiptext{
+        color:white;
+      }
     </style>
   </head>
   <body>	
     <div id="xz">
     <h3 id="hello">你好！欢迎使用配置查询器</h3>
     </div>
+    <div id="tipdiv"><p id="tiptext"></p></div>
     <img src="" id="bigphoto"/>
     <div id="phoex" onclick="bigExit();"></div>
     <div id="setting">
@@ -405,11 +429,10 @@
       <div id="includeDiv">
         <h3 style="margin-left:2%;">设置</h3>
         <div id="seten" class="sett"><p id="setenp" class="setp">回车发送</p><div id="ststa" class="setx" onclick="if(!sttta){ststb.style.left='17px';this.style.backgroundColor='#56a9ff';sttta=true;}else{ststb.style.left='2px';this.style.backgroundColor='rgba(0,0,0,0.1)';sttta=false;}"><div id="ststb" class="setxa"></div></div></div>
-        <div id="setgid" class="sett"><p id="setgidp" class="setp" style="display:inline;">Gemma对话ID</p><p id="gaid" style="display:inline;" class="settext" onclick="let gaigem=window.prompt('修改Gemma的连续对话id');if(gaigem){aiida=gaigem;}"></p></div>
-        <div id="setqid" class="sett"><p id="setqwdp" class="setp" style="display:inline;">Qwen对话ID</p><p id="qwid" style="display:inline;" class="settext" onclick="let gaiqwen=window.prompt('修改Qwen的连续对话id');if(gaiqwen){aiidb=gaiqwen;}"></p></div>
+        <div id="setgid" class="sett" style="display:none;"><p id="setgidp" class="setp" style="display:inline;">Gemma对话ID</p><p id="gaid" style="display:inline;" class="settext" onclick="let gaigem=window.prompt('修改Gemma的连续对话id');if(gaigem){aiida=gaigem;}"></p></div>
+        <div id="setqid" class="sett" style="display:none;"><p id="setqwdp" class="setp" style="display:inline;">Qwen对话ID</p><p id="qwid" style="display:inline;" class="settext" onclick="let gaiqwen=window.prompt('修改Qwen的连续对话id');if(gaiqwen){aiidb=gaiqwen;}"></p></div>
         <div id="setcid" class="sett"><p id="setchdp" class="setp" style="display:inline;">ChatGPT对话ID</p><p id="chid" style="display:inline;" class="settext" onclick="let gaichat=window.prompt('修改ChatGPT的连续对话id');if(gaichat&&gaichat.length>=6){aiidc=gaichat;}"></p></div>
         <div id="setxgqw" class="sett" onclick="settw('qwenset');"><p id="qwexga" class="setp">修改Qwen3参数</p></div>
-        <div id="setaread" class="sett"><p id="setareap" class="setp" style="display:inline;">天气查询地区</p><p id="ar" style="display:inline;" class="settext" onclick="temarea=window.prompt('修改查询天气的地区');">没有设置</p></div>
         <div id="setnews" class="sett" onclick="settw('newsa');"><p id="setnewsp" class="setp">消息</p></div>
         <div id="setmd" class="sett" onclick="settw('mdDiv');"><p id="mdxz" class="setp">回答模型</p><p id="mdDisplay" style="display:inline;" class="settext">默认</p></div>
         <div id="setsql" class="sett" onclick="settw('sqla');"><p id="setsqlp" class="setp">数据库检索</p></div>
@@ -419,23 +442,27 @@
         <h3 style="margin-left:2%;margin-top:40px;">消息</h3>
         <div id="setct" class="settt"><p id="setctp" class="setp">记录消息</p><div id="stcta" class="setx" onclick="if(!ctwzif){stctb.style.left='17px';this.style.backgroundColor='#56a9ff';ctwzif=true;}else{stctb.style.left='2px';this.style.backgroundColor='rgba(0,0,0,0.1)';ctwzif=false;}"><div id="stctb" class="setxa"></div></div></div>
         <div id="setctshow" class="settt" onclick="const thisifa=window.confirm('是否跳转查看消息？\n提示：本页面的消息可能会被重置。');if(thisifa){localStorage.setItem('uplccnews',ctwz.join('NEXT://'));window.open('show.html');}"><p id="setctpa" class="setp">查看记录的消息</p></div>
-        <div id="setctshow" class="settt" onclick="const thisifb=window.confirm('确定删除记录的消息？');if(thisifb){localStorage.removeItem('uplccnews');ctwzp='';ctwz=[];alert('成功删除记录的消息。');}"><p id="setctpb" class="setp">删除记录的消息</p></div>
+        <div id="setctshow" class="settt" onclick="const thisifb=window.confirm('确定删除记录的消息？');if(thisifb){localStorage.removeItem('uplccnews');ctwzp='';ctwz=[];tip('成功删除记录的消息。');}"><p id="setctpb" class="setp">删除记录的消息</p></div>
       </div>
       <div id="mdDiv" class="settwo">
         <button id="mdex" class="twoex" onclick="settw('mdDiv',1);"></button>
         <h3 style="margin-left:2%;margin-top:40px;">回答模型</h3>
         <input type="text" class="settt" id="scarmd" placeholder="搜索想要的模型" oninput="mdsca(this.value);"/>
         <div class="settt" id="mdv0" onclick="deep=0;mdEx();" data-md="默认"><p id="mdmr" class="setp">默认</p></div>
-        <div class="settt" id="mdv1" onclick="deep=1;mdEx();" data-md="DeepSeek"><p id="mdDeepSeek" class="setp">DeepSeek</p></div>
-        <div class="settt" id="mdv6" onclick="deep=6;mdEx();" data-md="DeepSeek(流式输出)"><p id="mdDeepSeekliu" class="setp">DeepSeek(流式输出)</p></div>
-        <div class="settt" id="mdv2" onclick="deep=2;mdEx();" data-md="Gemma"><p id="mdGamma" class="setp">Gemma</p></div>
-        <div class="settt" id="mdv3" onclick="deep=3;mdEx();if(!aiida){aiida='u'+Math.round(Math.random()*9999999);}else{const ifaiid=window.confirm('是否开启新对话？(Gemma)');if(ifaiid){aiida='u'+Math.round(Math.random()*9999999);}}" data-md="Gemma(连续对话)"><p id="mdGammalink" class="setp">Gemma(连续对话)</p></div>
-        <div class="settt" id="mdv4" onclick="deep=4;mdEx();" data-md="Qwen"><p id="mdQwen" class="setp">Qwen</p></div>
-        <div class="settt" id="mdv7" onclick="deep=7;mdEx();if(!aiidb){aiidb='u'+Math.round(Math.random()*9999999);}else{const ifaiida=window.confirm('是否开启新对话？(Qwen)');if(ifaiida){aiidb='u'+Math.round(Math.random()*9999999);}}" data-md="Qwen(连续对话)"><p id="mdQwenlink" class="setp">Qwen(连续对话)</p></div>
-        <div class="settt" id="mdv5" onclick="deep=5;mdEx();" data-md="GLM-4-Flash"><p id="mdGlm" class="setp">GLM-4-Flash</p></div>
-        <div class="settt" id="mdv8" onclick="deep=8;mdEx();" data-md="CogView(文生图模型)"><p id="mdCog" class="setp">CogView(文生图模型)</p></div>
+        <div class="settt" id="mdv1" onclick="deep=1;mdEx();" data-md="DeepSeek" data-stop="1"><p id="mdDeepSeek" class="setp">DeepSeek</p></div>
+        <div class="settt" id="mdv6" onclick="deep=6;mdEx();" data-md="DeepSeek(流式输出)" data-stop="1"><p id="mdDeepSeekliu" class="setp">DeepSeek(流式输出)</p></div>
+        <div class="settt" id="mdv2" onclick="deep=2;mdEx();" data-md="Gemma" data-stop="1"><p id="mdGamma" class="setp">Gemma</p></div>
+        <div class="settt" id="mdv3" onclick="deep=3;mdEx();if(!aiida){aiida='u'+Math.round(Math.random()*9999999);}else{const ifaiid=window.confirm('是否开启新对话？(Gemma)');if(ifaiid){aiida='u'+Math.round(Math.random()*9999999);}}" data-md="Gemma(连续对话)" data-stop="1"><p id="mdGammalink" class="setp">Gemma(连续对话)</p></div>
+        <div class="settt" id="mdv4" onclick="deep=4;mdEx();" data-md="Qwen" data-stop="1"><p id="mdQwen" class="setp">Qwen</p></div>
+        <div class="settt" id="mdv7" onclick="deep=7;mdEx();if(!aiidb){aiidb='u'+Math.round(Math.random()*9999999);}else{const ifaiida=window.confirm('是否开启新对话？(Qwen)');if(ifaiida){aiidb='u'+Math.round(Math.random()*9999999);}}" data-md="Qwen(连续对话)" data-stop="1"><p id="mdQwenlink" class="setp">Qwen(连续对话)</p></div>
+        <div class="settt" id="mdv5" onclick="deep=5;mdEx();" data-md="GLM-4-Flash" data-stop="1"><p id="mdGlm" class="setp">GLM-4-Flash</p></div>
+        <div class="settt" id="mdv8" onclick="deep=8;mdEx();" data-md="CogView(文生图模型)" data-stop="1"><p id="mdCog" class="setp">CogView(文生图模型)</p></div>
         <div class="settt" id="mdv9" onclick="deep=9;mdEx();if(!aiidc){aiidc='u'+Math.round(Math.random()*9999999);}else{const ifaiidb=window.confirm('是否开启新对话？(ChatGPT)');if(ifaiidb){aiidc='u'+Math.round(Math.random()*9999999);}}" data-md="ChatGPT-4(连续对话)"><p id="mdGptf" class="setp">ChatGPT-4(连续对话)</p></div>
         <div class="settt" id="mdv10" onclick="deep=10;mdEx();if(!aiidd){aiidd='u'+Math.round(Math.random()*9999999999);}else{const ifaiidc=window.confirm('是否开启新对话？(Qwen3)');if(ifaiidc){aiidd='u'+Math.round(Math.random()*9999999999);}}" data-md="Qwen3(自主编辑参数)"><p id="mdQwef" class="setp">Qwen3(自主编辑参数)</p></div>
+        <div class="settt" id="mdv11" onclick="deep=11;mdEx();" data-md="MiniMax-M2(流式输出)"><p id="mdMini" class="setp">MiniMax-M2(流式输出)</p></div>
+        <div class="settt" id="mdv12" onclick="deep=12;mdEx();" data-md="DeepSeek-R1(流式输出)"><p id="mdDeep" class="setp">DeepSeek-R1(流式输出)</p></div>
+        <div class="settt" id="mdv13" onclick="deep=13;mdEx();" data-md="Kimi-K2"><p id="mdKimi" class="setp">Kimi-K2</p></div>
+        <div class="settt" id="mdv14" onclick="deep=14;mdEx();" data-md="豆包Seed(流式输出)"><p id="mdSeed" class="setp">豆包Seed(流式输出)</p></div>
       </div>
       <div id="sqla" class="settwo">
         <button id="mdex" class="twoex" onclick="settw('sqla',1);"></button>
@@ -478,7 +505,6 @@
       let past = 0;
       let deep=0;
       let aiida,aiidb,aiidc,aiidd;
-      let temarea="没有设置";
       let ifh=false;
       let mdif=false;
       let ctwzif=true;
@@ -489,14 +515,14 @@
       }
       var sttta=false;
       var mapa=new Map([
-["SD 8 Elite Gen 5",0],["MTK 9500",0],["APPLE A19 Pro",0],["APPLE A19 Pro UC",0],["APPLE A19",0],["SD 8 Elite",0],["XRING O1",0],["APPLE A18 Pro",0],["MTK 9400+",0],["MTK 9400",0],["APPLE A18",0],["APPLE A17 Pro",0],["APPLE A18 UC",0],["SD 8 Gen 3",0],
-["MTK 9300+",0],["MTK 9400e",0],["MTK 9300",0],["Kirin 9020",0],["SD 8 Gen 2",0],["APPLE A16",0],["MTK 9200+",0],["MTK 9200",0],["Kirin 9010S",0],["SD 888+",0],["SD 888",0],["SD 870",0]
-]);
-let ind=mapa.size;
-for(var key of mapa.keys()){
-mapa.set(key,ind);
-ind--;
-}
+        ["SD 8 Elite Gen 5",0],["MTK 9500",0],["APPLE A19 Pro",0],["APPLE A19 Pro UC",0],["APPLE A19",0],["SD 8 Elite",0],["XRING O1",0],["APPLE A18 Pro",0],["MTK 9400+",0],["MTK 9400",0],["APPLE A18",0],["APPLE A17 Pro",0],["APPLE A18 UC",0],["SD 8 Gen 3",0],
+        ["MTK 9300+",0],["MTK 9400e",0],["MTK 9300",0],["Kirin 9020",0],["SD 8 Gen 2",0],["APPLE A16",0],["MTK 9200+",0],["MTK 9200",0],["Kirin 9010S",0],["SD 888+",0],["SD 888",0],["SD 870",0]
+      ]);
+      let ind=mapa.size;
+      for(var key of mapa.keys()){
+        mapa.set(key,ind);
+        ind--;
+      }
       function tb(){
         requestAnimationFrame(tb);
         xz.style.height = window.innerHeight - (window.innerHeight - inp.offsetTop) + "px";
@@ -520,8 +546,6 @@ ind--;
         document.getElementById("qwid").innerText=aiidb;
         document.getElementById("chid").innerText=aiidc;
         document.getElementById("qweid").innerText=aiidd;
-        document.getElementById("ar").innerText=temarea;
-        if(!temarea||(/[<>\/\s\.,\[\]\{\}%\*"'`´]/).test(temarea))temarea="没有设置";
         if((/[<>\/\s\.,\[\]\{\}%\*"'`´]/).test(aiida))aiida='u'+Math.round(Math.random()*9999999);
         if((/[<>\/\s\.,\[\]\{\}%\*"'`´]/).test(aiidb))aiidb='u'+Math.round(Math.random()*9999999);
       },1500);
@@ -538,6 +562,11 @@ ind--;
           bo.style.animationName="bob";
           bo.style.animationDuration="0.3s";
           setTimeout(()=>{bo.style.display="none";bo.style.opacity="0";},300);
+        }
+        if(deep==0&&!sr.value.trim()){
+          document.getElementById("sr").placeholder="在这里输入问题...";
+        }else if(deep!==0&&!sr.value.trim()){
+          document.getElementById("sr").placeholder="言行请务必遵守法律法规";
         }
       },500);
       document.getElementById("sr").addEventListener("keydown",(e)=>{
@@ -574,11 +603,17 @@ ind--;
           hd(`${a[ra].split(";")[0]}${mb[rb]}${a[ra].split(";")[rb+1]}。`);
           return;
         }
-        if(deep==6){
-          bdeep();
-          return;
-        }else if(deep!==0){
-          hddeep();
+        if(eisautoif&&deep!==0){
+          if(deep==6||deep==11||deep==12||deep==14){
+            bdeep();
+            eisAll(1500);
+            return;
+          }else{
+            hddeep();
+            eisAll(1500);
+            return;
+          }
+        }else if(!eisautoif&&deep!==0){
           return;
         }
         for(var r = 0; r < a.length; r++) {
@@ -606,10 +641,6 @@ ind--;
           hd("你好！");
           return;
         }
-        if(!sj&&p("作者",t)||p("开发者",t)){
-          hd("这个工具的开发者是UPLCC，回答结果仅供参考。");
-          return;
-        }
         if(!sj&&p("全部数据",t)){
           var codeaaa="";
           for(var sjaaa=0;sjaaa<a.length;sjaaa++){
@@ -631,29 +662,34 @@ ${codeaaa}];//:CODE`);
           return;
         }
         if(!sj&&(p("天气",t)||p("温度",t)||p("气温",t))){
-          let tem;
-          if(temarea=="没有设置"||!temarea){
-            tem=window.prompt("请输入城市");
-            if(!tem)return;
-            temarea=tem;
-          }else{
-            tem=temarea;
-          }
-          if(p("现在",t)||p("当前",t)){
-            fetch(`https://api.fohok.xin/API/hftq.php?city=${tem.trim().replace(/\s,.<>\/\"\'&/,"")}`)
+          if(p("现在",t)||p("当前",t)||p("now",t)){
+            fetch(`https://api.xiaoy.asia/api/v1/?name=weather&mod=1`)
               .then(data => data.json())
               .then(t => {
-                hd(`**${t.city}**当前天气**${t.data.text}**，当前温度**${t.data.temp}摄氏度**，当前体感温度**${t.data.feelsLike}摄氏度**。BR://更新时间：${t.updateTime}`);
+                hd(`**${t.location.city}(纬度：${t.location.lat},经度：${t.location.lon})**当前天气**${t.data.condition}**，当前温度**${t.data.temperature}摄氏度**，当前体感温度**${t.data.feels_like}摄氏度**。BR://更新时间：${t.update_time}`);
               })
               .catch(err => alert('请求失败：' + err));
           }else{
-            fetch(`https://api.fohok.xin/API/hftq.php?city=${tem.trim().replace(/\s,.<>\/\"\'&/,"")}&type=T`)
+            fetch(`https://api.xiaoy.asia/api/v1/?name=weather&mod=4`)
               .then(data => data.json())
               .then(t => {
-                hd(`**${t.city}**今日(${t.data[0].fxDate})天气**${t.data[0].textDay}**，晚上**${t.data[0].textNight}**，明日(${t.data[1].fxDate})天气**${t.data[1].textDay}**，晚上**${t.data[1].textNight}**，今日温度**${t.data[0].tempMin}摄氏度至${t.data[0].tempMax}摄氏度**，明日温度**${t.data[1].tempMin}摄氏度至${t.data[1].tempMax}摄氏度**。BR://更新时间：${t.updateTime}`);
+                let tempresult=[];
+                for(var temper=0;temper<t.data.forecast.length;temper++){
+                  tempresult.push(`**${t.data.forecast[temper].date}**天气**${t.data.forecast[temper].condition}**，**${t.data.forecast[temper].temperature_low}至${t.data.forecast[temper].temperature_high}**`);
+                }
+                hd(`<h3>城市：${t.location.city}BR://(纬度：${t.location.lat},经度：${t.location.lon})</h3>BR://${tempresult.join("BR://")}BR://更新时间：${t.update_time}`);
               })
               .catch(err => alert('请求失败：' + err));
           }
+          return;
+        }
+        if((p("获",t)||p("代码",t)||(/code/i).test(t)||p("拿",t)||p("取",t))&&(p("http://",t)||p("https://",t))){
+          const urlMatch=t.match(/https?:\/\/([a-zA-Z0-9\%\,\.\&\$\:\=\-\_\/\#\?\!\|\"\'\`\~]+)/g);
+          const url=urlMatch?urlMatch[0].trim():"https://www.baidu.com";
+          hdliu("",0);
+          const msg="正在获取**"+url+"**的网页源代码BR://BR://**正在调用工具 `fetch`**";
+          hdliu(msg,1);
+          getcode(url).then(result=>hdliu(msg+"** 调用完成**BR://BR://网页标题："+result.title+"BR://网页源码：```html "+result.code+"```",1));
           return;
         }
         if (!sj) {
@@ -870,7 +906,16 @@ aitip("内容请仔细辨别。");
       function eis(){
         if(eisif){
           eisif=false;
-          setTimeout(()=>{eisif=true;},500);
+          setTimeout(()=>{eisif=true;},1000);
+        }else{
+          return;
+        }
+      }
+      let eisautoif=true;
+      function eisAll(t){
+        if(eisautoif){
+          eisautoif=false;
+          setTimeout(()=>{eisautoif=true;},t);
         }else{
           return;
         }
@@ -886,7 +931,10 @@ null,
 `https://api.fohok.xin/API/qwen.php?msg=${e}&id=${aiidb}`,
 `https://api.fohok.xin/API/zpst.php?content=${e}&type=json`,
 `https://api.xiaoy.asia/api/v1/?name=ai_chat_chatgpt&chatid=${aiidc}&msg=${e}`,
-`https://api.xiaoy.asia/api/v1/?name=ai_chat_qwen&chatid=${aiidd}&msg=${e}&lw=${qwenlw}&sk=${qwensk}`
+`https://api.xiaoy.asia/api/v1/?name=ai_chat_qwen&chatid=${aiidd}&msg=${e}&lw=${qwenlw}&sk=${qwensk}`,
+null,
+null,
+`https://api.jkyai.top/API/kimik2.php?question=${e}&type=json`
 ];
         const r = await fetch(api[deep-1]);
         const jsonData = await r.json();
@@ -938,6 +986,12 @@ null,
           }else{
             return "Error";
           }
+        }else if(deep==13){
+          if(jsonData.content){
+            return jsonData.content;
+          }else{
+            return "Error";
+          }
         }else{
           return "Error";
         }
@@ -956,6 +1010,7 @@ null,
       }
       let hdliuid;
       let hdliustr;
+      let hdliutimes=0;
       function hdliu(str,num){
         if(!num){
           const botMsgDiv = document.createElement('div');
@@ -968,6 +1023,7 @@ null,
             setTimeout(()=>{botMsgDiv.style.animation="none"},200);
           }
           hdliuid=botMsgDiv;
+          hdliutimes=0;
           xz.appendChild(botMsgDiv);
         }else{
           str=changeString(str);
@@ -976,13 +1032,20 @@ null,
         }
       }
       async function bdeep() {
-        const msg = sr.value.trim();
+        let msg = sr.value.trim();
         if(!msg)return;
         hd("正在请求服务器数据，请稍等");
         let reason="";
         let sse;
+        msg=encodeURIComponent(msg);
         if(deep==6){
-          sse=new EventSource(`https://api.fohok.xin/API/DeepSeek-R1.php?msg=${encodeURIComponent(msg)}&flow=1`);
+          sse=new EventSource(`https://api.fohok.xin/API/DeepSeek-R1.php?msg=${msg}&flow=1`);
+        }else if(deep==11){
+          sse=new EventSource(`https://api.jkyai.top/API/minimax2.php?question=${msg}&type=true`);
+        }else if(deep==12){
+          sse=new EventSource(`https://api.jkyai.top/API/deepseek.php?question=${msg}&type=true`);
+        }else if(deep==14){
+          sse=new EventSource(`https://api.jkyai.top/API/doubao.php?question=${msg}&type=true`);
         }
         var ifbde=false;
         sse.addEventListener('message',(e)=>{
@@ -996,7 +1059,6 @@ null,
             hdliu("",0);
             ifbde=true;
           }
-          hdliu(reason,1);
             const chunk=JSON.parse(e.data);
             const text=chunk.choices?.[0]?.delta?.content;
             if(text){
@@ -1009,7 +1071,13 @@ null,
           if(ctwzif&&hdliustr)ctwz.push(`${hdliustr}`);
         });
       }
-      const mdD=["默认","DeepSeek","Gemma","Gemma(连续对话)","Qwen","GLM-4-Flash","DeepSeek(流式输出)","Qwen(连续对话)","CogView","ChatGPT-4","Qwen3"];
+      const mdD=[
+        "默认","DeepSeek","Gemma","Gemma(连续对话)","Qwen","GLM-4-Flash","DeepSeek(流式输出)","Qwen(连续对话)","CogView",
+        "ChatGPT-4","Qwen3","MiniMax-M2","DeepSeek-R1","Kimi-K2","Seed"
+      ];
+      for(var mdstop=0;mdstop<mdD.length;mdstop++){
+        if(document.getElementById("mdv"+mdstop).dataset.stop==1)document.getElementById("mdv"+mdstop).style.display="none";
+      }
       function mdEx(){
         mdDisplay.textContent=mdD[deep];
         for(var mdfor=0;mdfor<mdD.length;mdfor++){
@@ -1104,10 +1172,10 @@ null,
       function changeString(str){
         str=str
             .replace(/```[\s\S]*?```/g,t=>{
-              return "CODE://"+t.replace(/```(\w+)?/gi,"```").slice(3,-3)+"//:CODE";
+              return "CODE://"+t.replace(/```(\w+)?/gi,"```").slice(3,-3).replace(/CODE:\/\//g,"CODEQ://").replace(/\/\/:CODE/g,"CODEH://").replace(/`/g,`YINHAO://`)+"//:CODE";
             })
             .replace(/```(\w+)([\s\S]+)(?!```)$/gi,(t,l,c)=>{
-              return "CODE://"+c+"//:CODE";
+              return "CODE://"+c.replace(/CODE:\/\//g,"CODEQ://").replace(/\/\/:CODE/g,"CODEH://").replace(/`/g,`YINHAO://`)+"//:CODE";
             })
             .replace(/\n/g,"BR://")
             .replace(/CODE:\/\/([\s\S]*?)\/\/:CODE/g,(_, c)=>{
@@ -1115,11 +1183,13 @@ null,
                 .replace(/[&<>]/g,(m)=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))
                 .replace(/\*\*(.*?)\*\*/g,`TRING://$1//:TRING`)
                 .replace(/#/g,`JINGHAO://`)
-                .replace(/&/g,`AHAO://`)}</pre></div>`;
+                .replace(/&/g,`AHAO://`)
+                .replace(/`/g,`YINHAO://`)
+                .replace(/\*/g,`XINGHAO://`)}</pre></div>`;
             })
             .replace(/BR:\/\//g, '<br>')
             .replace(/\*\*(.*?)\*\*/g,`<span style="font-weight:900;">$1</span>`)
-            .replace(/`(.*?)`/g,(t)=>{
+            .replace(/`(.+?)`/g,(t)=>{
               return `<div class="codeb">`+t.slice(1,-1).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")+`</div>`;
             })
             .replace(/######(.*?)(?:$|<br>|BR:\/\/)/gm,`<h3 style="font-size:17px;">$1</h3>`)
@@ -1130,13 +1200,17 @@ null,
             .replace(/#(.*?)(?:$|<br>|BR:\/\/)/gm,`<h3 style="font-size:22px;">$1</h3>`)
             .replace(/TRING:\/\/([\s\S]*?)\/\/:TRING/g,`**$1**`)
             .replace(/JINGHAO:\/\//g,`#`)
-            .replace(/AHAO:\/\//g,`&`);
+            .replace(/AHAO:\/\//g,`&`)
+            .replace(/YINHAO:\/\//g,"`")
+            .replace(/XINGHAO:\/\//g,"*")
+            .replace(/CODEQ:\/\//g,"CODE://")
+            .replace(/CODEH:\/\//g,"//:CODE");
         return str;
       }
       function mdsca(md){
         if(!md.trim()){
           for(var mdfo=0;mdfo<mdD.length;mdfo++){
-            document.getElementById(`mdv${mdfo}`).style.display="block";
+            if(!document.getElementById(`mdv${mdfo}`).dataset.stop)document.getElementById(`mdv${mdfo}`).style.display="block";
           }
           return;
         }
@@ -1147,7 +1221,7 @@ null,
         }
         for(var i=0;i<allsour.length;i++){
           if(allsour[i].toLowerCase().includes(md.trim().toLowerCase())){
-            document.getElementById(`mdv${i}`).style.display="block";
+            if(!document.getElementById(`mdv${i}`).dataset.stop)document.getElementById(`mdv${i}`).style.display="block";
           }
         }
       }
@@ -1177,6 +1251,44 @@ null,
           }
         }
         document.getElementById("sqlap").innerHTML=`共检索到${fh.split('<div class="setttauto">').length-1}条信息${fh}`;
+      }
+      let willtip=[];
+      let tipif=true;
+      function tip(str){
+        if(!str.trim())return;
+        const tipdiv=document.getElementById("tipdiv");
+        const tiptext=document.getElementById("tiptext");
+        if(tipif){
+          tipif=false;
+          tipdiv.style.opacity="1";
+          tipdiv.style.left="5%";
+          tiptext.textContent=str;
+          setTimeout(()=>{
+            tipdiv.style.opacity="0";
+            tipdiv.style.left="-50px";
+            setTimeout(()=>{
+              tiptext.textContent="";
+              tipif=true;
+            },500);
+          },3000);
+        }else{
+          willtip.push(str);
+        }
+      }
+      function nowtip(){
+        requestAnimationFrame(nowtip);
+        if(willtip.length&&tipif){
+          tip(willtip[0]);
+          willtip.splice(0,1);
+        }
+      }
+      nowtip();
+      async function getcode(url){
+        if((!url.includes("http://")&&!url.includes("https://"))||!url.trim())return;
+        const result=await fetch(url).then(t=>t.text()).then(data=>data.replace(/`/g,"YINHAO://"));
+        const titleMatch=result.match(/<title>([^<]+)<\/title>/i);
+        const titleResult=titleMatch?titleMatch[1]:"没有获取到标题";
+        return {"title":titleResult,"code":result};
       }
     </script>
   </body>
