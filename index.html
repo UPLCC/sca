@@ -436,6 +436,7 @@
         <div id="setnews" class="sett" onclick="settw('newsa');"><p id="setnewsp" class="setp">消息</p></div>
         <div id="setmd" class="sett" onclick="settw('mdDiv');"><p id="mdxz" class="setp">回答模型</p><p id="mdDisplay" style="display:inline;" class="settext">默认</p></div>
         <div id="setsql" class="sett" onclick="settw('sqla');"><p id="setsqlp" class="setp">数据库检索</p></div>
+        <div id="setto" class="sett" onclick="settw('toa');"><p id="settop" class="setp">公式转译</p></div>
       </div>
       <div id="newsa" class="settwo">
         <button id="newsex" class="twoex" onclick="settw('newsa',1);"></button>
@@ -463,6 +464,9 @@
         <div class="settt" id="mdv12" onclick="deep=12;mdEx();" data-md="DeepSeek-R1(流式输出)"><p id="mdDeep" class="setp">DeepSeek-R1(流式输出)</p></div>
         <div class="settt" id="mdv13" onclick="deep=13;mdEx();" data-md="Kimi-K2"><p id="mdKimi" class="setp">Kimi-K2</p></div>
         <div class="settt" id="mdv14" onclick="deep=14;mdEx();" data-md="豆包Seed(流式输出)"><p id="mdSeed" class="setp">豆包Seed(流式输出)</p></div>
+        <div class="settt" id="mdv15" onclick="deep=15;mdEx();" data-md="Grok4"><p id="mdGrok" class="setp">Grok4</p></div>
+        <div class="settt" id="mdv16" onclick="deep=16;mdEx();" data-md="Gemini-2.5"><p id="mdGemini" class="setp">Gemini-2.5</p></div>
+        <div class="settt" id="mdv17" onclick="deep=17;mdEx();" data-md="FLUX.1"><p id="mdFLUX" class="setp">FLUX.1</p></div>
       </div>
       <div id="sqla" class="settwo">
         <button id="mdex" class="twoex" onclick="settw('sqla',1);"></button>
@@ -476,6 +480,13 @@
         <div id="setqwid" class="sett"><p id="setqwedp" class="setp" style="display:inline;">Qwen3对话ID</p><p id="qweid" style="display:inline;" class="settext" onclick="let gaiqw=window.prompt('修改Qwen3的连续对话id');if(gaiqw&&gaiqw.length>=10){aiidd=gaiqw;}"></p></div>
         <div id="setqwn" class="sett"><p id="setqwnp" class="setp">联网</p><div id="stqwa" class="setx" onclick="if(qwenlw!=='on'){stqw.style.left='17px';this.style.backgroundColor='#56a9ff';qwenlw='on';}else{stqw.style.left='2px';this.style.backgroundColor='rgba(0,0,0,0.1)';qwenlw='off';}"><div id="stqw" class="setxa"></div></div></div>
         <div id="setqwnn" class="sett"><p id="setqwnnp" class="setp">联网搜索</p><div id="stqwan" class="setx" onclick="if(qwensk!=='on'){stqwb.style.left='17px';this.style.backgroundColor='#56a9ff';qwensk='on';}else{stqwb.style.left='2px';this.style.backgroundColor='rgba(0,0,0,0.1)';qwensk='off';}"><div id="stqwb" class="setxa"></div></div></div>
+      </div>
+      <div id="toa" class="settwo" style="overflow-x:auto;">
+        <button id="toex" class="twoex" onclick="settw('toa',1);"></button>
+        <h3 style="margin-left:2%;margin-top:40px;">公式转译</h3>
+        <input type="text" class="settt" id="scarto" placeholder="\ce{化学表达式}" style="width:70%;padding:4px;box-sizing:border-box;border:1px solid rgba(0,0,0,0.1);"/>
+        <button onclick="markdownto(scarto.value.trim());" class="settt" style="width:22%;margin-left:-1%;border:1px solid rgba(0,0,0,0.1);">转译</button>
+        <p id="markdowntoresult" style="margin:2%;"></p>
       </div>
     </div>
     <div id="setex" onclick="setting.style.animationName='bob';setting.style.animationDuration='0.3s';setTimeout(()=>{setting.style.display='none';this.style.display='none';},300);"></div>
@@ -516,7 +527,7 @@
       var sttta=false;
       var mapa=new Map([
         ["SD 8 Elite Gen 5",0],["MTK 9500",0],["APPLE A19 Pro",0],["APPLE A19 Pro UC",0],["APPLE A19",0],["SD 8 Elite",0],["XRING O1",0],["APPLE A18 Pro",0],["MTK 9400+",0],["MTK 9400",0],["APPLE A18",0],["APPLE A17 Pro",0],["APPLE A18 UC",0],["SD 8 Gen 3",0],
-        ["MTK 9300+",0],["MTK 9400e",0],["MTK 9300",0],["Kirin 9020",0],["SD 8 Gen 2",0],["APPLE A16",0],["MTK 9200+",0],["MTK 9200",0],["Kirin 9010S",0],["SD 888+",0],["SD 888",0],["SD 870",0]
+        ["MTK 9300+",0],["MTK 9400e",0],["MTK 9300",0],["Kirin 9030 Pro",0],["SD 8 Gen 2",0],["Kirin 9030",0],["APPLE A16",0],["Kirin 9020",0],["MTK 9200+",0],["MTK 9200",0],["Kirin 9010S",0],["SD 888+",0],["SD 888",0],["SD 870",0]
       ]);
       let ind=mapa.size;
       for(var key of mapa.keys()){
@@ -822,7 +833,8 @@ aitip("内容请仔细辨别。");
         if(ctwzif)ctwz.push(`USER://${message}`);
         if(xz.scrollHeight - xz.scrollTop - xz.clientHeight < gxpx&&xz.scrollHeight > ifgxa){gx();ifgxa=xz.scrollHeight}
       }
-      function hd(str) {
+      function hd(str){
+        if(!str.trim())return;
         const botMsgDiv = document.createElement('div');
         botMsgDiv.className = 'fs';
         botMsgDiv.onclick = function (){
@@ -839,7 +851,8 @@ aitip("内容请仔细辨别。");
       }
       function typeWriter(element, text, index, speed) {
         if (index < text.length) {
-          element.innerHTML = text.substring(0, index);
+          element.innerHTML = text.substring(0,
+index);
           setTimeout(() => typeWriter(element, text, index + 1, speed), speed);
         } else {
           element.innerHTML = text;
@@ -934,7 +947,11 @@ null,
 `https://api.xiaoy.asia/api/v1/?name=ai_chat_qwen&chatid=${aiidd}&msg=${e}&lw=${qwenlw}&sk=${qwensk}`,
 null,
 null,
-`https://api.jkyai.top/API/kimik2.php?question=${e}&type=json`
+`https://api.jkyai.top/API/kimik2.php?question=${e}&type=json`,
+null,
+`https://api.jkyai.top/API/grok4-model/index.php?question=${e}&type=json`,
+`https://api.jkyai.top/API/gemini2.5/index.php?question=${e}&type=json`,
+`https://api.jkyai.top/API/flux.1?prompt=${e}&type=json`
 ];
         const r = await fetch(api[deep-1]);
         const jsonData = await r.json();
@@ -989,6 +1006,26 @@ null,
         }else if(deep==13){
           if(jsonData.content){
             return jsonData.content;
+          }else{
+            return "Error";
+          }
+        }else if(deep==15){
+          if(jsonData.success!=="erro"){
+            return jsonData.content;
+          }else{
+            return "Error";
+          }
+        }else if(deep==16){
+          if(jsonData.success!=="erro"){
+            return jsonData.content;
+          }else{
+            return "Error";
+          }
+        }else if(deep==17){
+          if(!jsonData.error){
+            hdliu("",0);
+            hdliu(`<img src="${jsonData.data.url}" class="photos" onload="this.style.animation='none';this.style.animationName='bod';this.style.animationDuration='0.5s';" onclick="bigphoto.style.display='block';phoex.style.display='block';document.getElementById('bigphoto').src=this.src;bigphoto.style.animationName='bod';bigphoto.style.animationDuration='0.3s';phoex.style.animationName='bod';phoex.style.animationDuration='0.3s';"/>`,1);
+            if(ctwzif)ctwz.push(`${jsonData.data.url}`);
           }else{
             return "Error";
           }
@@ -1073,7 +1110,7 @@ null,
       }
       const mdD=[
         "默认","DeepSeek","Gemma","Gemma(连续对话)","Qwen","GLM-4-Flash","DeepSeek(流式输出)","Qwen(连续对话)","CogView",
-        "ChatGPT-4","Qwen3","MiniMax-M2","DeepSeek-R1","Kimi-K2","Seed"
+        "ChatGPT-4","Qwen3","MiniMax-M2","DeepSeek-R1","Kimi-K2","Seed","Grok4","Gemini-2.5","FLUX.1"
       ];
       for(var mdstop=0;mdstop<mdD.length;mdstop++){
         if(document.getElementById("mdv"+mdstop).dataset.stop==1)document.getElementById("mdv"+mdstop).style.display="none";
@@ -1289,6 +1326,11 @@ null,
         const titleMatch=result.match(/<title>([^<]+)<\/title>/i);
         const titleResult=titleMatch?titleMatch[1]:"没有获取到标题";
         return {"title":titleResult,"code":result};
+      }
+      function markdownto(str){
+        if(!str)return;
+        const url='https://latex.codecogs.com/svg.latex?'+encodeURIComponent(str);
+        document.getElementById("markdowntoresult").innerHTML=`<img src="${url}"/>`;
       }
     </script>
   </body>
