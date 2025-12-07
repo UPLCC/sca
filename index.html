@@ -364,9 +364,6 @@
         background-color:rgba(0,0,0,0);
         transition:background-color 0.5s ease;
       }
-      #mdv0{
-        background-color:rgba(255,231,183,0.3);
-      }
       #scarmd,#scarsql{
         border:1px solid gray;
         background-color:white;
@@ -415,6 +412,25 @@
       #tiptext{
         color:white;
       }
+      .choosepng{
+        position:absolute;
+        right:8px;
+        top:50%;
+        transform:translate(0%,-50%);
+        width:30px;
+        height:30px;
+        opacity:0;
+        transition:opacity 0.1s ease;
+      }
+      .modeltip{
+        display:inline-block;
+        padding:2px;
+        background-color:rgba(0,0,0,0.05);
+        color:rgba(0,0,0,0.7);
+        box-sizing:border-box;
+        border-radius:10px;
+        font-size:15px;
+      }
     </style>
   </head>
   <body>	
@@ -431,8 +447,8 @@
         <div id="seten" class="sett"><p id="setenp" class="setp">回车发送</p><div id="ststa" class="setx" onclick="if(!sttta){ststb.style.left='17px';this.style.backgroundColor='#56a9ff';sttta=true;}else{ststb.style.left='2px';this.style.backgroundColor='rgba(0,0,0,0.1)';sttta=false;}"><div id="ststb" class="setxa"></div></div></div>
         <div id="setgid" class="sett" style="display:none;"><p id="setgidp" class="setp" style="display:inline;">Gemma对话ID</p><p id="gaid" style="display:inline;" class="settext" onclick="let gaigem=window.prompt('修改Gemma的连续对话id');if(gaigem){aiida=gaigem;}"></p></div>
         <div id="setqid" class="sett" style="display:none;"><p id="setqwdp" class="setp" style="display:inline;">Qwen对话ID</p><p id="qwid" style="display:inline;" class="settext" onclick="let gaiqwen=window.prompt('修改Qwen的连续对话id');if(gaiqwen){aiidb=gaiqwen;}"></p></div>
-        <div id="setcid" class="sett"><p id="setchdp" class="setp" style="display:inline;">ChatGPT对话ID</p><p id="chid" style="display:inline;" class="settext" onclick="let gaichat=window.prompt('修改ChatGPT的连续对话id');if(gaichat&&gaichat.length>=6){aiidc=gaichat;}"></p></div>
-        <div id="setxgqw" class="sett" onclick="settw('qwenset');"><p id="qwexga" class="setp">修改Qwen3参数</p></div>
+        <div id="setcid" class="sett" style="display:none;"><p id="setchdp" class="setp" style="display:inline;">ChatGPT对话ID</p><p id="chid" style="display:inline;" class="settext" onclick="let gaichat=window.prompt('修改ChatGPT的连续对话id');if(gaichat&&gaichat.length>=6){aiidc=gaichat;}"></p></div>
+        <div id="setxgqw" class="sett" onclick="settw('qwenset');" style="display:none;"><p id="qwexga" class="setp">修改Qwen3参数</p></div>
         <div id="setnews" class="sett" onclick="settw('newsa');"><p id="setnewsp" class="setp">消息</p></div>
         <div id="setmd" class="sett" onclick="settw('mdDiv');"><p id="mdxz" class="setp">回答模型</p><p id="mdDisplay" style="display:inline;" class="settext">默认</p></div>
         <div id="setsql" class="sett" onclick="settw('sqla');"><p id="setsqlp" class="setp">数据库检索</p></div>
@@ -458,15 +474,20 @@
         <div class="settt" id="mdv7" onclick="deep=7;mdEx();if(!aiidb){aiidb='u'+Math.round(Math.random()*9999999);}else{const ifaiida=window.confirm('是否开启新对话？(Qwen)');if(ifaiida){aiidb='u'+Math.round(Math.random()*9999999);}}" data-md="Qwen(连续对话)" data-stop="1"><p id="mdQwenlink" class="setp">Qwen(连续对话)</p></div>
         <div class="settt" id="mdv5" onclick="deep=5;mdEx();" data-md="GLM-4-Flash" data-stop="1"><p id="mdGlm" class="setp">GLM-4-Flash</p></div>
         <div class="settt" id="mdv8" onclick="deep=8;mdEx();" data-md="CogView(文生图模型)" data-stop="1"><p id="mdCog" class="setp">CogView(文生图模型)</p></div>
-        <div class="settt" id="mdv9" onclick="deep=9;mdEx();if(!aiidc){aiidc='u'+Math.round(Math.random()*9999999);}else{const ifaiidb=window.confirm('是否开启新对话？(ChatGPT)');if(ifaiidb){aiidc='u'+Math.round(Math.random()*9999999);}}" data-md="ChatGPT-4(连续对话)"><p id="mdGptf" class="setp">ChatGPT-4(连续对话)</p></div>
-        <div class="settt" id="mdv10" onclick="deep=10;mdEx();if(!aiidd){aiidd='u'+Math.round(Math.random()*9999999999);}else{const ifaiidc=window.confirm('是否开启新对话？(Qwen3)');if(ifaiidc){aiidd='u'+Math.round(Math.random()*9999999999);}}" data-md="Qwen3(自主编辑参数)"><p id="mdQwef" class="setp">Qwen3(自主编辑参数)</p></div>
+        <div class="settt" id="mdv9" onclick="deep=9;mdEx();if(!aiidc){aiidc='u'+Math.round(Math.random()*9999999);}else{const ifaiidb=window.confirm('是否开启新对话？(ChatGPT)');if(ifaiidb){aiidc='u'+Math.round(Math.random()*9999999);}}" data-md="ChatGPT-4(连续对话)" data-stop="1"><p id="mdGptf" class="setp">ChatGPT-4(连续对话)</p></div>
+        <div class="settt" id="mdv10" onclick="deep=10;mdEx();if(!aiidd){aiidd='u'+Math.round(Math.random()*9999999999);}else{const ifaiidc=window.confirm('是否开启新对话？(Qwen3)');if(ifaiidc){aiidd='u'+Math.round(Math.random()*9999999999);}}" data-md="Qwen3(自主编辑参数)" data-stop="1"><p id="mdQwef" class="setp">Qwen3(自主编辑参数)</p></div>
         <div class="settt" id="mdv11" onclick="deep=11;mdEx();" data-md="MiniMax-M2(流式输出)"><p id="mdMini" class="setp">MiniMax-M2(流式输出)</p></div>
         <div class="settt" id="mdv12" onclick="deep=12;mdEx();" data-md="DeepSeek-R1(流式输出)"><p id="mdDeep" class="setp">DeepSeek-R1(流式输出)</p></div>
+        <div class="settt" id="mdv19" onclick="deep=19;mdEx();" data-md="DeepSeek-V3.2(流式输出)"><p id="mdDeepe" class="setp">DeepSeek-V3.2(流式输出)</p></div>
         <div class="settt" id="mdv13" onclick="deep=13;mdEx();" data-md="Kimi-K2"><p id="mdKimi" class="setp">Kimi-K2</p></div>
         <div class="settt" id="mdv14" onclick="deep=14;mdEx();" data-md="豆包Seed(流式输出)"><p id="mdSeed" class="setp">豆包Seed(流式输出)</p></div>
-        <div class="settt" id="mdv15" onclick="deep=15;mdEx();" data-md="Grok4"><p id="mdGrok" class="setp">Grok4</p></div>
-        <div class="settt" id="mdv16" onclick="deep=16;mdEx();" data-md="Gemini-2.5"><p id="mdGemini" class="setp">Gemini-2.5</p></div>
+        <div class="settt" id="mdv15" onclick="deep=15;mdEx();" data-md="Grok4" data-stop="1"><p id="mdGrok" class="setp">Grok4</p></div>
+        <div class="settt" id="mdv16" onclick="deep=16;mdEx();" data-md="Gemini-2.5(连续对话)"><p id="mdGemini" class="setp">Gemini-2.5(连续对话)</p></div>
         <div class="settt" id="mdv17" onclick="deep=17;mdEx();" data-md="FLUX.1"><p id="mdFLUX" class="setp">FLUX.1</p></div>
+        <div class="settt" id="mdv18" onclick="deep=18;mdEx();" data-md="Cluade4.5(连续对话)"><p id="mdCluade" class="setp">Claude4.5(连续对话)</p></div>
+        <div class="settt" id="mdv20" onclick="deep=20;mdEx();" data-md="ChatGPT-5(连续对话)"><p id="mdChatGPT" class="setp">ChatGPT-5(连续对话)</p></div>
+        <div class="settt" id="mdv21" onclick="deep=21;mdEx();" data-md="ChatGPT-OSS(连续对话)"><p id="mdChatGPToss" class="setp">ChatGPT-OSS(连续对话)</p></div>
+        <div class="settt" id="mdv22" onclick="deep=22;mdEx();" data-md="Qwen3-coder(连续对话)"><p id="mdQwencoder" class="setp">Qwen3-coder(连续对话)</p></div>
       </div>
       <div id="sqla" class="settwo">
         <button id="mdex" class="twoex" onclick="settw('sqla',1);"></button>
@@ -534,6 +555,14 @@
         mapa.set(key,ind);
         ind--;
       }
+      const uplccLocal=JSON.parse(localStorage.getItem("uplcc_model_id"));
+      if(!uplccLocal||uplccLocal.time!==new Date().toLocaleDateString("zh-CN")){
+        let result="";
+        for(let i=0;i<6;i++){
+          result+=Math.floor(Math.random()*9);
+        }
+        localStorage.setItem("uplcc_model_id",JSON.stringify({"time":new Date().toLocaleDateString("zh-CN"),"id":result}));
+      }
       function tb(){
         requestAnimationFrame(tb);
         xz.style.height = window.innerHeight - (window.innerHeight - inp.offsetTop) + "px";
@@ -589,6 +618,8 @@
           }
         }
       });
+      let devchoose=false;
+      let dev=[false];
       function give() {
         if (!sr.value.trim()) {
           return;
@@ -615,7 +646,7 @@
           return;
         }
         if(eisautoif&&deep!==0){
-          if(deep==6||deep==11||deep==12||deep==14){
+          if(deep==6||deep==11||deep==12||deep==14||deep==19){
             bdeep();
             eisAll(1500);
             return;
@@ -694,6 +725,13 @@ ${codeaaa}];//:CODE`);
           }
           return;
         }
+        if(devchoose||dev.some(Boolean)){
+          let userchoose=t.trim();
+          if(userchoose==2&&!dev.some(Boolean)){devchoose=false;hd("已退出开发者选项");return;}
+          if(userchoose==1&&!dev.some(Boolean)){hd("请输入修改的id(6位数字)");dev[0]=true;return;}
+          if(dev[0]&&userchoose.length==6){userchoose=""+Number(userchoose);if(userchoose.length!==6||/.,\+\-\*\/a-zA-Z/.test(userchoose)){hd("修改失败，请再次尝试");return;}localStorage.setItem("uplcc_model_id",JSON.stringify({"time":new Date().toLocaleDateString("zh-CN"),"id":userchoose}));hd("已将连续对话id修改为`"+userchoose+"`");devchoose=false;dev[0]=false;}else if(dev[0]){hd("请输入6位数字id");}
+          return;
+        }
         if((p("获",t)||p("代码",t)||(/code/i).test(t)||p("拿",t)||p("取",t))&&(p("http://",t)||p("https://",t))){
           const urlMatch=t.match(/https?:\/\/([a-zA-Z0-9\%\,\.\&\$\:\=\-\_\/\#\?\!\|\"\'\`\~]+)/g);
           const url=urlMatch?urlMatch[0].trim():"https://www.baidu.com";
@@ -701,6 +739,12 @@ ${codeaaa}];//:CODE`);
           const msg="正在获取**"+url+"**的网页源代码BR://BR://**正在调用工具 `fetch`**";
           hdliu(msg,1);
           getcode(url).then(result=>hdliu(msg+"** 调用完成**BR://BR://网页标题："+result.title+"BR://网页源码：```html "+result.code+"```",1));
+          return;
+        }
+        if(t.trim()=="uplccdevchange"){
+          hdliu("",0);
+          hdliu(`**开发者选项**BR://输入数字进行选择：BR://1:修改模型连续对话idBR://2:退出`,1);
+          devchoose=true;
           return;
         }
         if (!sj) {
@@ -950,8 +994,13 @@ null,
 `https://api.jkyai.top/API/kimik2.php?question=${e}&type=json`,
 null,
 `https://api.jkyai.top/API/grok4-model/index.php?question=${e}&type=json`,
-`https://api.jkyai.top/API/gemini2.5/index.php?question=${e}&type=json`,
-`https://api.jkyai.top/API/flux.1?prompt=${e}&type=json`
+`https://api.jkyai.top/API/gemini2.5/index.php?question=${e}&type=json&uid=${uplccLocal.id}`,
+`https://api.jkyai.top/API/flux.1?prompt=${e}&type=json`,
+`https://api.jkyai.top/API/hiku-4.5/index.php?question=${e}&type=json&uid=${uplccLocal.id}`,
+null,
+`https://api.jkyai.top/API/gpt5-nano/index.php?question=${e}&type=json&uid=${uplccLocal.id}`,
+`https://api.jkyai.top/API/chatgpt-oss/index.php?question=${e}&type=json&uid=${uplccLocal.id}`,
+`https://api.jkyai.top/API/qwen3-coder/index.php?question=${e}&type=json&uid=${uplccLocal.id}`
 ];
         const r = await fetch(api[deep-1]);
         const jsonData = await r.json();
@@ -1029,6 +1078,30 @@ null,
           }else{
             return "Error";
           }
+        }else if(deep==18){
+          if(jsonData.success){
+            return jsonData.content;
+          }else{
+            return "Error";
+          }
+        }else if(deep==20){
+          if(jsonData.success){
+            return jsonData.content;
+          }else{
+            return "Error";
+          }
+        }else if(deep==21){
+          if(jsonData.success){
+            return jsonData.content;
+          }else{
+            return "Error";
+          }
+        }else if(deep==22){
+          if(jsonData.success){
+            return jsonData.response;
+          }else{
+            return "Error";
+          }
         }else{
           return "Error";
         }
@@ -1083,6 +1156,8 @@ null,
           sse=new EventSource(`https://api.jkyai.top/API/deepseek.php?question=${msg}&type=true`);
         }else if(deep==14){
           sse=new EventSource(`https://api.jkyai.top/API/doubao.php?question=${msg}&type=true`);
+        }else if(deep==19){
+          sse=new EventSource(`https://api.jkyai.top/API/depsek3.2.php?question=${msg}&type=true`);
         }
         var ifbde=false;
         sse.addEventListener('message',(e)=>{
@@ -1110,17 +1185,22 @@ null,
       }
       const mdD=[
         "默认","DeepSeek","Gemma","Gemma(连续对话)","Qwen","GLM-4-Flash","DeepSeek(流式输出)","Qwen(连续对话)","CogView",
-        "ChatGPT-4","Qwen3","MiniMax-M2","DeepSeek-R1","Kimi-K2","Seed","Grok4","Gemini-2.5","FLUX.1"
+        "ChatGPT-4","Qwen3","MiniMax-M2","DeepSeek-R1","Kimi-K2","Seed","Grok4","Gemini-2.5","FLUX.1","Cluade4.5",
+        "DeepSeek-V3.2","ChatGPT-5","ChatGPT-OSS","Qwen3-coder"
       ];
       for(var mdstop=0;mdstop<mdD.length;mdstop++){
+        const thisdom=document.getElementById("mdv"+mdstop);
         if(document.getElementById("mdv"+mdstop).dataset.stop==1)document.getElementById("mdv"+mdstop).style.display="none";
+        document.getElementById("mdv"+mdstop).innerHTML+=`<img src="choose.png" class="choosepng" style="opacity:0;" id="chpng${mdstop}"/>`;
+        if(mdstop==0)document.getElementById("chpng0").style.opacity="1";
+        if(/\(.+?\)/.test(thisdom.children[0].innerHTML)){const str=thisdom.children[0].innerHTML.replace(/\(([\s\S]+?)\)/g,`<div class="modeltip">$1</div>`);thisdom.children[0].innerHTML=str;}
       }
       function mdEx(){
         mdDisplay.textContent=mdD[deep];
         for(var mdfor=0;mdfor<mdD.length;mdfor++){
-          document.getElementById(`mdv${mdfor}`).style.backgroundColor="rgba(0,0,0,0.02)";
+          document.getElementById("chpng"+mdfor).style.opacity="0";
         }
-        document.getElementById("mdv"+deep).style.backgroundColor="rgba(255,231,183,0.3)";
+        document.getElementById("chpng"+deep).style.opacity="1";
       }
       function bigExit(){
         bigphoto.style.animationName="bob";
@@ -1222,12 +1302,13 @@ null,
                 .replace(/#/g,`JINGHAO://`)
                 .replace(/&/g,`AHAO://`)
                 .replace(/`/g,`YINHAO://`)
-                .replace(/\*/g,`XINGHAO://`)}</pre></div>`;
+                .replace(/\*/g,`XINGHAO://`)
+                .replace(/\-/g,`JIANHAO://`)}</pre></div>`;
             })
             .replace(/BR:\/\//g, '<br>')
             .replace(/\*\*(.*?)\*\*/g,`<span style="font-weight:900;">$1</span>`)
             .replace(/`(.+?)`/g,(t)=>{
-              return `<div class="codeb">`+t.slice(1,-1).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")+`</div>`;
+              return `<div class="codeb">`+t.slice(1,-1).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\-/g,`JIANHAO://`)+`</div>`;
             })
             .replace(/######(.*?)(?:$|<br>|BR:\/\/)/gm,`<h3 style="font-size:17px;">$1</h3>`)
             .replace(/#####(.*?)(?:$|<br>|BR:\/\/)/gm,`<h3 style="font-size:18px;">$1</h3>`)
@@ -1235,13 +1316,15 @@ null,
             .replace(/###(.*?)(?:$|<br>|BR:\/\/)/gm,`<h3 style="font-size:20px;">$1</h3>`)
             .replace(/##(.*?)(?:$|<br>|BR:\/\/)/gm,`<h3 style="font-size:21px;">$1</h3>`)
             .replace(/#(.*?)(?:$|<br>|BR:\/\/)/gm,`<h3 style="font-size:22px;">$1</h3>`)
+            .replace(/<br>\-\-\-<br>/g,"<hr/>")
             .replace(/TRING:\/\/([\s\S]*?)\/\/:TRING/g,`**$1**`)
             .replace(/JINGHAO:\/\//g,`#`)
             .replace(/AHAO:\/\//g,`&`)
             .replace(/YINHAO:\/\//g,"`")
             .replace(/XINGHAO:\/\//g,"*")
             .replace(/CODEQ:\/\//g,"CODE://")
-            .replace(/CODEH:\/\//g,"//:CODE");
+            .replace(/CODEH:\/\//g,"//:CODE")
+            .replace(/JIANHAO:\/\//g,"-");
         return str;
       }
       function mdsca(md){
