@@ -488,6 +488,7 @@
         <div class="settt" id="mdv20" onclick="deep=20;mdEx();" data-md="ChatGPT-5(连续对话)"><p id="mdChatGPT" class="setp">ChatGPT-5(连续对话)</p></div>
         <div class="settt" id="mdv21" onclick="deep=21;mdEx();" data-md="ChatGPT-OSS(连续对话)"><p id="mdChatGPToss" class="setp">ChatGPT-OSS(连续对话)</p></div>
         <div class="settt" id="mdv22" onclick="deep=22;mdEx();" data-md="Qwen3-coder(连续对话)"><p id="mdQwencoder" class="setp">Qwen3-coder(连续对话)</p></div>
+        <div class="settt" id="mdv23" onclick="deep=23;mdEx();" data-md="Xiaomi MiMo(限时)"><p id="mdMiMo" class="setp">Xiaomi MiMo(限时)</p></div>
       </div>
       <div id="sqla" class="settwo">
         <button id="mdex" class="twoex" onclick="settw('sqla',1);"></button>
@@ -1000,8 +1001,46 @@ null,
 null,
 `https://api.jkyai.top/API/gpt5-nano/index.php?question=${e}&type=json&uid=${uplccLocal.id}`,
 `https://api.jkyai.top/API/chatgpt-oss/index.php?question=${e}&type=json&uid=${uplccLocal.id}`,
-`https://api.jkyai.top/API/qwen3-coder/index.php?question=${e}&type=json&uid=${uplccLocal.id}`
+`https://api.jkyai.top/API/qwen3-coder/index.php?question=${e}&type=json&uid=${uplccLocal.id}`,
+null
 ];
+        if(deep==23){
+          const API_KEY="sk-cgkz9rshrc7ujlmspjmxz4wu0shgggjec4rstaclwrl1j097";
+          fetch('https://api.xiaomimimo.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${API_KEY}`
+            },
+            body: JSON.stringify({
+              model:'mimo-v2-flash',
+              messages:[
+                {
+                  role:'system',
+                  content:`你是MiMo（中文名称也是MiMo），是小米公司研发的AI智能助手。今天的日期：${new Date().toLocaleDateString('zh-CN')}，你的知识截止日期是2024年12月。`
+                },
+                {
+                  role:'user',
+                  content:e
+                }
+              ],
+              max_completion_tokens: 1024,
+              temperature: 0.3,
+              top_p: 0.95,
+              stream: false,
+              stop: null,
+              frequency_penalty: 0,
+              presence_penalty: 0,
+              thinking: { type: 'disabled' }
+            })
+          })
+          .then(res => {
+            return res.json();
+          })
+          .then(data => hd(data.choices[0].message.content))
+          .catch(err => hd(err));
+          return;
+        }
         const r = await fetch(api[deep-1]);
         const jsonData = await r.json();
         if(deep==1){
@@ -1113,7 +1152,6 @@ null,
       }
       async function hddeep(){
         if(!sr.value.trim())return;
-        hd("正在请求服务器数据，请稍等");
         const result=await hddeepa(sr.value.trim());
         hd(result);
         aitip("内容由AI生成，请仔细辨别。");
@@ -1144,7 +1182,6 @@ null,
       async function bdeep() {
         let msg = sr.value.trim();
         if(!msg)return;
-        hd("正在请求服务器数据，请稍等");
         let reason="";
         let sse;
         msg=encodeURIComponent(msg);
@@ -1186,7 +1223,7 @@ null,
       const mdD=[
         "默认","DeepSeek","Gemma","Gemma(连续对话)","Qwen","GLM-4-Flash","DeepSeek(流式输出)","Qwen(连续对话)","CogView",
         "ChatGPT-4","Qwen3","MiniMax-M2","DeepSeek-R1","Kimi-K2","Seed","Grok4","Gemini-2.5","FLUX.1","Cluade4.5",
-        "DeepSeek-V3.2","ChatGPT-5","ChatGPT-OSS","Qwen3-coder"
+        "DeepSeek-V3.2","ChatGPT-5","ChatGPT-OSS","Qwen3-coder","MiMo-V2-Flash"
       ];
       for(var mdstop=0;mdstop<mdD.length;mdstop++){
         const thisdom=document.getElementById("mdv"+mdstop);
