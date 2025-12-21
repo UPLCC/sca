@@ -1002,45 +1002,8 @@ null,
 `https://api.jkyai.top/API/gpt5-nano/index.php?question=${e}&type=json&uid=${uplccLocal.id}`,
 `https://api.jkyai.top/API/chatgpt-oss/index.php?question=${e}&type=json&uid=${uplccLocal.id}`,
 `https://api.jkyai.top/API/qwen3-coder/index.php?question=${e}&type=json&uid=${uplccLocal.id}`,
-null
+`https://uplccsca.uplcc123456.workers.dev/mimo?msg=${e}&key=sk-cgkz9rshrc7ujlmspjmxz4wu0shgggjec4rstaclwrl1j097`
 ];
-        if(deep==23){
-          const API_KEY="sk-cgkz9rshrc7ujlmspjmxz4wu0shgggjec4rstaclwrl1j097";
-          fetch('https://api.xiaomimimo.com/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${API_KEY}`
-            },
-            body: JSON.stringify({
-              model:'mimo-v2-flash',
-              messages:[
-                {
-                  role:'system',
-                  content:`你是MiMo（中文名称也是MiMo），是小米公司研发的AI智能助手。今天的日期：${new Date()}，你的知识截止日期是2024年12月。`
-                },
-                {
-                  role:'user',
-                  content:e
-                }
-              ],
-              max_completion_tokens: 1024,
-              temperature: 0.3,
-              top_p: 0.95,
-              stream: false,
-              stop: null,
-              frequency_penalty: 0,
-              presence_penalty: 0,
-              thinking: { type: 'disabled' }
-            })
-          })
-          .then(res => {
-            return res.json();
-          })
-          .then(data => hd(data.choices[0].message.content))
-          .catch(err => hd(err));
-          return;
-        }
         const r = await fetch(api[deep-1]);
         const jsonData = await r.json();
         if(deep==1){
@@ -1141,6 +1104,8 @@ null
           }else{
             return "Error";
           }
+        }else if(deep==23){
+          return jsonData.choices[0].message.content;
         }else{
           return "Error";
         }
