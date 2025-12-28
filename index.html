@@ -589,6 +589,7 @@
         document.getElementById("qweid").innerText=aiidd;
         if((/[<>\/\s\.,\[\]\{\}%\*"'`´]/).test(aiida))aiida='u'+Math.round(Math.random()*9999999);
         if((/[<>\/\s\.,\[\]\{\}%\*"'`´]/).test(aiidb))aiidb='u'+Math.round(Math.random()*9999999);
+        localStorage.setItem('uplccnews',ctwz.join('NEXT://'));
       },1500);
       let gxifa=false;
       setInterval(()=>{
@@ -1002,7 +1003,7 @@ null,
 `https://api.jkyai.top/API/gpt5-nano/index.php?question=${e}&type=json&uid=${uplccLocal.id}`,
 `https://api.jkyai.top/API/chatgpt-oss/index.php?question=${e}&type=json&uid=${uplccLocal.id}`,
 `https://api.jkyai.top/API/qwen3-coder/index.php?question=${e}&type=json&uid=${uplccLocal.id}`,
-`https://uplccsca.uplcc123456.workers.dev/mimo?msg=${e}&key=sk-cgkz9rshrc7ujlmspjmxz4wu0shgggjec4rstaclwrl1j097`
+`https://uplccapi.vercel.app/api/mimo.js?msg=${e}&key=sk-cgkz9rshrc7ujlmspjmxz4wu0shgggjec4rstaclwrl1j097&id=${uplccLocal.id}`
 ];
         const r = await fetch(api[deep-1]);
         const jsonData = await r.json();
@@ -1105,7 +1106,12 @@ null,
             return "Error";
           }
         }else if(deep==23){
-          return jsonData.choices[0].message.content;
+          if(jsonData.code===200){
+            const result=`<p style="font-size:13px;color:gray;">${jsonData.reason}</p>\n\n---\n\n${jsonData.message}`;
+            return result;
+          }else{
+            return "Error";
+          }
         }else{
           return "Error";
         }

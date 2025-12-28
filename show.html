@@ -56,20 +56,14 @@
       let num=0;
       for(let thisnews of news){
         num++;
-        thisnews=thisnews
-          .replace(/&amp;/g,"&")
-          .replace(/&lt;/g,"<")
-          .replace(/&gt;/g,">")
-          .replace(/&/,"&amp")
-          .replace(/</,"&lt;")
-          .replace(/>/,"&gt;");
+        thisnews=thisnews;
         if(thisnews.substring(0,7)=="USER://"){
           udisplay+=`USER://${thisnews.replace("USER://","")}//:USER`;
         }else{
           udisplay+=`<p class="displaynews">回答</p>${thisnews.replace(/&lt;br&gt;/g,"<br>")}`;
         }
         if(num!==news.length){
-          udisplay+="<br><hr/>";
+          udisplay+="<br><hr/><br>";
         }
       }
       document.getElementById("information").innerHTML=udisplay
