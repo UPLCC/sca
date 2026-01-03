@@ -162,28 +162,11 @@
           margin-left:0px;
         }
       }
-      .tip{
-        position: relative;
-        width: 85vw;
-        margin-right:auto;
-        margin-left: 5vw;
-        background-color: rgba(255,229,170,0.3);
-        margin: 10px;
-        padding: 10px;
-        box-sizing: border-box;
-        border-radius: 15px;
-      }
       #hello{
-        background:linear-gradient(90deg,#ffc0dc,#ffd79b);
-        width:300px;
-        font-size:25px;
-        -webkit-background-clip:text;
-        background-clip:text;
-        -webkit-text-fill-color:transparent;
-        color:transparent;
         position:absolute;
         left:50%;
         top:50%;
+        width:150px;
         transform:translate(-50%,-50%);
       }
       #ExmdD{
@@ -435,7 +418,7 @@
   </head>
   <body>	
     <div id="xz">
-    <h3 id="hello">你好！欢迎使用配置查询器</h3>
+    <img src="logo.png" id="hello"/>
     </div>
     <div id="tipdiv"><p id="tiptext"></p></div>
     <img src="" id="bigphoto"/>
@@ -476,7 +459,7 @@
         <div class="settt" id="mdv8" onclick="deep=8;mdEx();" data-md="CogView(文生图模型)" data-stop="1"><p id="mdCog" class="setp">CogView(文生图模型)</p></div>
         <div class="settt" id="mdv9" onclick="deep=9;mdEx();if(!aiidc){aiidc='u'+Math.round(Math.random()*9999999);}else{const ifaiidb=window.confirm('是否开启新对话？(ChatGPT)');if(ifaiidb){aiidc='u'+Math.round(Math.random()*9999999);}}" data-md="ChatGPT-4(连续对话)" data-stop="1"><p id="mdGptf" class="setp">ChatGPT-4(连续对话)</p></div>
         <div class="settt" id="mdv10" onclick="deep=10;mdEx();if(!aiidd){aiidd='u'+Math.round(Math.random()*9999999999);}else{const ifaiidc=window.confirm('是否开启新对话？(Qwen3)');if(ifaiidc){aiidd='u'+Math.round(Math.random()*9999999999);}}" data-md="Qwen3(自主编辑参数)" data-stop="1"><p id="mdQwef" class="setp">Qwen3(自主编辑参数)</p></div>
-        <div class="settt" id="mdv11" onclick="deep=11;mdEx();" data-md="MiniMax-M2(流式输出)"><p id="mdMini" class="setp">MiniMax-M2(流式输出)</p></div>
+        <div class="settt" id="mdv11" onclick="deep=11;mdEx();" data-md="MiniMax-M2(流式输出)" data-stop="1"><p id="mdMini" class="setp">MiniMax-M2(流式输出)</p></div>
         <div class="settt" id="mdv12" onclick="deep=12;mdEx();" data-md="DeepSeek-R1(流式输出)"><p id="mdDeep" class="setp">DeepSeek-R1(流式输出)</p></div>
         <div class="settt" id="mdv19" onclick="deep=19;mdEx();" data-md="DeepSeek-V3.2(流式输出)"><p id="mdDeepe" class="setp">DeepSeek-V3.2(流式输出)</p></div>
         <div class="settt" id="mdv13" onclick="deep=13;mdEx();" data-md="Kimi-K2"><p id="mdKimi" class="setp">Kimi-K2</p></div>
@@ -830,7 +813,6 @@ ${dcword}的电池容量(${a[sydc].split(";")[3]})相较于其他机型更高。
 <h3>充电功率：${cdword}</h3>
 ${cdword}的充电功率(${a[sysd].split(";")[2]})相较于其他机型更高。
 `);
-aitip("内容请仔细辨别。");
 }
       function pe(){
         const areaText=sr.value.toLowerCase().trim();
@@ -904,20 +886,6 @@ index);
           element.innerHTML = text;
         }
         if(xz.scrollHeight - xz.scrollTop - xz.clientHeight < gxpx)gx();
-      }
-      function aitip(message){
-        const tipDiv = document.createElement('div');
-        tipDiv.className = 'tip';
-        tipDiv.textContent = message;
-        tipDiv.style.animationName="boa";
-        tipDiv.style.animationDuration="0.15s";
-        setTimeout(()=>{tipDiv.style.opacity="1";},150);
-        tipDiv.onclick = function (){
-          tipDiv.style.animationName="animateA";
-          tipDiv.style.animationDuration="0.2s";
-          setTimeout(()=>{tipDiv.style.animation="none"},200);
-        }
-        xz.appendChild(tipDiv);
       }
       function dd(str, num) {
         const aa = a[ph-1].split(";");
@@ -1003,7 +971,7 @@ null,
 `https://api.jkyai.top/API/gpt5-nano/index.php?question=${e}&type=json&uid=${uplccLocal.id}`,
 `https://api.jkyai.top/API/chatgpt-oss/index.php?question=${e}&type=json&uid=${uplccLocal.id}`,
 `https://api.jkyai.top/API/qwen3-coder/index.php?question=${e}&type=json&uid=${uplccLocal.id}`,
-`https://uplccapi.vercel.app/api/mimo.js?msg=${e}&key=sk-cgkz9rshrc7ujlmspjmxz4wu0shgggjec4rstaclwrl1j097&id=${uplccLocal.id}`
+`https://uplccapi.deno.dev/mimo?msg=${e}&key=sk-cgkz9rshrc7ujlmspjmxz4wu0shgggjec4rstaclwrl1j097&maxtokens=8192`
 ];
         const r = await fetch(api[deep-1]);
         const jsonData = await r.json();
@@ -1107,7 +1075,7 @@ null,
           }
         }else if(deep==23){
           if(jsonData.code===200){
-            const result=`<p style="font-size:13px;color:gray;">${jsonData.reason}</p>\n\n---\n\n${jsonData.message}`;
+            const result=`<div class="codea"><p style="font-size:13px;">${jsonData.reason}</p></div>${jsonData.message}`;
             return result;
           }else{
             return "Error";
@@ -1125,7 +1093,6 @@ null,
         if(!sr.value.trim())return;
         const result=await hddeepa(sr.value.trim());
         hd(result);
-        aitip("内容由AI生成，请仔细辨别。");
       }
       let hdliuid;
       let hdliustr;
@@ -1171,7 +1138,6 @@ null,
         sse.addEventListener('message',(e)=>{
           if (e.data === '[DONE]') {
             sse.close();
-            aitip("内容由AI生成，请仔细辨别。");
             if(ctwzif)ctwz.push(`${hdliustr}`);
             return;
           }
