@@ -11,7 +11,7 @@
       #inp {
         position: fixed;
         bottom: 10px;
-        height: 80px;
+        height: 45px;
         width: 96vw;
         left:2vw;
         right:2px;
@@ -24,9 +24,9 @@
       #sr {
         position: absolute;
         z-index: 1;
-        width: 100%;
-        height: 60px;
-        bottom:20px;
+        width: 90%;
+        height: 45px;
+        bottom:0px;
         border: 0;
         border-radius: 15px;
         padding: 10px;
@@ -60,7 +60,7 @@
         padding: 10px;
         margin: 10px;
         box-sizing: border-box;
-        background-color: rgba(135,206,250,0.1);
+        background-color: rgba(0,0,0,0.03);
         border-radius: 13px;
         min-width:40px;
         max-width: 80vw;
@@ -74,16 +74,15 @@
       }
       .fs {
         position: relative;
-        max-width: 85vw;
-        min-width:10vw;
-        margin-right:auto;
+        width: 94%;
+        max-width:94%;
         width:fit-content;
-        margin-left: 5vw;
-        background-color: rgba(0,0,0,0.02);
-        margin: 10px;
-        padding: 10px;
+        background-color: rgba(0,0,0,0);
+        margin-top:10px;
+        margin-bottom:10px;
+        margin-left: 3%;
+        margin-right:3%;
         box-sizing: border-box;
-        border-radius: 15px;
         overflow-x:auto;
         overflow-wrap:break-word;
       }
@@ -95,7 +94,7 @@
       .codea{
         position:relative;
         width:98%;
-        background-color:rgba(0,0,0,0.05);
+        background-color:rgba(0,0,0,0.03);
         border-radius:7px;
         padding:1%;
         overflow-x:auto;
@@ -213,6 +212,7 @@
         border:2px solid rgba(0,0,0,0.1);
         background-color:rgba(255,255,255,0.1);
         backdrop-filter:blur(1px);
+        display:none;
       }
       #setting{
         position:absolute;
@@ -224,7 +224,7 @@
         max-height:260px;
         overflow-y:auto;
         overflow-x:hidden;
-        background-color:rgba(255,255,255,0.7);
+        background-color:rgba(255,255,255,1);
         box-shadow:0 0 20px 10px rgba(0,0,0,0.1);
         backdrop-filter:blur(5px);
         border-radius:20px;
@@ -280,6 +280,9 @@
         z-index:31;
         width:100vw;
         height:100vh;
+        background-color:rgba(0,0,0,0.15);
+        backdrop-filter:blur(5px);
+        opacity:0;
         display:none;
       }
       .settwo{
@@ -414,9 +417,54 @@
         border-radius:10px;
         font-size:15px;
       }
+      #topdiv{
+        position:fixed;
+        z-index:29;
+        width:100vw;
+        height:40px;
+        top:0;
+        background-color:rgba(0,0,0,0.02);
+        backdrop-filter:blur(10px);
+        overflow:hidden;
+        box-shadow:0 0 5px 5px rgba(0,0,0,0.05);
+      }
+      #setpng{
+        position:absolute;
+        right:12px;
+        width:20px;
+        top:50%;
+        transform:translate(0%,-50%);
+      }
+      #mdname{
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%,-50%);
+        font-size:15px;
+      }
+      #comphide{
+        position:fixed;
+        z-index:999;
+        width:100vw;
+        opacity:1;
+        height:100vh;
+        background-color:white;
+        transition:opacity 0.3s ease;
+      }
+      #comptext{
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%,-50%);
+      }
     </style>
   </head>
   <body>	
+    <div id="comphide"><h3 id="comptext">正在加载资源(0/0)</h3></div>
+    <div id="topdiv">
+      <span id="mdname" onclick="setting.style.display='block';setting.style.animationName='bod';setting.style.animationDuration='0.3s';settingcz();setex.style.display='block';setex.style.animationName='bod';setex.style.animationDuration='0.3s';setex.style.opacity='1';setTimeout(()=>settw('mdDiv'),50);">新对话</span>
+      <img src="setting.png" id="setpng" onclick="setting.style.display='block';setting.style.animationName='bod';setting.style.animationDuration='0.3s';settingcz();setex.style.display='block';setex.style.animationName='bod';setex.style.animationDuration='0.3s';setex.style.opacity='1';"/>
+    </div>
     <div id="xz">
     <img src="logo.png" id="hello"/>
     </div>
@@ -494,12 +542,12 @@
         <p id="markdowntoresult" style="margin:2%;"></p>
       </div>
     </div>
-    <div id="setex" onclick="setting.style.animationName='bob';setting.style.animationDuration='0.3s';setTimeout(()=>{setting.style.display='none';this.style.display='none';},300);"></div>
+    <div id="setex" onclick="setting.style.animationName='bob';setting.style.animationDuration='0.3s';setex.style.animationName='bob';setex.style.animationDuration='0.3s';setTimeout(()=>{setting.style.display='none';this.style.opacity='0';this.style.display='none';},300);"></div>
     <div id="ExmdD" onclick="mdEx();"></div>
     <button id="bo" onclick="gx();bo.style.animationName='bob';bo.style.animationDuration='0.3s';setTimeout(()=>{bo.style.display='none';bo.style.opacity='0';},300);setTimeout(()=>{gxifa=false;},500);">回到底部</button>
     <div id="inp">
-      <textarea id="sr" placeholder="在这里输入问题..." onfocus="this.style.height='80px';this.style.bottom='40px';inp.style.height='120px';" onblur="this.style.height='80px';this.style.bottom='0px';inp.style.height='80px';" oninput="if(this.value.trim()!==''){ts.style.backgroundColor='rgba(0,0,0,1)';}else{ts.style.backgroundColor='rgba(0,0,0,0.5)';}"></textarea>
-      <button id="set" onclick="setting.style.display='block';setting.style.animationName='bod';setting.style.animationDuration='0.3s';settingcz();setex.style.display='block';">设置</button>
+      <textarea id="sr" placeholder="在这里输入问题..." onfocus="this.style.height='75px';this.style.bottom='0px';inp.style.height='75px';" onblur="this.style.height='45px';this.style.bottom='0px';inp.style.height='45px';" oninput="if(this.value.trim()!==''){ts.style.backgroundColor='rgba(0,0,0,1)';}else{ts.style.backgroundColor='rgba(0,0,0,0.5)';}"></textarea>
+      <button id="set" onclick="setting.style.display='block';setting.style.animationName='bod';setting.style.animationDuration='0.3s';settingcz();setex.style.display='block';setex.style.animationName='bod';setex.style.animationDuration='0.3s';setex.style.opacity='1';">设置</button>
       <button id="ts" onclick="if(eisif){give();eis();}this.style.animationName='animate';this.style.animationDuration='0.3s';setTimeout(()=>{this.style.animation='none';},300);"></button>
     </div>
     <script src="news.js"></script>
@@ -524,6 +572,35 @@
       let ifh=false;
       let mdif=false;
       let ctwzif=true;
+      const imgnum=document.querySelectorAll("img");
+      let imgtimes=0;
+      const comptext=document.getElementById("comptext");
+      comptext.innerText=`正在加载资源(${imgtimes}/${imgnum.length})`;
+      for(let imgtime=0;imgtime<imgnum.length;imgtime++){
+        if(imgnum[imgtime].complete){
+          imgtimes++;
+          comptext.innerText=`正在加载资源(${imgtimes}/${imgnum.length})`;
+          if(imgtimes==imgnum.length){
+            setTimeout(()=>{
+              const comphide=document.getElementById("comphide");
+              comphide.style.opacity="0";
+              setTimeout(()=>comphide.style.display="none",300);
+            },300);
+          }
+        }else{
+          imgnum[imgtime].addEventListener("load",()=>{
+            imgtimes++;
+            comptext.innerText=`正在加载资源(${imgtimes}/${imgnum.length})`;
+            if(imgtimes==imgnum.length){
+              setTimeout(()=>{
+                const comphide=document.getElementById("comphide");
+                comphide.style.opacity="0";
+                setTimeout(()=>comphide.style.display="none",300);
+              },300);
+            }
+          });
+        }
+      }
       let ctwzp=localStorage.getItem("uplccnews");
       let ctwz=[];
       if(ctwzp){
@@ -547,6 +624,13 @@
         }
         localStorage.setItem("uplcc_model_id",JSON.stringify({"time":new Date().toLocaleDateString("zh-CN"),"id":result}));
       }
+      const uplccLocaldeep=localStorage.getItem("uplccdeep");
+      if(!uplccLocaldeep){
+        localStorage.setItem("uplccdeep",0);
+      }
+      deep=Number(localStorage.getItem("uplccdeep"));
+      setTimeout(()=>{mdEx();},100);
+      document.getElementById("mdname").innerText=document.getElementById("mdv"+deep).innerHTML.split("<")[1].split(">")[1].replace("默认","对话").split("-")[0];
       function tb(){
         requestAnimationFrame(tb);
         xz.style.height = window.innerHeight - (window.innerHeight - inp.offsetTop) + "px";
@@ -573,6 +657,7 @@
         if((/[<>\/\s\.,\[\]\{\}%\*"'`´]/).test(aiida))aiida='u'+Math.round(Math.random()*9999999);
         if((/[<>\/\s\.,\[\]\{\}%\*"'`´]/).test(aiidb))aiidb='u'+Math.round(Math.random()*9999999);
         localStorage.setItem('uplccnews',ctwz.join('NEXT://'));
+        document.getElementById("sr").style.width=parseFloat(getComputedStyle(document.getElementById("inp")).width)-44+"px";
       },1500);
       let gxifa=false;
       setInterval(()=>{
@@ -587,11 +672,6 @@
           bo.style.animationName="bob";
           bo.style.animationDuration="0.3s";
           setTimeout(()=>{bo.style.display="none";bo.style.opacity="0";},300);
-        }
-        if(deep==0&&!sr.value.trim()){
-          document.getElementById("sr").placeholder="在这里输入问题...";
-        }else if(deep!==0&&!sr.value.trim()){
-          document.getElementById("sr").placeholder="言行请务必遵守法律法规";
         }
       },500);
       document.getElementById("sr").addEventListener("keydown",(e)=>{
@@ -842,10 +922,12 @@ ${cdword}的充电功率(${a[sysd].split(";")[2]})相较于其他机型更高。
         return t.includes(value);
       }
       var ifgxa=0;
+      let newsnum=0;
       function addUserMessage(message) {
         message=message.trim().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g,"<br>");
         const userMsgDiv = document.createElement('div');
         userMsgDiv.className = 'userx';
+        userMsgDiv.id="bothdv"+newsnum;
         userMsgDiv.innerHTML = message;
         userMsgDiv.style.animationName="boa";
         userMsgDiv.style.animationDuration="0.15s";
@@ -858,6 +940,8 @@ ${cdword}的充电功率(${a[sysd].split(";")[2]})相较于其他机型更高。
           setTimeout(()=>{userMsgDiv.style.animation="none"},200);
         }
         xz.appendChild(userMsgDiv);
+        if(newsnum==0)userMsgDiv.style.marginTop="50px";
+        newsnum++;
         if(ctwzif)ctwz.push(`USER://${message}`);
         if(xz.scrollHeight - xz.scrollTop - xz.clientHeight < gxpx&&xz.scrollHeight > ifgxa){gx();ifgxa=xz.scrollHeight}
       }
@@ -865,14 +949,10 @@ ${cdword}的充电功率(${a[sysd].split(";")[2]})相较于其他机型更高。
         if(!str.trim())return;
         const botMsgDiv = document.createElement('div');
         botMsgDiv.className = 'fs';
-        botMsgDiv.onclick = function (){
-          if(botMsgDiv.offsetHeight<=300){botMsgDiv.style.animationName="animate";}else{
-            botMsgDiv.style.animationName="animateA";
-          }
-          botMsgDiv.style.animationDuration="0.2s";
-          setTimeout(()=>{botMsgDiv.style.animation="none"},200);
-        }
+        botMsgDiv.id="bothdv"+newsnum;
         xz.appendChild(botMsgDiv);
+        if(newsnum==0)botMsgDiv.style.marginTop="50px";
+        newsnum++;
         str=changeString(str);
         typeWriter(botMsgDiv, str, 0, 10);
         if(ctwzif)ctwz.push(`${str}`);
@@ -1101,16 +1181,12 @@ null,
         if(!num){
           const botMsgDiv = document.createElement('div');
           botMsgDiv.className = 'fs';
-          botMsgDiv.onclick = function (){
-            if(botMsgDiv.offsetHeight<=300){botMsgDiv.style.animationName="animate";}else{
-              botMsgDiv.style.animationName="animateA";
-            }
-            botMsgDiv.style.animationDuration="0.2s";
-            setTimeout(()=>{botMsgDiv.style.animation="none"},200);
-          }
+          botMsgDiv.id="bothdv"+newsnum;
           hdliuid=botMsgDiv;
           hdliutimes=0;
           xz.appendChild(botMsgDiv);
+          if(newsnum==0)botMsgDiv.style.marginTop="50px";
+          newsnum++;
         }else{
           str=changeString(str);
           hdliuid.innerHTML=str;
@@ -1175,6 +1251,8 @@ null,
           document.getElementById("chpng"+mdfor).style.opacity="0";
         }
         document.getElementById("chpng"+deep).style.opacity="1";
+        document.getElementById("mdname").innerText=document.getElementById("mdv"+deep).innerHTML.split("<")[1].split(">")[1].replace("默认","对话").split("-")[0];
+        localStorage.setItem("uplccdeep",deep);
       }
       function bigExit(){
         bigphoto.style.animationName="bob";
