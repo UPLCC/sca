@@ -76,7 +76,6 @@
         position: relative;
         width: 94%;
         max-width:94%;
-        width:fit-content;
         background-color: rgba(0,0,0,0);
         margin-top:10px;
         margin-bottom:10px;
@@ -98,6 +97,16 @@
         border-radius:7px;
         padding:1%;
         overflow-x:auto;
+      }
+      .ushare{
+        display:block;
+        width:98%;
+        height:35px;
+        margin-top:8px;
+        padding:4px;
+        background-color:rgba(0,0,0,0.03);
+        border-radius:10px;
+        border:0px solid transparent;
       }
       @keyframes animate{
         50%{
@@ -1320,17 +1329,26 @@ null
         }
         ifsetexhd=false;
       });
+      let sharecode=false;
+      let usharecode;
       function changeString(str){
         str=str
             .replace(/```[\s\S]*?```/g,t=>{
-              return "CODE://"+t.replace(/```(\w+)?/gi,"```").slice(3,-3).replace(/CODE:\/\//g,"CODEQ://").replace(/\/\/:CODE/g,"CODEH://").replace(/`/g,`YINHAO://`)+"//:CODE";
+              return "CODE://"+t.replace(/```(\w+)?/gi,t=>{
+                const lang=t.match(/^```(\w+)\s*/);
+                const ifhtml=lang?lang[1]:"";
+                if(/(html|htm)/gi.test(ifhtml)){
+                  sharecode=true;
+                }
+                return "```";
+              }).slice(3,-3).replace(/CODE:\/\//g,"CODEQ://").replace(/\/\/:CODE/g,"CODEH://").replace(/`/g,`YINHAO://`)+"//:CODE";
             })
             .replace(/```(\w+)([\s\S]+)(?!```)$/gi,(t,l,c)=>{
               return "CODE://"+c.replace(/CODE:\/\//g,"CODEQ://").replace(/\/\/:CODE/g,"CODEH://").replace(/`/g,`YINHAO://`)+"//:CODE";
             })
             .replace(/\n/g,"BR://")
             .replace(/CODE:\/\/([\s\S]*?)\/\/:CODE/g,(_, c)=>{
-              return `<div class="codea"><pre>${c
+              const recode=`<div class="codea"><pre>${c
                 .replace(/[&<>]/g,(m)=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))
                 .replace(/\*\*(.*?)\*\*/g,`TRING://$1//:TRING`)
                 .replace(/#/g,`JINGHAO://`)
@@ -1338,6 +1356,13 @@ null
                 .replace(/`/g,`YINHAO://`)
                 .replace(/\*/g,`XINGHAO://`)
                 .replace(/\-/g,`JIANHAO://`)}</pre></div>`;
+              if(sharecode){
+                sharecode=false;
+                usharecode=c.replace(/BR:\/\//g,`
+`);
+                return recode+`<button class="ushare" onclick="viewhtml();">在线预览</button>`;
+              }
+              return recode;
             })
             .replace(/BR:\/\//g, '<br>')
             .replace(/\*\*(.*?)\*\*/g,`<span style="font-weight:900;">$1</span>`)
@@ -1448,6 +1473,10 @@ null
         if(!str)return;
         const url='https://latex.codecogs.com/svg.latex?'+encodeURIComponent(str);
         document.getElementById("markdowntoresult").innerHTML=`<img src="${url}"/>`;
+      }
+      function viewhtml(){
+        localStorage.setItem("uplcc_sca_share_code",JSON.stringify({time:0,code:usharecode}));
+        window.open("https://uplcc.github.io/code","_blank");
       }
     </script>
   </body>

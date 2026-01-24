@@ -60,7 +60,7 @@
         if(thisnews.substring(0,7)=="USER://"){
           udisplay+=`USER://${thisnews.replace("USER://","")}//:USER`;
         }else{
-          udisplay+=`<p class="displaynews">回答</p>${thisnews.replace(/&lt;br&gt;/g,"<br>")}`;
+          udisplay+=`<p class="displaynews">回答</p>${thisnews.replace(/&lt;br&gt;/g,"<br>").replace(/<button class\=\"ushare\" onclick\=\"viewhtml\(\)\;\">在线预览<\/button>/g,"")}`;
         }
         if(num!==news.length){
           udisplay+="<br><hr/><br>";
