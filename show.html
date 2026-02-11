@@ -47,11 +47,11 @@
   <script>
     function shows(){
       const newsq=localStorage.getItem("uplccnews");
-      if(!newsq){
+      if(!newsq||!JSON.parse(newsq).message){
         document.getElementById("information").innerHTML="没有消息";
         return;
       }
-      const news=newsq.split("NEXT://");
+      const news=JSON.parse(newsq).message.split("NEXT://");
       let udisplay="";
       let num=0;
       for(let thisnews of news){

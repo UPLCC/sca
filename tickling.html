@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>UPLCC-Tickling</title>
+    <style>
+      *{
+        margin:0;
+        padding:0;
+        font-weight:300;
+        font-size:clamp(10px,100%,50px);
+      }
+      body{
+        background-color:rgba(0,0,0,0.03);
+        width:100vw;
+        height:100vh;
+        overflow:hidden;
+      }
+      #topD{
+        position:fixed;
+        top:0;
+        width:100vw;
+        height:44px;
+        background-color:rgba(255,255,255,0.7);
+        padding:4px;
+        box-sizing:border-box;
+        backdrop-filter:blur(10px);
+        user-select:none;
+        z-index:100;
+      }
+      #logo{
+        position:absolute;
+        top:50%;
+        transform:translate(0%,-50%);
+        width:100px;
+      }
+      #more{
+        position:absolute;
+        z-index:101;
+        top:0px;
+        right:4px;
+        width:50px;
+        height:44px;
+        font-size:100%;
+        background-color:rgba(0,0,0,0);
+        border:0px solid transparent;
+        transition:background-color 0.3s ease;
+        user-select:none;
+      }
+      #more:hover{
+        background-color:rgba(0,0,0,0.1);
+      }
+      #moreDiv{
+        position:absolute;
+        z-index:101;
+        top:48px;
+        right:4px;
+        padding:4px;
+        background-color:rgba(255,255,255,0.5);
+        box-shadow: 
+          0 1px 2px rgba(15, 23, 42, 0.02),
+          0 4px 8px rgba(15, 23, 42, 0.04),
+          0 12px 24px rgba(15, 23, 42, 0.06);
+        border-radius:clamp(6px,1.2vw,16px);
+        min-width:100px;
+        user-select:none;
+        backdrop-filter:blur(10px);
+        display:none;
+      }
+      .moreChild{
+        display:block;
+        margin:0 auto;
+        width:100%;
+        height:24px;
+        font-size:100%;
+        background-color:rgba(0,0,0,0);
+        border:0px solid transparent;
+        transition:background-color 0.3s ease;
+        border-radius:clamp(2px,1.2vw,8px);
+      }
+      .moreChild:hover{
+        background-color:rgba(0,0,0,0.1);
+      }
+      #secondMenu{
+        position:absolute;
+        z-index:102;
+        top:72px;
+        right:115px;
+        padding:4px;
+        background-color:rgba(255,255,255,0.5);
+        box-shadow: 
+          0 1px 2px rgba(15, 23, 42, 0.02),
+          0 4px 8px rgba(15, 23, 42, 0.04),
+          0 12px 24px rgba(15, 23, 42, 0.06);
+        border-radius:clamp(6px,1.2vw,16px);
+        min-width:100px;
+        user-select:none;
+        backdrop-filter:blur(10px);
+        display:none;
+      }
+      #blurDiv{
+        position:fixed;
+        z-index:100;
+        top:0;
+        left:0;
+        right:0;
+        bottom:0;
+        width:100vw;
+        height:100vh;
+        backdrop-filter:blur(10px);
+        background-color:rgba(0,0,0,0.03);
+        pointer-events:none;
+        opacity:0;
+        transition:all 0.15s ease;
+      }
+      #ticklingInput {
+        position:absolute;
+        width:90vw;
+        height:150px;
+        top:56px;
+        left:50%;
+        transform:translate(-50%,0%);
+        background-color:rgba(255,255,255,1);
+        border-radius:clamp(16px,1.2vw,24px);
+        border:0px solid transparent;
+        font-size:14px;
+        padding:4px 8px;
+        color:#171717;
+        line-height:1.6;
+        resize:none;
+        outline:none;
+        font-family:system-ui, -apple-system, sans-serif;
+        box-sizing:border-box;
+      }
+      #ticklingInput::placeholder {
+        color:#a3a3a3;
+      }
+      #submit{
+        position:absolute;
+        width:90vw;
+        height:44px;
+        top:214px;
+        left:50%;
+        transform:translate(-50%,0%);
+        border-radius:clamp(16px,1.2vw,24px);
+        border:0px solid transparent;
+        background-color:rgba(51,136,255,0.5);
+        color:rgba(255,255,255,1);
+        font-weight:400;
+        user-select:none;
+        transition:all 0.15s ease;
+      }
+      #wd{
+        position:absolute;
+        z-index:99;
+        left:50%;
+        top:50%;
+        transform:translate(-50%,-50%);
+        width:clamp(300px,70vw,650px);
+        height:clamp(200px,60vh,600px);
+        border-radius:clamp(12px,1.2vw,24px);
+        overflow:hidden;
+        background-color:rgba(255,255,255,0.9);
+        backdrop-filter:blur(10px);
+        box-shadow: 
+          0 1px 2px rgba(15, 23, 42, 0.02),
+          0 4px 8px rgba(15, 23, 42, 0.04),
+          0 12px 24px rgba(15, 23, 42, 0.06);
+        display:none;
+        transition:transform 0.1s ease, box-shadow 0.2s ease;
+      }
+      #wd.dragging {
+        box-shadow: 
+          0 8px 16px rgba(15, 23, 42, 0.08),
+          0 20px 40px rgba(15, 23, 42, 0.12),
+          0 40px 80px rgba(15, 23, 42, 0.16);
+        cursor:grabbing;
+      }
+      #wdtopD{
+        position:absolute;
+        top:0;
+        width:100%;
+        height:30px;
+        background-color:rgba(0,0,0,0.03);
+        backdrop-filter:blur(10px);
+        overflow:hidden;
+        user-select:none;
+        cursor:grab;
+        transition:background-color 0.2s ease;
+      }
+      #wdtopD:hover {
+        background-color:rgba(0,0,0,0.06);
+      }
+      #wdtopD:active {
+        cursor:grabbing;
+      }
+      #topDshut{
+        position:absolute;
+        right:0;
+        width:30px;
+        height:30px;
+        background-color:rgba(0,0,0,0);
+        border:0px solid transparent;
+        display:inline-block;
+        transition:background-color 0.15s ease;
+        cursor:pointer;
+      }
+      #topDshut:hover{
+        background-color:rgba(0,0,0,0.1);
+      }
+      #wdshut{
+        position:absolute;
+        width:18px;
+        top:50%;
+        right:4px;
+        transform:translate(0%,-50%);
+        pointer-events:none;
+      }
+      #topDname{
+        position:absolute;
+        left:4px;
+        top:50%;
+        transform:translate(0%,-50%);
+        pointer-events:none;
+      }
+      #wdContent {
+        margin-top:30px;
+        height:calc(100% - 30px);
+        overflow:auto;
+        padding:16px;
+        box-sizing:border-box;
+      }
+      #comphide{
+        position:fixed;
+        z-index:999;
+        width:100vw;
+        opacity:1;
+        height:100vh;
+        background-color:white;
+        transition:opacity 0.3s ease;
+      }
+      #comptext{
+        position:absolute;
+        top:50%;
+        left:50%;
+        font-size:20px;
+        font-weight:400;
+        transform:translate(-50%,-50%);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="comphide"><h3 id="comptext">正在加载资源(0/0)</h3></div>
+    <div id="topD">
+      <img src="logo.png" id="logo"/>
+    </div>
+    <button id="more">更多</button>
+    <div id="moreDiv">
+      <button id="respond" class="moreChild">回应</button>
+      <button id="language" class="moreChild">语言</button>
+    </div>
+    <div id="secondMenu">
+      <button class="moreChild" onclick="langindex=0;updateLang();">简体中文</button>
+      <button class="moreChild" onclick="langindex=1;updateLang();">English</button>
+    </div>
+    <div id="blurDiv"></div>
+    <textarea placeholder="在这里输入内容" id="ticklingInput"></textarea>
+    <button id="submit">提交</button>
+    <div id="wd">
+      <div id="wdtopD">
+        <span id="topDname">详情</span>
+        <button id="topDshut"><img src="exitA.png" id="wdshut"/></button>
+      </div>
+      <div id="wdContent"></div>
+    </div>
+  </body>
+  <script>
+    const elementlang={
+      more:["更多","More"],
+      respond:["回应","Response"],
+      language:["语言","Language"],
+      ticklingInput:["在这里输入内容","Please provide the content you want to be translated"],
+      submit:["提交","Submit"],
+      topDname:["详情","Details"]
+    };
+    const jslang=[
+      ["请输入需要查询的反馈ID","Please enter the feedback ID you need to query"],
+      ["请求失败","Request failed"],
+      ["ID错误","ID error"],
+      ["提交失败，请稍后再试","Submission failed. Please try again later"],
+      ["提交成功，你的反馈ID为","Your submission was successful. Your feedback ID is "],
+      ["没有回答","No reply"],
+      ["反馈内容","Feedback content"]
+    ];
+    let langindex=0;
+    const more=document.getElementById("more");
+    const moreDiv=document.getElementById("moreDiv");
+    const secondMenu=document.getElementById("secondMenu");
+    const topD=document.getElementById("topD");
+    const blurDiv=document.getElementById("blurDiv");
+    const logo=document.getElementById("logo");
+    const respond=document.getElementById("respond");
+    const language=document.getElementById("language");
+    const ticklingInput=document.getElementById("ticklingInput");
+    const submit=document.getElementById("submit");
+    const wd=document.getElementById("wd");
+    const wdContent=document.getElementById("wdContent");
+    const wdtopD=document.getElementById("wdtopD");
+    const topDshut=document.getElementById("topDshut");
+    const baseFirst="httpsaHR0cHM6Ly8=";
+    const baseURL="c2NhLmRlbm8uZGV2";
+    const baseName="UPLCC";
+    let isTrue=true;
+    let isDragging=false;
+    let currentX;
+    let currentY;
+    let initialX;
+    let initialY;
+    let xOffset=0;
+    let yOffset=0;
+    const imgnum=document.querySelectorAll("img");
+    let imgtimes=0;
+    const comptext=document.getElementById("comptext");
+    comptext.innerText=`正在加载资源(${imgtimes}/${imgnum.length})`;
+    for(let imgtime=0;imgtime<imgnum.length;imgtime++){
+      if(imgnum[imgtime].complete){
+        imgtimes++;
+        comptext.innerText=`正在加载资源(${imgtimes}/${imgnum.length})`;
+        if(imgtimes==imgnum.length){
+          setTimeout(()=>{
+            const comphide=document.getElementById("comphide");
+            comphide.style.opacity="0";
+            setTimeout(()=>comphide.style.display="none",300);
+          },300);
+        }
+      }else{
+        imgnum[imgtime].addEventListener("load",()=>{
+          imgtimes++;
+          comptext.innerText=`正在加载资源(${imgtimes}/${imgnum.length})`;
+          if(imgtimes==imgnum.length){
+            setTimeout(()=>{
+              const comphide=document.getElementById("comphide");
+              comphide.style.opacity="0";
+              setTimeout(()=>comphide.style.display="none",300);
+            },300);
+          }
+        });
+      }
+    }
+    function updateUI(){
+      requestAnimationFrame(updateUI);
+      document.getElementById("secondMenu").style.right=parseFloat(getComputedStyle(document.getElementById("moreDiv")).width)+16+"px";
+      if(!isTrue){
+        submit.style.backgroundColor="rgba(51,136,255,0.5)";
+      }else if(isTrue&&ticklingInput.value&&ticklingInput.value.trim()){
+        submit.style.backgroundColor="rgba(51,136,255,1)";
+      }else{
+        submit.style.backgroundColor="rgba(51,136,255,0.5)";
+      }
+    }
+    updateUI();
+    function changeString(str){
+      return str.replace(/&/g,"&amp;")
+                .replace(/</g,"&lt;")
+                .replace(/>/g,"&gt;")
+                .replace(/\n/g,"<br>")
+                .replace(/\"([\s\S]+?)\"/g,t=>{
+                  return t.replace(/\*/g,"UPLCCXINGHAOBIAOJI").replace(/\#/g,"UPLCCJINGHAOBIAOJI");
+                })
+                .replace(/\'([\s\S]+?)\'/g,t=>{
+                  return t.replace(/\*/g,"UPLCCXINGHAOBIAOJI").replace(/\#/g,"UPLCCJINGHAOBIAOJI");
+                })
+                .replace(/\`([\s\S]+?)\`/g,t=>{
+                  return t.replace(/\*/g,"UPLCCXINGHAOBIAOJI").replace(/\#/g,"UPLCCJINGHAOBIAOJI");
+                })
+                .replace(/\*\*([\S\s]+?)\*\*/g,`<span style="font-weight:500">$1</span>`)
+                .replace(/UPLCCXINGHAOBIAOJI/g,"*")
+                .replace(/######(.*?)(?:$|<br>|\s)/gm,`<h3 style="font-size:17px;">$1</h3>`)
+                .replace(/#####(.*?)(?:$|<br>|\s)/gm,`<h3 style="font-size:18px;">$1</h3>`)
+                .replace(/####(.*?)(?:$|<br>|\s)/gm,`<h3 style="font-size:19px;">$1</h3>`)
+                .replace(/###(.*?)(?:$|<br>|\s)/gm,`<h3 style="font-size:20px;">$1</h3>`)
+                .replace(/##(.*?)(?:$|<br>|\s)/gm,`<h3 style="font-size:21px;">$1</h3>`)
+                .replace(/#(.*?)(?:$|<br>|\s)/gm,`<h3 style="font-size:22px;">$1</h3>`)
+                .replace(/UPLCCJINGHAOBIAOJI/g,"#");
+    }
+    more.onclick=()=>{
+      moreDiv.style.display="block";
+      more.style.backgroundColor="rgba(0,0,0,0.1)";
+      blurDiv.style.opacity=1;
+      blurDiv.style.pointerEvents="auto";
+    };
+    blurDiv.onclick=()=>{
+      moreDiv.style.display="none";
+      more.style.backgroundColor="rgba(0,0,0,0)";
+      blurDiv.style.opacity=0;
+      blurDiv.style.pointerEvents="none";
+      secondMenu.style.display="none";
+    };
+    language.onclick=()=>{
+      secondMenu.style.display="block";
+    };
+    respond.onclick=()=>{
+      blurDiv.click();
+      const ticklingId=window.prompt(jslang[0][langindex]);
+      if(!ticklingId||!ticklingId.trim())return;
+      fetch(atob(baseFirst.replace("https",""))+atob(baseURL)+"/"+baseName[+![]].toLowerCase()+"db?method="+atob("Z2V0")+"&key=uplcc").then(res=>res.json()).then(t=>{
+        if(t.code!==200||!t.message){
+          alert(jslang[1][langindex]);
+          return;
+        }
+        if(t.message.length<=ticklingId){
+          alert(jslang[2][langindex]);
+          return;
+        }
+        wd.style.display="block";
+        resetWindowPosition();
+        wdContent.innerHTML="<h3 style='font-weight:400;'>"+jslang[6][langindex]+"：<br>"+changeString(JSON.parse(t.message[ticklingId]).question||"")+"</h3><hr/>"+changeString(JSON.parse(t.message[ticklingId]).answer||jslang[5][langindex]);
+      }).catch(e=>alert(e));
+    };
+    function updateLang(){
+      for(const [key,value] of Object.entries(elementlang)){
+        const element=document.getElementById(key);
+        if(key==="ticklingInput"){
+          element.placeholder=value[langindex];
+          continue;
+        }
+        if(element){
+          element.innerText=value[langindex];
+        }
+      }
+    }
+    function eis(){
+      if(isTrue){
+        isTrue=false;
+        setTimeout(()=>isTrue=true,10000);
+      }
+    }
+    submit.onclick=async ()=>{
+      if(ticklingInput.value&&ticklingInput.value.trim()&&isTrue){
+        eis();
+        const res=await fetch(
+          atob(baseFirst.replace("https",""))+atob(baseURL)+"/"+baseName[+![]].toLowerCase()+"db?method="+atob("cHVzaA==")+"&key=uplcc&"+atob("dmFsdWU9")+
+          encodeURIComponent(JSON.stringify({
+            question:ticklingInput.value,
+            answer:""
+          }))
+        ).then(res=>res.json());
+        if(res.code!==200){
+          alert(jslang[3][langindex]);
+        }else{
+          alert(jslang[4][langindex]+Number(res.arrayLength-1));
+        }
+      }
+    };
+    topDshut.onclick=()=>{
+      wd.style.display="none";
+    };
+    function resetWindowPosition() {
+      xOffset=0;
+      yOffset=0;
+      wd.style.transform="translate(-50%, -50%)";
+      wd.style.left="50%";
+      wd.style.top="50%";
+    }
+    function dragStart(e) {
+      if(e.target===topDshut||e.target===wdshut)return;
+      if(e.type==="touchstart"){
+        initialX=e.touches[0].clientX-xOffset;
+        initialY=e.touches[0].clientY-yOffset;
+      }else{
+        initialX=e.clientX-xOffset;
+        initialY=e.clientY-yOffset;
+      }
+      if(e.target===wdtopD||e.target===topDname){
+        isDragging=true;
+        wd.classList.add("dragging");
+      }
+    }
+    function dragEnd(e) {
+      initialX=currentX;
+      initialY=currentY;
+      isDragging=false;
+      wd.classList.remove("dragging");
+    }
+    function drag(e) {
+      if(isDragging){
+        e.preventDefault();
+        if(e.type==="touchmove"){
+          currentX=e.touches[0].clientX-initialX;
+          currentY=e.touches[0].clientY-initialY;
+        }else{
+          currentX=e.clientX-initialX;
+          currentY=e.clientY-initialY;
+        }
+        xOffset=currentX;
+        yOffset=currentY;
+        wd.style.transform=`translate(calc(-50% + ${currentX}px), calc(-50% + ${currentY}px))`;
+      }
+    }
+    wdtopD.addEventListener("mousedown",dragStart);
+    wdtopD.addEventListener("touchstart",dragStart,{passive:false});
+    document.addEventListener("mouseup",dragEnd);
+    document.addEventListener("touchend",dragEnd);
+    document.addEventListener("mousemove",drag);
+    document.addEventListener("touchmove",drag,{passive:false});
+  </script>
+</html>
