@@ -630,14 +630,27 @@
       }
       let ctwzp=localStorage.getItem("uplccnews");
       let ctwz=[];
+      let today=new Date().toISOString().split("T")[0];
       if(ctwzp){
-        if(!JSON.parse(ctwzp).time||JSON.parse(ctwzp).time!==new Date().toISOString().split("T")[0]){
-          localStorage.setItem("uplccnews",JSON.stringify({time:new Date().toISOString().split("T")[0],message:""}));
-          ctwz=[];
-          ctwzp=localStorage.getItem("uplccnews");
-        }else{
-          ctwz=JSON.parse(ctwzp).message.split("NEXT://");
-        }
+        try{
+          let parsed=JSON.parse(ctwzp);
+          if(parsed&&typeof parsed==='object'&&parsed.time===today){
+            ctwz = parsed.message ? parsed.message.split("NEXT://") : [];
+          }else{
+            throw new Error("Invalid format or expired");
+          }
+      }catch (e){
+        localStorage.setItem("uplccnews", JSON.stringify({
+           time: today,
+           message: ""
+        }));
+        ctwz=[];
+      }
+      }else{
+        localStorage.setItem("uplccnews", JSON.stringify({
+          time: today,
+          message: ""
+        }));
       }
       var sttta=false;
       var mapa=new Map([
