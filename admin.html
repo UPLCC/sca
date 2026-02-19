@@ -181,8 +181,9 @@
     document.body.appendChild(reele);
   }
   function doReply(question){
-    const answer=prompt("回复："+question);
+    let answer=prompt("回复："+question);
     if(!answer||!answer.trim())return;
+    answer=answer.replace(/\\n/g,"\n");
     const index=questionMap.get(question);
     if(index===undefined){
       alert("错误");

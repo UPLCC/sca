@@ -531,8 +531,8 @@
         <div class="settt" id="mdv10" onclick="deep=10;mdEx();if(!aiidd){aiidd='u'+Math.round(Math.random()*9999999999);}else{const ifaiidc=window.confirm('是否开启新对话？(Qwen3)');if(ifaiidc){aiidd='u'+Math.round(Math.random()*9999999999);}}" data-md="Qwen3(自主编辑参数)" data-stop="1"><p id="mdQwef" class="setp">Qwen3(自主编辑参数)</p></div>
         <div class="settt" id="mdv11" onclick="deep=11;mdEx();" data-md="MiniMax-M2(流式输出)" data-stop="1"><p id="mdMini" class="setp">MiniMax-M2(流式输出)</p></div>
         <div class="settt" id="mdv12" onclick="deep=12;mdEx();" data-md="DeepSeek-R1(流式输出)"><p id="mdDeep" class="setp">DeepSeek-R1(流式输出)</p></div>
-        <div class="settt" id="mdv19" onclick="deep=19;mdEx();" data-md="DeepSeek-V3.1(流式输出)" data-stop="1"><p id="mdDeepe" class="setp">DeepSeek-V3.1(流式输出)</p></div>
-        <div class="settt" id="mdv24" onclick="deep=24;mdEx();" data-md="DeepSeek-V3.1(翻译专用)" data-stop="1"><p id="mdDeepen" class="setp">DeepSeek-V3.1(翻译专用)</p></div>
+        <div class="settt" id="mdv19" onclick="deep=19;mdEx();" data-md="DeepSeek-V3.1(流式输出)"><p id="mdDeepe" class="setp">DeepSeek-V3.1(流式输出)</p></div>
+        <div class="settt" id="mdv24" onclick="deep=24;mdEx();" data-md="DeepSeek-V3.1(翻译专用)"><p id="mdDeepen" class="setp">DeepSeek-V3.1(翻译专用)</p></div>
         <div class="settt" id="mdv13" onclick="deep=13;mdEx();" data-md="Kimi-K2" data-stop="1"><p id="mdKimi" class="setp">Kimi-K2</p></div>
         <div class="settt" id="mdv14" onclick="deep=14;mdEx();" data-md="豆包Seed(流式输出)"><p id="mdSeed" class="setp">豆包Seed(流式输出)</p></div>
         <div class="settt" id="mdv15" onclick="deep=15;mdEx();" data-md="Grok4" data-stop="1"><p id="mdGrok" class="setp">Grok4</p></div>
@@ -1063,6 +1063,14 @@ index);
           return;
         }
       }
+      const bk="WaFPQW4VZ10BxfIlb927lSQGdOWh434c";
+      let bka="";
+      for(let bae=0;bae<bk.length;bae++){
+        if(bae%2===0){
+          bka+=bk[bae];
+        }
+      }
+      let bkb=atob(bka);
       async function adeep(e){
         const api=[
 `https://api.fohok.xin/API/DeepSeek-R1.php?msg=${e}`,
@@ -1081,13 +1089,13 @@ null,
 null,
 `https://api.jkyai.top/API/grok4-model/index.php?question=${e}&type=json`,
 `https://yunzhiapi.cn/API/gemini2.5/index.php?question=${e}&type=json&uid=${uplccLocal.id}`,
-`https://yunzhiapi.cn/API/flux.1?prompt=${e}&type=json`,
-`https://yunzhiapi.cn/API/hiku-4.5/index.php?question=${e}&type=json&uid=${uplccLocal.id}`,
+`https://yunzhiapi.cn/API/flux.1?prompt=${e}&type=json&token=${bkb}`,
+`https://yunzhiapi.cn/API/hiku-4.5/index.php?question=${e}&type=json&uid=${uplccLocal.id}&token=${bkb}`,
 null,
 `https://yunzhiapi.cn/API/gpt5-nano/index.php?question=${e}&type=json&uid=${uplccLocal.id}`,
 `https://yunzhiapi.cn/API/chatgpt-oss/index.php?question=${e}&type=json&uid=${uplccLocal.id}`,
-`https://yunzhiapi.cn/API/qwen3-coder/index.php?question=${e}&type=json&uid=${uplccLocal.id}`,
-`https://yunzhiapi.cn/API/xiaomi/index.php?question=${e}&type=json&uid=${uplccLocal.id}`,
+`https://yunzhiapi.cn/API/qwen3-coder/index.php?question=${e}&type=json&uid=${uplccLocal.id}&token=${bkb}`,
+`https://yunzhiapi.cn/API/xiaomi/index.php?question=${e}&type=json&uid=${uplccLocal.id}&token=${bkb}`,
 null,
 null,
 null
@@ -1242,17 +1250,17 @@ null
         }else if(deep==11){
           sse=new EventSource(`https://yunzhiapi.cn/API/minimax2.php?question=${msg}&type=true`);
         }else if(deep==12){
-          sse=new EventSource(`https://yunzhiapi.cn/API/deepseek.php?question=${msg}&type=true`);
+          sse=new EventSource(`https://yunzhiapi.cn/API/deepseek.php?question=${msg}&type=true&token=${bkb}`);
         }else if(deep==14){
-          sse=new EventSource(`https://yunzhiapi.cn/API/doubao.php?question=${msg}&type=true`);
+          sse=new EventSource(`https://yunzhiapi.cn/API/doubao.php?question=${msg}&type=true&token=${bkb}`);
         }else if(deep==19){
-          sse=new EventSource(`https://yunzhiapi.cn/API/depsek3.1.php?question=${msg}&type=true`);
+          sse=new EventSource(`https://yunzhiapi.cn/API/depsek3.1.php?question=${msg}&type=true&token=${bkb}`);
         }else if(deep==24){
-          sse=new EventSource(`https://yunzhiapi.cn/API/depsek3.1.php?question=${msg}&type=true&system=直接中英文翻译用户的内容并给出相关动词短语2句和句子1句，翻译的单词要给出词性，你不能回答用户的问题`);
+          sse=new EventSource(`https://yunzhiapi.cn/API/depsek3.1.php?question=${msg}&type=true&system=直接中英文翻译用户的内容并给出相关动词短语2句和句子1句，翻译的单词要给出词性，你不能回答用户的问题&token=${bkb}`);
         }else if(deep==25){
-          sse=new EventSource(`https://yunzhiapi.cn/API/yuanbao.php?question=${msg}&type=true`);
+          sse=new EventSource(`https://yunzhiapi.cn/API/yuanbao.php?question=${msg}&type=true&token=${bkb}`);
         }else if(deep==26){
-          sse=new EventSource(`https://yunzhiapi.cn/API/glm4.6.php?question=${msg}&type=true`);
+          sse=new EventSource(`https://yunzhiapi.cn/API/glm4.6.php?question=${msg}&type=true&token=${bkb}`);
         }
         var ifbde=false;
         sse.addEventListener('message',(e)=>{

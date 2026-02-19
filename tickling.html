@@ -9,6 +9,7 @@
         padding:0;
         font-weight:300;
         font-size:clamp(10px,100%,50px);
+        overflow-wrap:break-word;
       }
       body{
         background-color:rgba(0,0,0,0.03);
@@ -159,7 +160,7 @@
         width:clamp(300px,70vw,650px);
         height:clamp(200px,60vh,600px);
         border-radius:clamp(12px,1.2vw,24px);
-        overflow:hidden;
+        overflow-y:auto;
         background-color:rgba(255,255,255,0.9);
         backdrop-filter:blur(10px);
         box-shadow: 
@@ -169,7 +170,7 @@
         display:none;
         transition:transform 0.1s ease, box-shadow 0.2s ease;
       }
-      #wd.dragging {
+      #wd.dragging{
         box-shadow: 
           0 8px 16px rgba(15, 23, 42, 0.08),
           0 20px 40px rgba(15, 23, 42, 0.12),
@@ -188,10 +189,10 @@
         cursor:grab;
         transition:background-color 0.2s ease;
       }
-      #wdtopD:hover {
+      #wdtopD:hover{
         background-color:rgba(0,0,0,0.06);
       }
-      #wdtopD:active {
+      #wdtopD:active{
         cursor:grabbing;
       }
       #topDshut{
@@ -223,7 +224,87 @@
         transform:translate(0%,-50%);
         pointer-events:none;
       }
-      #wdContent {
+      #wdContent{
+        margin-top:30px;
+        height:calc(100% - 30px);
+        overflow:auto;
+        padding:16px;
+        box-sizing:border-box;
+      }
+      #pf{
+        position:absolute;
+        z-index:99;
+        left:50%;
+        top:50%;
+        transform:translate(-50%,-50%);
+        width:clamp(300px,70vw,650px);
+        height:clamp(200px,60vh,600px);
+        border-radius:clamp(12px,1.2vw,24px);
+        overflow-y:auto;
+        background-color:rgba(255,255,255,0.9);
+        backdrop-filter:blur(10px);
+        box-shadow: 
+          0 1px 2px rgba(15, 23, 42, 0.02),
+          0 4px 8px rgba(15, 23, 42, 0.04),
+          0 12px 24px rgba(15, 23, 42, 0.06);
+        display:none;
+        transition:transform 0.1s ease, box-shadow 0.2s ease;
+      }
+      #pf.dragging{
+        box-shadow: 
+          0 8px 16px rgba(15, 23, 42, 0.08),
+          0 20px 40px rgba(15, 23, 42, 0.12),
+          0 40px 80px rgba(15, 23, 42, 0.16);
+        cursor:grabbing;
+      }
+      #pftopD{
+        position:absolute;
+        top:0;
+        width:100%;
+        height:30px;
+        background-color:rgba(0,0,0,0.03);
+        backdrop-filter:blur(10px);
+        overflow:hidden;
+        user-select:none;
+        cursor:grab;
+        transition:background-color 0.2s ease;
+      }
+      #pftopD:hover{
+        background-color:rgba(0,0,0,0.06);
+      }
+      #pftopD:active{
+        cursor:grabbing;
+      }
+      #pftopDshut{
+        position:absolute;
+        right:0;
+        width:30px;
+        height:30px;
+        background-color:rgba(0,0,0,0);
+        border:0px solid transparent;
+        display:inline-block;
+        transition:background-color 0.15s ease;
+        cursor:pointer;
+      }
+      #pftopDshut:hover{
+        background-color:rgba(0,0,0,0.1);
+      }
+      #pfshut{
+        position:absolute;
+        width:18px;
+        top:50%;
+        right:4px;
+        transform:translate(0%,-50%);
+        pointer-events:none;
+      }
+      #pftopDname{
+        position:absolute;
+        left:4px;
+        top:50%;
+        transform:translate(0%,-50%);
+        pointer-events:none;
+      }
+      #pfContent{
         margin-top:30px;
         height:calc(100% - 30px);
         overflow:auto;
@@ -247,6 +328,17 @@
         font-weight:400;
         transform:translate(-50%,-50%);
       }
+      .ticklingData{
+        width:96%;
+        background-color:rgba(0,0,0,0.03);
+        backdrop-filter:blur(10px);
+        min-height:60px;
+        border-radius:clamp(6px,1.2vw,12px);
+        margin:4px auto;
+        padding:12px;
+        box-sizing:border-box;
+        user-select:none;
+      }
     </style>
   </head>
   <body>
@@ -266,6 +358,13 @@
     <div id="blurDiv"></div>
     <textarea placeholder="在这里输入内容" id="ticklingInput"></textarea>
     <button id="submit">提交</button>
+    <div id="pf">
+      <div id="pftopD">
+        <span id="pftopDname">过去的反馈和建议</span>
+        <button id="pftopDshut"><img src="exitA.png" id="pfshut"/></button>
+      </div>
+      <div id="pfContent"></div>
+    </div>
     <div id="wd">
       <div id="wdtopD">
         <span id="topDname">详情</span>
@@ -281,7 +380,8 @@
       language:["语言","Language"],
       ticklingInput:["在这里输入内容","Please provide the content you want to be translated"],
       submit:["提交","Submit"],
-      topDname:["详情","Details"]
+      topDname:["详情","Details"],
+      pftopDname:["过去的反馈和建议","Past feedback and suggestions"]
     };
     const jslang=[
       ["请输入需要查询的反馈ID","Please enter the feedback ID you need to query"],
@@ -290,9 +390,23 @@
       ["提交失败，请稍后再试","Submission failed. Please try again later"],
       ["提交成功，你的反馈ID为","Your submission was successful. Your feedback ID is "],
       ["没有回答","No reply"],
-      ["反馈内容","Feedback content"]
+      ["反馈内容","Feedback content"],
     ];
     let langindex=0;
+    let pastFeedback;
+    function updatePastFeedback(){
+      const storage=localStorage.getItem("uplcc_user_feedback");
+      if(!storage){
+        localStorage.setItem("uplcc_user_feedback",JSON.stringify([]));
+        pastFeedback=[];
+      }else{
+        pastFeedback=JSON.parse(localStorage.getItem("uplcc_user_feedback"));
+      }
+    }
+    updatePastFeedback();
+    function submitFeedback(){
+      localStorage.setItem("uplcc_user_feedback",JSON.stringify(pastFeedback));
+    }
     const more=document.getElementById("more");
     const moreDiv=document.getElementById("moreDiv");
     const secondMenu=document.getElementById("secondMenu");
@@ -307,6 +421,10 @@
     const wdContent=document.getElementById("wdContent");
     const wdtopD=document.getElementById("wdtopD");
     const topDshut=document.getElementById("topDshut");
+    const pf=document.getElementById("pf");
+    const pfContent=document.getElementById("pfContent");
+    const pftopD=document.getElementById("pftopD");
+    const pftopDshut=document.getElementById("pftopDshut");
     const baseFirst="httpsaHR0cHM6Ly8=";
     const baseURL="c2NhLmRlbm8uZGV2";
     const baseName="UPLCC";
@@ -318,6 +436,13 @@
     let initialY;
     let xOffset=0;
     let yOffset=0;
+    let isDraggingPf=false;
+    let currentXPf;
+    let currentYPf;
+    let initialXPf;
+    let initialYPf;
+    let xOffsetPf=0;
+    let yOffsetPf=0;
     const imgnum=document.querySelectorAll("img");
     let imgtimes=0;
     const comptext=document.getElementById("comptext");
@@ -347,6 +472,69 @@
         });
       }
     }
+    fetch(atob(baseFirst.replace("https",""))+atob(baseURL)+"/"+baseName[+![]].toLowerCase()+"db?method="+atob("Z2V0")+"&key=uplcc")
+      .then(res=>res.json())
+      .then(d=>{
+         if(d.code!==200||!d.message||!Array.isArray(d.message)){
+           alert(d);
+           return;
+         }
+         const dbData=d.message;
+         const validFeedback=[];
+         for(let i=0;i<pastFeedback.length;i++){
+           const localItem=pastFeedback[i];
+           const id=localItem.id;
+           if(id>=0&&id<dbData.length&&dbData[id]){
+             const dbItem=JSON.parse(dbData[id]);
+             if(dbItem.question===localItem.question&&dbItem.question!==""){
+               validFeedback.push(localItem);
+             }
+           }
+         }
+         if(validFeedback.length!==pastFeedback.length){
+           pastFeedback=validFeedback;
+           submitFeedback();
+           updateFeedback();
+         }
+       })
+       .catch(err=>{
+         alert(err);
+       });
+    function updateFeedback(){
+      document.querySelectorAll('.ticklingData').forEach(e=>e.remove());
+      for(var i=0;i<pastFeedback.length;i++){
+        const jsonData=pastFeedback[i].question;
+        const jsonId=pastFeedback[i].id;
+        let baseData;
+        if(jsonData.length>10){
+          baseData=jsonData.slice(0,15)+"...";
+        }else{
+          baseData=jsonData;
+        }
+        const ele=document.createElement("div");
+        ele.className="ticklingData";
+        ele.innerHTML=`<h3>${baseData}</h3><p>ID:${jsonId}</p>`;
+        ele.onclick=()=>{
+          const ticklingId=jsonId;
+          if(!ticklingId&&ticklingId!==0)return;
+          fetch(atob(baseFirst.replace("https",""))+atob(baseURL)+"/"+baseName[+![]].toLowerCase()+"db?method="+atob("Z2V0")+"&key=uplcc").then(res=>res.json()).then(t=>{
+            if(t.code!==200||!t.message){
+              alert(jslang[1][langindex]);
+              return;
+            }
+            if(t.message.length<=ticklingId){
+              alert(jslang[2][langindex]);
+              return;
+            }
+            wd.style.display="block";
+            resetWindowPosition();
+            wdContent.innerHTML="<h3 style='font-weight:400;'>"+jslang[6][langindex]+"：<br>"+changeString(JSON.parse(t.message[ticklingId]).question||"")+"</h3><hr/>"+changeString(JSON.parse(t.message[ticklingId]).answer||jslang[5][langindex]);
+          }).catch(e=>alert(e));
+        }
+        document.getElementById("pfContent").appendChild(ele);
+      }
+    }
+    updateFeedback();
     function updateUI(){
       requestAnimationFrame(updateUI);
       document.getElementById("secondMenu").style.right=parseFloat(getComputedStyle(document.getElementById("moreDiv")).width)+16+"px";
@@ -401,21 +589,9 @@
     };
     respond.onclick=()=>{
       blurDiv.click();
-      const ticklingId=window.prompt(jslang[0][langindex]);
-      if(!ticklingId||!ticklingId.trim())return;
-      fetch(atob(baseFirst.replace("https",""))+atob(baseURL)+"/"+baseName[+![]].toLowerCase()+"db?method="+atob("Z2V0")+"&key=uplcc").then(res=>res.json()).then(t=>{
-        if(t.code!==200||!t.message){
-          alert(jslang[1][langindex]);
-          return;
-        }
-        if(t.message.length<=ticklingId){
-          alert(jslang[2][langindex]);
-          return;
-        }
-        wd.style.display="block";
-        resetWindowPosition();
-        wdContent.innerHTML="<h3 style='font-weight:400;'>"+jslang[6][langindex]+"：<br>"+changeString(JSON.parse(t.message[ticklingId]).question||"")+"</h3><hr/>"+changeString(JSON.parse(t.message[ticklingId]).answer||jslang[5][langindex]);
-      }).catch(e=>alert(e));
+      updateFeedback();
+      pf.style.display="block";
+      resetPfWindowPosition();
     };
     function updateLang(){
       for(const [key,value] of Object.entries(elementlang)){
@@ -448,6 +624,9 @@
         if(res.code!==200){
           alert(jslang[3][langindex]);
         }else{
+          pastFeedback.push({question:ticklingInput.value,id:res.arrayLength-1});
+          submitFeedback();
+          updateFeedback();
           alert(jslang[4][langindex]+Number(res.arrayLength-1));
         }
       }
@@ -455,12 +634,22 @@
     topDshut.onclick=()=>{
       wd.style.display="none";
     };
+    pftopDshut.onclick=()=>{
+      pf.style.display="none";
+    };
     function resetWindowPosition() {
       xOffset=0;
       yOffset=0;
       wd.style.transform="translate(-50%, -50%)";
       wd.style.left="50%";
       wd.style.top="50%";
+    }
+    function resetPfWindowPosition() {
+      xOffsetPf=0;
+      yOffsetPf=0;
+      pf.style.transform="translate(-50%, -50%)";
+      pf.style.left="50%";
+      pf.style.top="50%";
     }
     function dragStart(e) {
       if(e.target===topDshut||e.target===wdshut)return;
@@ -497,11 +686,52 @@
         wd.style.transform=`translate(calc(-50% + ${currentX}px), calc(-50% + ${currentY}px))`;
       }
     }
+    function dragStartPf(e) {
+      if(e.target===pftopDshut||e.target===pfshut)return;
+      if(e.type==="touchstart"){
+        initialXPf=e.touches[0].clientX-xOffsetPf;
+        initialYPf=e.touches[0].clientY-yOffsetPf;
+      }else{
+        initialXPf=e.clientX-xOffsetPf;
+        initialYPf=e.clientY-yOffsetPf;
+      }
+      if(e.target===pftopD||e.target===pftopDname){
+        isDraggingPf=true;
+        pf.classList.add("dragging");
+      }
+    }
+    function dragEndPf(e) {
+      initialXPf=currentXPf;
+      initialYPf=currentYPf;
+      isDraggingPf=false;
+      pf.classList.remove("dragging");
+    }
+    function dragPf(e) {
+      if(isDraggingPf){
+        e.preventDefault();
+        if(e.type==="touchmove"){
+          currentXPf=e.touches[0].clientX-initialXPf;
+          currentYPf=e.touches[0].clientY-initialYPf;
+        }else{
+          currentXPf=e.clientX-initialXPf;
+          currentYPf=e.clientY-initialYPf;
+        }
+        xOffsetPf=currentXPf;
+        yOffsetPf=currentYPf;
+        pf.style.transform=`translate(calc(-50% + ${currentXPf}px), calc(-50% + ${currentYPf}px))`;
+      }
+    }
     wdtopD.addEventListener("mousedown",dragStart);
     wdtopD.addEventListener("touchstart",dragStart,{passive:false});
     document.addEventListener("mouseup",dragEnd);
     document.addEventListener("touchend",dragEnd);
     document.addEventListener("mousemove",drag);
     document.addEventListener("touchmove",drag,{passive:false});
+    pftopD.addEventListener("mousedown",dragStartPf);
+    pftopD.addEventListener("touchstart",dragStartPf,{passive:false});
+    document.addEventListener("mouseup",dragEndPf);
+    document.addEventListener("touchend",dragEndPf);
+    document.addEventListener("mousemove",dragPf);
+    document.addEventListener("touchmove",dragPf,{passive:false});
   </script>
 </html>
