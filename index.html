@@ -15,10 +15,27 @@
         width: 96vw;
         left:2vw;
         right:2px;
-        border-radius: 15px;
+        background:linear-gradient(
+          45deg,
+          rgba(255,255,255,0.8) 0%,
+          transparent 25%,
+          transparent 75%,
+          rgba(255,255,255,0.8) 100%
+        );
+        box-shadow:
+          inset 2px -2px 1px -1px rgba(255,255,255,0.9),
+          inset -2px 2px 1px -1px rgba(255,255,255,0.9),
+          inset 6px -6px 1px -6px rgba(255,255,255,0.55),
+          inset -6px 6px 1px -6px rgba(255,255,255,0.55),
+          inset 0 0 2px rgba(0,0,0,0.8),
+          0 4px 8px rgba(0,0,0,0.2);
+        backdrop-filter:blur(1px);
+        border:1px double rgba(51,51,51,0.08);
+        border-radius: 24px;
         background-color: rgba(0,0,0,0.02);
         backdrop-filter:blur(10px);
         border: 0;
+        overflow:hidden;
         transition: height 0.2s ease;
       }
       #sr {
@@ -236,7 +253,7 @@
         background-color:rgba(255,255,255,1);
         box-shadow:0 0 20px 10px rgba(0,0,0,0.1);
         backdrop-filter:blur(5px);
-        border-radius:20px;
+        border-radius:24px;
         padding:8px;
         user-select:none;
         display:none;
@@ -246,12 +263,28 @@
         width:96%;
         height:40px;
         margin:2%;
-        background-color:rgba(0,0,0,0.02);
-        border-radius:10px;
-        transition:background-color 0.3s ease;
+        background:linear-gradient(
+          45deg,
+          rgba(255,255,255,0.8) 0%,
+          transparent 25%,
+          transparent 75%,
+          rgba(255,255,255,0.8) 100%
+        );
+        box-shadow:
+          inset 2px -2px 1px -1px rgba(255,255,255,0.9),
+          inset -2px 2px 1px -1px rgba(255,255,255,0.9),
+          inset 6px -6px 1px -6px rgba(255,255,255,0.55),
+          inset -6px 6px 1px -6px rgba(255,255,255,0.55),
+          inset 0 0 2px rgba(0,0,0,0.8),
+          0 4px 8px rgba(0,0,0,0.2);
+        backdrop-filter:blur(1px);
+        border:1px double rgba(51,51,51,0.08);
+        border-radius:15px;
+        transition:all 0.3s ease;
       }
-      .sett:hover{
-        background-color:rgba(0,0,0,0.05);
+      .sett:active{
+        background-color:rgba(255,255,255,1);
+        transform:scale(0.97);
       }
       .setp{
         position:absolute;
@@ -318,16 +351,37 @@
       .twoex{
         position:fixed;
         z-index:55;
-        border:0px solid rgba(0,0,0,0.1);
-        background-color:rgba(255,255,255,0);
+        background:linear-gradient(
+          45deg,
+          rgba(255,255,255,0.8) 0%,
+          transparent 25%,
+          transparent 75%,
+          rgba(255,255,255,0.8) 100%
+        );
+        box-shadow:
+          inset 2px -2px 1px -1px rgba(255,255,255,0.9),
+          inset -2px 2px 1px -1px rgba(255,255,255,0.9),
+          inset 6px -6px 1px -6px rgba(255,255,255,0.55),
+          inset -6px 6px 1px -6px rgba(255,255,255,0.55),
+          inset 0 0 2px rgba(0,0,0,0.8),
+          0 4px 8px rgba(0,0,0,0.2);
+        backdrop-filter:blur(1px);
+        border:1px double rgba(51,51,51,0.08);
         border-radius:16px;
         padding:4px;
-        width:30px;
-        height:30px;
+        width:33px;
+        height:33px;
         background-image:url("exit.png");
         background-repeat:no-repeat;
         background-position:center;
         background-size:20px;
+        transition:all 0.3s ease;
+      }
+      .twoex:active{
+        background-color:rgba(255,255,255,0.5);
+        transform:scale(0.97);
+        backdrop-filter:blur(2px);
+        background-size:19px;
       }
       .settt{
         position:relative;
@@ -337,13 +391,28 @@
         margin-right:2%;
         width:96%;
         height:40px;
-        background-color:rgba(0,0,0,0.02);
-        border-radius:10px;
+        background:linear-gradient(
+          45deg,
+          rgba(255,255,255,0.8) 0%,
+          transparent 25%,
+          transparent 75%,
+          rgba(255,255,255,0.8) 100%
+        );
+        box-shadow:
+          inset 2px -2px 1px -1px rgba(255,255,255,0.9),
+          inset -2px 2px 1px -1px rgba(255,255,255,0.9),
+          inset 6px -6px 1px -6px rgba(255,255,255,0.55),
+          inset -6px 6px 1px -6px rgba(255,255,255,0.55),
+          inset 0 0 2px rgba(0,0,0,0.8),
+          0 4px 8px rgba(0,0,0,0.2);
+        border-radius:16px;
+        border:1px double rgba(51,51,51,0.08);
         user-select:none;
-        transition:background-color 0.2s ease,transform 0.3s ease;
+        transition:all 0.2s ease,transform 0.3s ease;
       }
       .settt:active{
-        background-color:rgba(0,0,0,0.07);
+        background-color:rgba(255,255,255,1);
+        transform:scale(0.97);
       }
       #stcta{
         background-color:#56a9ff;
@@ -369,7 +438,6 @@
         transition:background-color 0.5s ease;
       }
       #scarmd,#scarsql{
-        border:1px solid gray;
         background-color:white;
         padding:4px;
         box-sizing:border-box;
@@ -442,10 +510,14 @@
         width:100vw;
         height:40px;
         top:0;
-        background-color:rgba(0,0,0,0.02);
-        backdrop-filter:blur(10px);
+        background:linear-gradient(
+          to bottom,
+          rgba(255,255,255,1) 0%,
+          rgba(255,255,255,1) 50%,
+          rgba(255,255,255,0.7) 70%,
+          rgba(255,255,255,0) 100%
+        );
         overflow:hidden;
-        box-shadow:0 0 5px 5px rgba(0,0,0,0.05);
       }
       #setpng{
         position:absolute;
@@ -534,7 +606,7 @@
         <div class="settt" id="mdv19" onclick="deep=19;mdEx();" data-md="DeepSeek-V3.1(流式输出)" data-stop="1"><p id="mdDeepe" class="setp">DeepSeek-V3.1(流式输出)</p></div>
         <div class="settt" id="mdv24" onclick="deep=24;mdEx();" data-md="DeepSeek-V3.1(翻译专用)" data-stop="1"><p id="mdDeepen" class="setp">DeepSeek-V3.1(翻译专用)</p></div>
         <div class="settt" id="mdv13" onclick="deep=13;mdEx();" data-md="Kimi-K2" data-stop="1"><p id="mdKimi" class="setp">Kimi-K2</p></div>
-        <div class="settt" id="mdv14" onclick="deep=14;mdEx();" data-md="豆包Seed(流式输出)"><p id="mdSeed" class="setp">豆包Seed(流式输出)</p></div>
+        <div class="settt" id="mdv14" onclick="deep=14;mdEx();" data-md="豆包Seed(流式输出)" data-stop="1"><p id="mdSeed" class="setp">豆包Seed(流式输出)</p></div>
         <div class="settt" id="mdv15" onclick="deep=15;mdEx();" data-md="Grok4" data-stop="1"><p id="mdGrok" class="setp">Grok4</p></div>
         <div class="settt" id="mdv16" onclick="deep=16;mdEx();" data-md="Gemini-2.5(连续对话)" data-stop="1"><p id="mdGemini" class="setp">Gemini-2.5(连续对话)</p></div>
         <div class="settt" id="mdv17" onclick="deep=17;mdEx();" data-md="FLUX.1" data-stop="1"><p id="mdFLUX" class="setp">FLUX.1</p></div>
@@ -548,6 +620,7 @@
         <div class="settt" id="mdv28" onclick="deep=28;mdEx();" data-md="智谱GLM4.6-OCR(流式输出)"><p id="mdZpOCR" class="setp">智谱GLM4.6-OCR(流式输出)</p></div>
         <div class="settt" id="mdv29" onclick="deep=29;mdEx();" data-md="Qwen3-VL(流式输出)"><p id="mdQwenVL" class="setp">Qwen3-VL(流式输出)</p></div>
         <div class="settt" id="mdv30" onclick="deep=30;mdEx();" data-md="Kwaipilot(流式输出)"><p id="mdKwaipilot" class="setp">Kwaipilot(流式输出)</p></div>
+        <div class="settt" id="mdv31" onclick="deep=31;mdEx();" data-md="DeepSeek-V4(联网搜索)"><p id="mdDeepSeekV4" class="setp">DeepSeek-V4(联网搜索)</p></div>
       </div>
       <div id="sqla" class="settwo">
         <button id="mdex" class="twoex" onclick="settw('sqla',1);"></button>
@@ -602,6 +675,8 @@
       let ifh=false;
       let mdif=false;
       let ctwzif=true;
+      let isMsg=false;
+      let msgStop=false;
       const imgnum=document.querySelectorAll("img");
       let imgtimes=0;
       const comptext=document.getElementById("comptext");
@@ -1101,7 +1176,12 @@ null,
 `https://yunzhiapi.cn/API/xiaomi/index.php?question=${e}&type=json&uid=${uplccLocal.id}&token=${bkb}`,
 null,
 null,
-null
+null,
+null,
+null,
+null,
+null,
+`https://yunzhiapi.cn/API/deepseek/v4.php?question=${e}&token=${bkb}8&type=json&search=true&uid=${uplccLocal.id}`
 ];
         const r = await fetch(api[deep-1]);
         const jsonData = await r.json();
@@ -1209,6 +1289,12 @@ null
           }else{
             return "Error";
           }
+        }else if(deep==31){
+          if(jsonData.success){
+            return jsonData.content.replace(/\[citation\:\d+\]/g,"");
+          }else{
+            return "Error";
+          }
         }else{
           return "Error";
         }
@@ -1242,11 +1328,22 @@ null
           hdliustr=str;
         }
       }
+      let sse;
       async function bdeep() {
+        if(isMsg){
+          const isStop=window.confirm("确定停止上一个模型输出？");
+          if(isStop){
+            sse.close();
+            isMsg=false;
+          }else{
+            tip("请等待模型输出完成");
+            return;
+          }
+        }
+        isMsg=true;
         let msg = sr.value.trim();
         if(!msg)return;
         let reason="";
-        let sse;
         msg=encodeURIComponent(msg);
         if(deep==6){
           sse=new EventSource(`https://api.fohok.xin/API/DeepSeek-R1.php?msg=${msg}&flow=1`);
@@ -1275,6 +1372,7 @@ null
         sse.addEventListener('message',(e)=>{
           if (e.data === '[DONE]') {
             sse.close();
+            isMsg=false;
             if(ctwzif)ctwz.push(`${hdliustr}`);
             return;
           }
@@ -1303,6 +1401,7 @@ null
         });
         sse.addEventListener('error',()=>{
           sse.close();
+          isMsg=false;
           if(ctwzif&&hdliustr)ctwz.push(`${hdliustr}`);
         });
       }
@@ -1310,7 +1409,7 @@ null
         "默认","DeepSeek","Gemma","Gemma(连续对话)","Qwen","GLM-4-Flash","DeepSeek(流式输出)","Qwen(连续对话)","CogView",
         "ChatGPT-4","Qwen3","MiniMax-M2","DeepSeek-R1","Kimi-K2","Seed","Grok4","Gemini-2.5","FLUX.1","Cluade4.5",
         "DeepSeek-V3.1","ChatGPT-5","ChatGPT-OSS","Qwen3-coder","MiMo-V2-Flash","DeepSeek-V3.1","元宝","GLM4.6",
-        "UPLCC-V1-Mini","GLM4.6-OCR","Qwen3-VL","Kwaipilot"
+        "UPLCC-V1-Mini","GLM4.6-OCR","Qwen3-VL","Kwaipilot","DeepSeek-V4"
       ];
       for(var mdstop=0;mdstop<mdD.length;mdstop++){
         const thisdom=document.getElementById("mdv"+mdstop);
@@ -1416,6 +1515,8 @@ null
       let usharecode;
       function changeString(str){
         str=str
+            .replace(/\[代码\:([^\]])+?\]([\s\S]*?)\[\/代码\]/g,"```$1$2```")
+            .replace(/「(.+?)」/g,"`$1`")
             .replace(/```[\s\S]*?```/g,t=>{
               return "CODE://"+t.replace(/```(\w+)?/gi,t=>{
                 const lang=t.match(/^```(\w+)\s*/);
