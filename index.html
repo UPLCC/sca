@@ -145,16 +145,36 @@
         position:fixed;
         right:3%;
         bottom:80px;
-        border-radius:10px;
         box-shadow:0px 0px 10px 5px rgba(0,0,0,0.1);
         width:80px;
         text-align:center;
         height:40px;
-        border:0px solid white;
-        background-color:rgba(255,255,255,0.1);
-        backdrop-filter:blur(3px);
+        background:linear-gradient(
+          45deg,
+          rgba(255,255,255,0.8) 0%,
+          transparent 25%,
+          transparent 75%,
+          rgba(255,255,255,0.8) 100%
+        );
+        box-shadow:
+          inset 2px -2px 1px -1px rgba(255,255,255,0.9),
+          inset -2px 2px 1px -1px rgba(255,255,255,0.9),
+          inset 6px -6px 1px -6px rgba(255,255,255,0.55),
+          inset -6px 6px 1px -6px rgba(255,255,255,0.55),
+          inset 0 0 2px rgba(0,0,0,0.8),
+          0 4px 8px rgba(0,0,0,0.2);
+        backdrop-filter:blur(1px);
+        border:1px double rgba(51,51,51,0.08);
+        border-radius:16px;
         display:none;
         opacity:0;
+        user-select:none;
+        transition:all 0.3s ease;
+      }
+      #bo:active{
+        background-color:rgba(255,255,255,0.5);
+        transform:scale(0.97);
+        backdrop-filter:blur(2px);
       }
       @keyframes boa{
         to{
@@ -257,6 +277,21 @@
         padding:8px;
         user-select:none;
         display:none;
+        background:linear-gradient(
+          45deg,
+          rgba(255,255,255,0.8) 0%,
+          transparent 25%,
+          transparent 75%,
+          rgba(255,255,255,0.8) 100%
+        );
+        box-shadow:
+          inset 2px -2px 1px -1px rgba(255,255,255,0.9),
+          inset -2px 2px 1px -1px rgba(255,255,255,0.9),
+          inset 6px -6px 1px -6px rgba(255,255,255,0.55),
+          inset -6px 6px 1px -6px rgba(255,255,255,0.55),
+          inset 0 0 2px rgba(0,0,0,0.8),
+          0 4px 8px rgba(0,0,0,0.2);
+        backdrop-filter:blur(1px);
       }
       .sett{
         position:relative;
@@ -283,8 +318,9 @@
         transition:all 0.3s ease;
       }
       .sett:active{
-        background-color:rgba(255,255,255,1);
+        background-color:rgba(255,255,255,0.7);
         transform:scale(0.97);
+        backdrop-filter:blur(2px);
       }
       .setp{
         position:absolute;
@@ -327,7 +363,7 @@
         z-index:31;
         width:100vw;
         height:100vh;
-        background-color:rgba(0,0,0,0.15);
+        background-color:rgba(0,0,0,0.03);
         backdrop-filter:blur(5px);
         opacity:0;
         display:none;
@@ -551,7 +587,7 @@
     </style>
   </head>
   <body>	
-    <div id="comphide"><h3 id="comptext">正在加载资源(0/0)</h3></div>
+    <div id="comphide"><h3 id="comptext">正在加载向量文件</h3></div>
     <div id="topdiv">
       <span id="mdname" onclick="setting.style.display='block';setting.style.animationName='bod';setting.style.animationDuration='0.3s';settingcz();setex.style.display='block';setex.style.animationName='bod';setex.style.animationDuration='0.3s';setex.style.opacity='1';setTimeout(()=>settw('mdDiv'),50);">新对话</span>
       <img src="setting.png" id="setpng" onclick="setting.style.display='block';setting.style.animationName='bod';setting.style.animationDuration='0.3s';settingcz();setex.style.display='block';setex.style.animationName='bod';setex.style.animationDuration='0.3s';setex.style.opacity='1';"/>
@@ -620,7 +656,8 @@
         <div class="settt" id="mdv28" onclick="deep=28;mdEx();" data-md="智谱GLM4.6-OCR(流式输出)"><p id="mdZpOCR" class="setp">智谱GLM4.6-OCR(流式输出)</p></div>
         <div class="settt" id="mdv29" onclick="deep=29;mdEx();" data-md="Qwen3-VL(流式输出)"><p id="mdQwenVL" class="setp">Qwen3-VL(流式输出)</p></div>
         <div class="settt" id="mdv30" onclick="deep=30;mdEx();" data-md="Kwaipilot(流式输出)"><p id="mdKwaipilot" class="setp">Kwaipilot(流式输出)</p></div>
-        <div class="settt" id="mdv31" onclick="deep=31;mdEx();" data-md="DeepSeek-V4(联网搜索)"><p id="mdDeepSeekV4" class="setp">DeepSeek-V4(联网搜索)</p></div>
+        <div class="settt" id="mdv31" onclick="deep=31;mdEx();" data-md="DeepSeek-V4(联网搜索)" data-stop="1"><p id="mdDeepSeekV4" class="setp">DeepSeek-V4(联网搜索)</p></div>
+        <div class="settt" id="mdv32" onclick="deep=32;mdEx();" data-md="英汉互译"><p id="mdTranslate" class="setp">英汉互译</p></div>
       </div>
       <div id="sqla" class="settwo">
         <button id="mdex" class="twoex" onclick="settw('sqla',1);"></button>
@@ -1181,7 +1218,8 @@ null,
 null,
 null,
 null,
-`https://yunzhiapi.cn/API/deepseek/v4.php?question=${e}&token=${bkb}8&type=json&search=true&uid=${uplccLocal.id}`
+`https://yunzhiapi.cn/API/deepseek/v4.php?question=${e}&token=${bkb}8&type=json&search=true&uid=${uplccLocal.id}`,
+`https://www.cunyuapi.top/translate?keyword=${e}`
 ];
         const r = await fetch(api[deep-1]);
         const jsonData = await r.json();
@@ -1292,6 +1330,12 @@ null,
         }else if(deep==31){
           if(jsonData.success){
             return jsonData.content.replace(/\[citation\:\d+\]/g,"");
+          }else{
+            return "Error";
+          }
+        }else if(deep==32){
+          if(jsonData.translation[0]){
+            return jsonData.translation.join("，");
           }else{
             return "Error";
           }
@@ -1409,7 +1453,7 @@ null,
         "默认","DeepSeek","Gemma","Gemma(连续对话)","Qwen","GLM-4-Flash","DeepSeek(流式输出)","Qwen(连续对话)","CogView",
         "ChatGPT-4","Qwen3","MiniMax-M2","DeepSeek-R1","Kimi-K2","Seed","Grok4","Gemini-2.5","FLUX.1","Cluade4.5",
         "DeepSeek-V3.1","ChatGPT-5","ChatGPT-OSS","Qwen3-coder","MiMo-V2-Flash","DeepSeek-V3.1","元宝","GLM4.6",
-        "UPLCC-V1-Mini","GLM4.6-OCR","Qwen3-VL","Kwaipilot","DeepSeek-V4"
+        "UPLCC-V1-Mini","GLM4.6-OCR","Qwen3-VL","Kwaipilot","DeepSeek-V4","英汉互译"
       ];
       for(var mdstop=0;mdstop<mdD.length;mdstop++){
         const thisdom=document.getElementById("mdv"+mdstop);
