@@ -8,6 +8,33 @@
         margin: 0;
         padding: 0;
       }
+      body {
+        overflow: hidden;
+      }
+      :root {
+        --x: 49vw;
+        --y: -49vh;
+        --startWidth: 30px;
+        --startHeight: 26px;
+      }
+      @keyframes settingDisplayOn{
+        to {
+          margin-left: 0px;
+          margin-top: 0px;
+          width: 300px;
+          height: 260px;
+          opacity: 1;
+        }
+      }
+      @keyframes settingDisplayOff{
+        to {
+          margin-left: var(--x);
+          margin-top: var(--y);
+          width: var(--startWidth);
+          height: var(--startHeight);
+          opacity: 0;
+        }
+      }
       #inp {
         position: fixed;
         bottom: 10px;
@@ -266,8 +293,11 @@
         left:50%;
         top:50%;
         transform:translate(-50%,-50%);
-        width:300px;
+        width:var(--startWidth);
+        height:var(--startHeight);
         max-height:260px;
+        margin-left:var(--x);
+        margin-top:var(--y);
         overflow-y:auto;
         overflow-x:hidden;
         background-color:rgba(255,255,255,1);
@@ -276,6 +306,7 @@
         border-radius:24px;
         padding:8px;
         user-select:none;
+        opacity:0;
         display:none;
         background:linear-gradient(
           45deg,
@@ -364,7 +395,7 @@
         width:100vw;
         height:100vh;
         background-color:rgba(0,0,0,0.03);
-        backdrop-filter:blur(5px);
+        backdrop-filter:blur(3px);
         opacity:0;
         display:none;
       }
@@ -589,8 +620,8 @@
   <body>	
     <div id="comphide"><h3 id="comptext">正在加载向量文件</h3></div>
     <div id="topdiv">
-      <span id="mdname" onclick="setting.style.display='block';setting.style.animationName='bod';setting.style.animationDuration='0.3s';settingcz();setex.style.display='block';setex.style.animationName='bod';setex.style.animationDuration='0.3s';setex.style.opacity='1';setTimeout(()=>settw('mdDiv'),50);">新对话</span>
-      <img src="setting.png" id="setpng" onclick="setting.style.display='block';setting.style.animationName='bod';setting.style.animationDuration='0.3s';settingcz();setex.style.display='block';setex.style.animationName='bod';setex.style.animationDuration='0.3s';setex.style.opacity='1';"/>
+      <span id="mdname" onclick="editSetting(0,0,'-49vh');setTimeout(()=>settw('mdDiv'),50);">新对话</span>
+      <img src="setting.png" id="setpng" onclick="editSetting(0,'49vw','-49vh');"/>
     </div>
     <div id="xz">
     <img src="logo.png" id="hello"/>
@@ -657,7 +688,7 @@
         <div class="settt" id="mdv29" onclick="deep=29;mdEx();" data-md="Qwen3-VL(流式输出)"><p id="mdQwenVL" class="setp">Qwen3-VL(流式输出)</p></div>
         <div class="settt" id="mdv30" onclick="deep=30;mdEx();" data-md="Kwaipilot(流式输出)"><p id="mdKwaipilot" class="setp">Kwaipilot(流式输出)</p></div>
         <div class="settt" id="mdv31" onclick="deep=31;mdEx();" data-md="DeepSeek-V4(联网搜索)" data-stop="1"><p id="mdDeepSeekV4" class="setp">DeepSeek-V4(联网搜索)</p></div>
-        <div class="settt" id="mdv32" onclick="deep=32;mdEx();" data-md="英汉互译"><p id="mdTranslate" class="setp">英汉互译</p></div>
+        <div class="settt" id="mdv32" onclick="deep=32;mdEx();" data-md="英汉互译" data-stop="1"><p id="mdTranslate" class="setp">英汉互译</p></div>
       </div>
       <div id="sqla" class="settwo">
         <button id="mdex" class="twoex" onclick="settw('sqla',1);"></button>
@@ -680,7 +711,7 @@
         <p id="markdowntoresult" style="margin:2%;"></p>
       </div>
     </div>
-    <div id="setex" onclick="setting.style.animationName='bob';setting.style.animationDuration='0.3s';setex.style.animationName='bob';setex.style.animationDuration='0.3s';setTimeout(()=>{setting.style.display='none';this.style.opacity='0';this.style.display='none';},300);"></div>
+    <div id="setex" onclick="editSetting(1);"></div>
     <div id="ExmdD" onclick="mdEx();"></div>
     <button id="bo" onclick="gx();bo.style.animationName='bob';bo.style.animationDuration='0.3s';setTimeout(()=>{bo.style.display='none';bo.style.opacity='0';},300);setTimeout(()=>{gxifa=false;},500);">回到底部</button>
     <div id="inp">
@@ -1218,7 +1249,7 @@ null,
 null,
 null,
 null,
-`https://yunzhiapi.cn/API/deepseek/v4.php?question=${e}&token=${bkb}8&type=json&search=true&uid=${uplccLocal.id}`,
+`https://yunzhiapi.cn/API/deepseek/v4.php?question=${e}&token=${bkb}&type=json&search=true&uid=${uplccLocal.id}`,
 `https://www.cunyuapi.top/translate?keyword=${e}`
 ];
         const r = await fetch(api[deep-1]);
@@ -1697,14 +1728,88 @@ null,
         const titleResult=titleMatch?titleMatch[1]:"没有获取到标题";
         return {"title":titleResult,"code":result};
       }
-      function markdownto(str){
-        if(!str)return;
-        const url='https://latex.codecogs.com/svg.latex?'+encodeURIComponent(str);
-        document.getElementById("markdowntoresult").innerHTML=`<img src="${url}"/>`;
-      }
-      function viewhtml(){
-        localStorage.setItem("uplcc_sca_share_code",JSON.stringify({time:0,code:usharecode}));
-        window.open("https://uplcc.github.io/code","_blank");
+      function editSetting(n,x,y){
+        if(n==0){
+          let newX=x;
+          let newY=y;
+          if(!x&&x!==0)newX="0vw";
+          if(!y&&y!==0)newY="0vh";
+          document.documentElement.style.setProperty("--x",newX);
+          document.documentElement.style.setProperty("--y",newY);
+          setting.style.display='block';
+          settingcz();
+          setex.style.display='block';
+          if(setex._anim)setex._anim.cancel();
+          setex._anim=setex.animate([
+            {opacity:0},
+            {opacity:1}
+          ],{
+            duration:300,
+            easing:'ease',
+            fill:'forwards'
+          });
+          const computed=getComputedStyle(setting);
+          const startWidth=parseFloat(computed.width)||30;
+          const startHeight=parseFloat(computed.height)||26;
+          const startML=parseFloat(computed.marginLeft)||0;
+          const startMT=parseFloat(computed.marginTop)||0;
+          const startOp=parseFloat(computed.opacity)||0;
+          if(setting._anim)setting._anim.cancel();
+          setting._anim=setting.animate([
+            {marginLeft:startML+'px',marginTop:startMT+'px',width:startWidth+'px',height:startHeight+'px',opacity:startOp},
+            {marginLeft:'0px',marginTop:'0px',width:'300px',height:'260px',opacity:1}
+          ],{
+            duration:500,
+            easing:'ease',
+            fill:'none'
+          });
+          setting._anim.onfinish=()=>{
+            setting.style.marginLeft='0px';
+            setting.style.marginTop='0px';
+            setting.style.width='300px';
+            setting.style.height='260px';
+            setting.style.opacity='1';
+            setting._anim=null;
+          };
+        }else{
+          const computed=getComputedStyle(setting);
+          const startWidth=parseFloat(computed.width)||300;
+          const startHeight=parseFloat(computed.height)||260;
+          const startML=parseFloat(computed.marginLeft)||0;
+          const startMT=parseFloat(computed.marginTop)||0;
+          const startOp=parseFloat(computed.opacity)||1;
+          if(setting._anim)setting._anim.cancel();
+          setting._anim=setting.animate([
+            {marginLeft:startML+'px',marginTop:startMT+'px',width:startWidth+'px',height:startHeight+'px',opacity:startOp},
+            {marginLeft:'var(--x)',marginTop:'var(--y)',width:'30px',height:'26px',opacity:0}
+          ],{
+            duration:500,
+            easing:'ease',
+            fill:'none'
+          });
+          if(setex._anim)setex._anim.cancel();
+          setex._anim=setex.animate([
+            {opacity:1},
+            {opacity:0}
+          ],{
+            duration:500,
+            easing:'ease',
+            fill:'none'
+          });
+          setting._anim.onfinish=()=>{
+            setting.style.display='none';
+            setting.style.opacity='0';
+            setting.style.marginLeft='var(--x)';
+            setting.style.marginTop='var(--y)';
+            setting.style.width='var(--startWidth)';
+            setting.style.height='var(--startHeight)';
+            setting._anim=null;
+          };
+          setex._anim.onfinish=()=>{
+            setex.style.display='none';
+            setex._anim=null;
+          };
+        }
       }
     </script>
   </body>
