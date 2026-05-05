@@ -16,6 +16,9 @@
         --y: -49vh;
         --startWidth: 30px;
         --startHeight: 26px;
+        --blurA: blur(10px);
+        --blurB: blur(1px);
+        --blurC: blur(5px);
       }
       @keyframes settingDisplayOn{
         to {
@@ -56,11 +59,10 @@
           inset -6px 6px 1px -6px rgba(255,255,255,0.55),
           inset 0 0 2px rgba(0,0,0,0.8),
           0 4px 8px rgba(0,0,0,0.2);
-        backdrop-filter:blur(1px);
         border:1px double rgba(51,51,51,0.08);
         border-radius: 24px;
         background-color: rgba(0,0,0,0.02);
-        backdrop-filter:blur(10px);
+        backdrop-filter:var(--blurA);
         border: 0;
         overflow:hidden;
         transition: height 0.2s ease;
@@ -271,7 +273,7 @@
         width:100vw;
         height:100vh;
         background-color:rgba(0,0,0,0.3);
-        backdrop-filter:blur(10px);
+        backdrop-filter:var(--blurA);
         display:none;
       }
       #set{
@@ -284,7 +286,7 @@
         border-radius:10px;
         border:2px solid rgba(0,0,0,0.1);
         background-color:rgba(255,255,255,0.1);
-        backdrop-filter:blur(1px);
+        backdrop-filter:var(--blurB);
         display:none;
       }
       #setting{
@@ -302,7 +304,6 @@
         overflow-x:hidden;
         background-color:rgba(255,255,255,1);
         box-shadow:0 0 20px 10px rgba(0,0,0,0.1);
-        backdrop-filter:blur(5px);
         border-radius:24px;
         padding:8px;
         user-select:none;
@@ -322,7 +323,7 @@
           inset -6px 6px 1px -6px rgba(255,255,255,0.55),
           inset 0 0 2px rgba(0,0,0,0.8),
           0 4px 8px rgba(0,0,0,0.2);
-        backdrop-filter:blur(1px);
+        backdrop-filter:var(--blurB);
       }
       .sett{
         position:relative;
@@ -343,7 +344,7 @@
           inset -6px 6px 1px -6px rgba(255,255,255,0.55),
           inset 0 0 2px rgba(0,0,0,0.8),
           0 4px 8px rgba(0,0,0,0.2);
-        backdrop-filter:blur(1px);
+        backdrop-filter:var(--blurB);
         border:1px double rgba(51,51,51,0.08);
         border-radius:15px;
         transition:all 0.3s ease;
@@ -395,7 +396,7 @@
         width:100vw;
         height:100vh;
         background-color:rgba(0,0,0,0.03);
-        backdrop-filter:blur(3px);
+        backdrop-filter:var(--blurC);
         opacity:0;
         display:none;
       }
@@ -539,7 +540,7 @@
         max-width:60vw;
         min-height:25px;
         background-color:rgba(0,0,0,0.4);
-        backdrop-filter:blur(10px);
+        backdrop-filter:var(--blurA);
         box-sizing:border-box;
         border-radius:15px;
         transition:all 0.3s ease;
@@ -630,7 +631,7 @@
     <img src="" id="bigphoto"/>
     <div id="phoex" onclick="bigExit();"></div>
     <div id="setting">
-      <div id="inczz"></div>
+     <div id="inczz"></div>
       <div id="includeDiv">
         <h3 style="margin-left:2%;">设置</h3>
         <div id="seten" class="sett"><p id="setenp" class="setp">回车发送</p><div id="ststa" class="setx" onclick="if(!sttta){ststb.style.left='17px';this.style.backgroundColor='#56a9ff';sttta=true;}else{ststb.style.left='2px';this.style.backgroundColor='rgba(0,0,0,0.1)';sttta=false;}"><div id="ststb" class="setxa"></div></div></div>
@@ -643,6 +644,8 @@
         <div id="setsql" class="sett" onclick="settw('sqla');"><p id="setsqlp" class="setp">数据库检索</p></div>
         <div id="setto" class="sett" onclick="settw('toa');"><p id="settop" class="setp">公式转译</p></div>
         <div id="setticklingdiv" class="sett" onclick="window.open('tickling.html');"><p id="settickling" class="setp">反馈</p></div>
+        <div id="setuidiv" class="sett" onclick="settw('ui');"><p id="setui" class="setp">界面</p></div>
+        <div id="setnotediv" class="sett" onclick="settw('note');"><p id="setnote" class="setp">更新日志</p></div>
       </div>
       <div id="newsa" class="settwo">
         <button id="newsex" class="twoex" onclick="settw('newsa',1);"></button>
@@ -686,7 +689,7 @@
         <div class="settt" id="mdv26" onclick="deep=26;mdEx();" data-md="智谱GLM4.6(流式输出)" data-stop="1"><p id="mdZp" class="setp">智谱GLM4.6(流式输出)</p></div>
         <div class="settt" id="mdv28" onclick="deep=28;mdEx();" data-md="智谱GLM4.6-OCR(流式输出)"><p id="mdZpOCR" class="setp">智谱GLM4.6-OCR(流式输出)</p></div>
         <div class="settt" id="mdv29" onclick="deep=29;mdEx();" data-md="Qwen3-VL(流式输出)"><p id="mdQwenVL" class="setp">Qwen3-VL(流式输出)</p></div>
-        <div class="settt" id="mdv30" onclick="deep=30;mdEx();" data-md="Kwaipilot(流式输出)"><p id="mdKwaipilot" class="setp">Kwaipilot(流式输出)</p></div>
+        <div class="settt" id="mdv30" onclick="deep=30;mdEx();" data-md="Kwaipilot(流式输出)" data-stop="1"><p id="mdKwaipilot" class="setp">Kwaipilot(流式输出)</p></div>
         <div class="settt" id="mdv31" onclick="deep=31;mdEx();" data-md="DeepSeek-V4(联网搜索)" data-stop="1"><p id="mdDeepSeekV4" class="setp">DeepSeek-V4(联网搜索)</p></div>
         <div class="settt" id="mdv32" onclick="deep=32;mdEx();" data-md="英汉互译" data-stop="1"><p id="mdTranslate" class="setp">英汉互译</p></div>
       </div>
@@ -710,6 +713,18 @@
         <button onclick="markdownto(scarto.value.trim());" class="settt" style="width:22%;margin-left:-1%;border:1px solid rgba(0,0,0,0.1);">转译</button>
         <p id="markdowntoresult" style="margin:2%;"></p>
       </div>
+      <div id="ui" class="settwo" style="overflow-x:auto;">
+        <button id="toex" class="twoex" onclick="settw('ui',1);"></button>
+        <h3 style="margin-left:2%;margin-top:40px;">界面</h3>
+        <div id="setfilter" class="sett"><p id="setfil" class="setp">减弱模糊效果</p><div id="stuia" class="setx" onclick="if(!lowFilter){stui.style.left='17px';this.style.backgroundColor='#56a9ff';lowFilter=true;}else{stui.style.left='2px';this.style.backgroundColor='rgba(0,0,0,0.1)';lowFilter=false;}editFilter();"><div id="stui" class="setxa"></div></div></div>
+        <p style="color:gray;margin:8px;">若你的设备运行此Web应用时卡顿，可尝试开启此二级菜单里的功能。</p>
+      </div>
+      <div id="note" class="settwo" style="overflow-x:auto;">
+        <button id="toex" class="twoex" onclick="settw('note',1);"></button>
+        <h3 style="margin-left:2%;margin-top:40px;" id="noteTitle">更新日志</h3>
+        <p id="noteContent" style="margin:8px;"></p>
+      </div>
+     </div>
     </div>
     <div id="setex" onclick="editSetting(1);"></div>
     <div id="ExmdD" onclick="mdEx();"></div>
@@ -723,6 +738,7 @@
     <script src="hum.js"></script>
     <script src="vector_beta_5000datas.js"></script>
     <script src="complete.js"></script>
+    <script src="updateNote.js"></script>
     <script>
       var ph, cx;
       const gxpx=100;
@@ -745,6 +761,7 @@
       let ctwzif=true;
       let isMsg=false;
       let msgStop=false;
+      let lowFilter=false;
       const imgnum=document.querySelectorAll("img");
       let imgtimes=0;
       const comptext=document.getElementById("comptext");
@@ -823,6 +840,8 @@
       deep=Number(localStorage.getItem("uplccdeep"));
       setTimeout(()=>{mdEx();},100);
       document.getElementById("mdname").innerText=document.getElementById("mdv"+deep).innerHTML.split("<")[1].split(">")[1].replace("默认","对话").split("-")[0];
+      document.getElementById("noteTitle").innerText=note[note.length-1].version;
+      document.getElementById("noteContent").innerHTML=note[note.length-1].content.join("<br><br>");
       function tb(){
         requestAnimationFrame(tb);
         xz.style.height = window.innerHeight - (window.innerHeight - inp.offsetTop) + "px";
@@ -1728,6 +1747,11 @@ null,
         const titleResult=titleMatch?titleMatch[1]:"没有获取到标题";
         return {"title":titleResult,"code":result};
       }
+      function markdownto(str){
+        if(!str)return;
+        const url='https://latex.codecogs.com/svg.latex?'+encodeURIComponent(str);
+        document.getElementById("markdowntoresult").innerHTML=`<img src="${url}"/>`;
+      }
       function editSetting(n,x,y){
         if(n==0){
           let newX=x;
@@ -1809,6 +1833,19 @@ null,
             setex.style.display='none';
             setex._anim=null;
           };
+        }
+      }
+      function editFilter(){
+        if(lowFilter){
+          document.documentElement.style.setProperty("--blurA","blur(0px)");
+          document.documentElement.style.setProperty("--blurB","blur(0px)");
+          document.documentElement.style.setProperty("--blurC","blur(0px)");
+          document.getElementById("setting").style.background="white";
+        }else{
+          document.documentElement.style.setProperty("--blurA","blur(10px)");
+          document.documentElement.style.setProperty("--blurB","blur(1px)");
+          document.documentElement.style.setProperty("--blurC","blur(5px)");
+          document.getElementById("setting").style.background="transparent";
         }
       }
     </script>
