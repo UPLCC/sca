@@ -688,7 +688,7 @@
         <div class="settt" id="mdv23" onclick="deep=23;mdEx();" data-md="Xiaomi MiMo(连续对话)" data-stop="1"><p id="mdMiMo" class="setp">Xiaomi MiMo(连续对话)</p></div>
         <div class="settt" id="mdv25" onclick="deep=25;mdEx();" data-md="腾讯元宝(流式输出)" data-stop="1"><p id="mdYuanbao" class="setp">腾讯元宝(流式输出)</p></div>
         <div class="settt" id="mdv26" onclick="deep=26;mdEx();" data-md="智谱GLM4.6(流式输出)" data-stop="1"><p id="mdZp" class="setp">智谱GLM4.6(流式输出)</p></div>
-        <div class="settt" id="mdv28" onclick="deep=28;mdEx();" data-md="智谱GLM4.6-OCR(流式输出)"><p id="mdZpOCR" class="setp">智谱GLM4.6-OCR(流式输出)</p></div>
+        <div class="settt" id="mdv28" onclick="deep=28;mdEx();" data-md="智谱GLM4.6-OCR(流式输出)" data-stop="1"><p id="mdZpOCR" class="setp">智谱GLM4.6-OCR(流式输出)</p></div>
         <div class="settt" id="mdv29" onclick="deep=29;mdEx();" data-md="Qwen3-VL(流式输出)"><p id="mdQwenVL" class="setp">Qwen3-VL(流式输出)</p></div>
         <div class="settt" id="mdv30" onclick="deep=30;mdEx();" data-md="Kwaipilot(流式输出)" data-stop="1"><p id="mdKwaipilot" class="setp">Kwaipilot(流式输出)</p></div>
         <div class="settt" id="mdv31" onclick="deep=31;mdEx();" data-md="DeepSeek-V4(联网搜索)" data-stop="1"><p id="mdDeepSeekV4" class="setp">DeepSeek-V4(联网搜索)</p></div>
@@ -733,7 +733,7 @@
         <h3 style="margin-left:2%;margin-top:40px;">上下文记忆(Beta)</h3>
         <div id="setct" class="settt"><p id="setctp" class="setp">上下文记忆</p><div id="stmea" class="setx" onclick="if(!openMemories){stmeb.style.left='17px';this.style.backgroundColor='#56a9ff';openMemories=true;}else{stmeb.style.left='2px';this.style.backgroundColor='rgba(0,0,0,0.1)';openMemories=false;}"><div id="stmeb" class="setxa"></div></div></div>
         <div id="newChat" class="settt" onclick="memories=[];tip('开启新对话');"><p id="openNewChat" class="setp">开启新对话</p></div>
-        <p style="color:gray;margin-left:8px;font-size:15px;">开启后可以进行连续对话，但是可能造成回答速度变慢、容易出错等问题。<br>此外，由于部分模型API没有System Prompt，所以不支持连续对话。以下是支持连续对话的模型：<br>ChatGPT-OSS、Qwen3.5-Flash、GLM-Z1。</p>
+        <p style="color:gray;margin-left:8px;font-size:15px;">开启后可以进行连续对话，但是可能造成回答速度变慢、容易出错等问题。<br>此外，由于部分模型API没有System Prompt和成本考虑，所以不支持连续对话。以下是支持连续对话的模型：<br>ChatGPT-OSS、Qwen3.5-Flash、GLM-Z1。<br>提示：如果一直提示API返回出错，可尝试开启新对话以解决。</p>
       </div>
      </div>
     </div>
@@ -745,6 +745,7 @@
       <button id="set" onclick="setting.style.display='block';setting.style.animationName='bod';setting.style.animationDuration='0.3s';settingcz();setex.style.display='block';setex.style.animationName='bod';setex.style.animationDuration='0.3s';setex.style.opacity='1';">设置</button>
       <button id="ts" onclick="if(eisif){give();eis();}this.style.animationName='animate';this.style.animationDuration='0.3s';setTimeout(()=>{this.style.animation='none';},300);"></button>
     </div>
+    <script src="list.js"></script>
     <script src="news.js"></script>
     <script src="hum.js"></script>
     <script src="vector_beta_5000datas.js"></script>
@@ -776,6 +777,25 @@
       let openMemories=true;
       let waitAdd="";
       let memories=[];
+      const mdD=[
+        "默认","DeepSeek","Gemma","Gemma(连续对话)","Qwen","GLM-4-Flash","DeepSeek(流式输出)","Qwen(连续对话)","CogView",
+        "ChatGPT-4","Qwen3","MiniMax-M2","DeepSeek-R1","Kimi-K2","Seed","Grok4","Gemini-2.5","FLUX.1","Cluade4.5",
+        "DeepSeek-V3.1","ChatGPT-5","ChatGPT-OSS","Qwen3-coder","MiMo-V2-Flash","DeepSeek-V3.1","元宝","GLM4.6",
+        "UPLCC-V1-Mini","GLM4.6-OCR","Qwen3-VL","Kwaipilot","DeepSeek-V4","英汉互译","ChatGPT-OSS","Qwen3.5-Flash",
+        "智谱GLM-Z1"
+      ];
+      for(let listIndex=0;listIndex<modelList.length;listIndex++){
+        const ele=modelList[listIndex];
+        mdD.push(ele.display);
+        document.getElementById("mdDiv").innerHTML+=`<div class="settt" id="mdv${ele.id}" onclick="deep=${ele.id};mdEx();" data-md="${ele.name}" data-stop="${ele.stop}" data-reason=${ele.reason}><p class="setp">${ele.name}</p></div>`;
+      }
+      for(var mdstop=0;mdstop<mdD.length;mdstop++){
+        const thisdom=document.getElementById("mdv"+mdstop);
+        if(document.getElementById("mdv"+mdstop).dataset.stop==1)document.getElementById("mdv"+mdstop).style.display="none";
+        document.getElementById("mdv"+mdstop).innerHTML+=`<img src="choose.png" class="choosepng" style="opacity:0;" id="chpng${mdstop}"/>`;
+        if(mdstop==0)document.getElementById("chpng0").style.opacity="1";
+        if(/\(.+?\)/.test(thisdom.children[0].innerHTML)){const str=thisdom.children[0].innerHTML.replace(/\(([\s\S]+?)\)/g,`<div class="modeltip">$1</div>`);thisdom.children[0].innerHTML=str;}
+      }
       const imgnum=document.querySelectorAll("img");
       let imgtimes=0;
       const comptext=document.getElementById("comptext");
@@ -1510,8 +1530,21 @@ null,
           }else{
             sse=new EventSource(`https://yunzhiapi.cn/API/glm-z1.php?token=${bkb}&type=true&question=${msg}`);
           }
+        }else if(deep==36){
+          sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=DeepSeek-V4-Flash`);
+        }else if(deep==37){
+          sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=DouBao-Seed-1.5`);
+        }else if(deep==38){
+          sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=DeepSeek-V4-pro`);
+        }else if(deep==39){
+          sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=Gemini-3.5-Flash`);
+        }else if(deep==40){
+          sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=Grok-4.20-Expert`);
+        }else if(deep==41){
+          sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=Claude-Haiku-4.5`);
         }
         var ifbde=false;
+        let endReason=false;
         sse.addEventListener('message',(e)=>{
           if (e.data === '[DONE]') {
             sse.close();
@@ -1531,13 +1564,18 @@ null,
             ifbde=true;
           }
           const chunk=JSON.parse(e.data);
-          if(deep==28){
-            const rea=chunk.choices?.[0]?.delta?.reasoning_content;
-            const res=chunk.choices?.[0]?.delta?.content;
+          if(deep==28||document.getElementById(`mdv${deep}`).dataset.reason){
+            const rea=chunk.choices?.[0]?.delta?.reasoning_content||"";
+            const res=chunk.choices?.[0]?.delta?.content||"";
             if(rea&&rea!==null){
               reason+="<span style='color:rgba(0,0,0,0.3);'>"+rea+"</span>";
               hdliu(reason,1);
             }else{
+              if(!endReason&&res!==null&&res!==undefined&&res!==""){
+                endReason=true;
+                reason+="<br>";
+                hdliu(reason,1);
+              }
               if(res!==null){
                 reason+=res;
                 hdliu(reason,1);
@@ -1564,20 +1602,6 @@ null,
             memories.push(`回答:${didnotHdliuString}`);
           }
         });
-      }
-      const mdD=[
-        "默认","DeepSeek","Gemma","Gemma(连续对话)","Qwen","GLM-4-Flash","DeepSeek(流式输出)","Qwen(连续对话)","CogView",
-        "ChatGPT-4","Qwen3","MiniMax-M2","DeepSeek-R1","Kimi-K2","Seed","Grok4","Gemini-2.5","FLUX.1","Cluade4.5",
-        "DeepSeek-V3.1","ChatGPT-5","ChatGPT-OSS","Qwen3-coder","MiMo-V2-Flash","DeepSeek-V3.1","元宝","GLM4.6",
-        "UPLCC-V1-Mini","GLM4.6-OCR","Qwen3-VL","Kwaipilot","DeepSeek-V4","英汉互译","ChatGPT-OSS","Qwen3.5-Flash",
-        "智谱GLM-Z1"
-      ];
-      for(var mdstop=0;mdstop<mdD.length;mdstop++){
-        const thisdom=document.getElementById("mdv"+mdstop);
-        if(document.getElementById("mdv"+mdstop).dataset.stop==1)document.getElementById("mdv"+mdstop).style.display="none";
-        document.getElementById("mdv"+mdstop).innerHTML+=`<img src="choose.png" class="choosepng" style="opacity:0;" id="chpng${mdstop}"/>`;
-        if(mdstop==0)document.getElementById("chpng0").style.opacity="1";
-        if(/\(.+?\)/.test(thisdom.children[0].innerHTML)){const str=thisdom.children[0].innerHTML.replace(/\(([\s\S]+?)\)/g,`<div class="modeltip">$1</div>`);thisdom.children[0].innerHTML=str;}
       }
       function mdEx(){
         mdDisplay.textContent=mdD[deep];
@@ -1739,6 +1763,8 @@ null,
           .replace(/##(.*?)(?:$|<br>|BR:\/\/)/gm,`<h3 style="font-size:21px;">$1</h3>`)
           .replace(/#(.*?)(?:$|<br>|BR:\/\/)/gm,`<h3 style="font-size:22px;">$1</h3>`)
           .replace(/<br>\-\-\-<br>/g,"<hr/>")
+          .replace(/<think>([\s\S]+?)<\/think>/g,`<span style='color:rgba(0,0,0,0.3);'>$1</span>`)
+          .replace(/<think>([\s\S]+?)/g,`<span style='color:rgba(0,0,0,0.3);'>$1</span>`)
           .replace(/TRING:\/\/([\s\S]*?)\/\/:TRING/g,`**$1**`)
           .replace(/JINGHAO:\/\//g,`#`)
           .replace(/AHAO:\/\//g,`&`)
@@ -1752,7 +1778,7 @@ null,
       function mdsca(md){
         if(!md.trim()){
           for(var mdfo=0;mdfo<mdD.length;mdfo++){
-            if(!document.getElementById(`mdv${mdfo}`).dataset.stop)document.getElementById(`mdv${mdfo}`).style.display="block";
+            if(document.getElementById(`mdv${mdfo}`).dataset.stop!=="1")document.getElementById(`mdv${mdfo}`).style.display="block";
           }
           return;
         }
@@ -1763,7 +1789,7 @@ null,
         }
         for(var i=0;i<allsour.length;i++){
           if(allsour[i].toLowerCase().includes(md.trim().toLowerCase())){
-            if(!document.getElementById(`mdv${i}`).dataset.stop)document.getElementById(`mdv${i}`).style.display="block";
+            if(document.getElementById(`mdv${i}`).dataset.stop!=="1")document.getElementById(`mdv${i}`).style.display="block";
           }
         }
       }

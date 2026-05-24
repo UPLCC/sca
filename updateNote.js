@@ -13,5 +13,13 @@ const note=[
       "2. 修复 模型无法输出正常结果的问题。",
       "3. 新增 更多大模型。"
     ]
+  },
+  {
+    "version":"1.0.50",
+    "content":[
+      "1. 新增 更多大模型。",
+      "2.优化 可拓展性。",
+      "<p style='color: gray;'>提示：大多数模型因为是Token计费，对于成本考虑，因此未加入上下文记忆功能。支持的模型详情请<span style='color: #56a9ff;' onclick='settw(`note`,1);setTimeout(()=>settw(`memory`,0),300);'>点击此处跳转</span>查看。</p>"
+    ]
   }
 ];
