@@ -1,8 +1,17 @@
 const modelList=[
-  {"name":"DeepSeek-V4-Flash(流式输出)","display":"DeepSeek-V4-Flash","stop":"0","id":"36","reason":true},
+  {"name":"DeepSeek-V4-Flash(流式输出)","display":"DeepSeek-V4-Flash","stop":"1","id":"36","reason":true},
   {"name":"豆包Seed-1.5(流式输出)","display":"豆包Seed-1.5","stop":"0","id":"37","reason":true},
-  {"name":"DeepSeek-V4-Pro(流式输出)","display":"DeepSeek-V4-Pro","stop":"0","id":"38","reason":true},
-  {"name":"Gemini-3.5-Flash(流式输出)","display":"Gemini-3.5-Flash","stop":"0","id":"39","reason":false},
-  {"name":"Grok-4.20-Expert(流式输出)","display":"Grok-4.20-Expert","stop":"0","id":"40","reason":false},
-  {"name":"Claude-Haiku-4.5(流式输出)","display":"Claude-Haiku-4.5","stop":"0","id":"41","reason":false}
+  {"name":"DeepSeek-V4-Pro(流式输出)","display":"DeepSeek-V4-Pro","stop":"1","id":"38","reason":true},
+  {"name":"Gemini-3.1-Pro(流式输出)","display":"Gemini-3.1-Pro","stop":"0","id":"39","reason":false},
+  {"name":"Grok-4.5-High(流式输出)","display":"Grok-4.5-High","stop":"0","id":"40","reason":false},
+  {"name":"Claude-Haiku-4.5(流式输出)","display":"Claude-Haiku-4.5","stop":"0","id":"41","reason":false},
+  {"name":"Mimo-V2.5-Pro(流式输出)","display":"Mimo-V2.5-Pro","stop":"0","id":"42","reason":true},
+  {"name":"混元-2.0-Think(流式输出)","display":"混元-2.0-Think","stop":"0","id":"43","reason":false},
+  {"name":"DeepSeek-R1(流式输出)","display":"DeepSeek-R1","stop":"0","id":"44","reason":false},
+  {"name":"ChatGPT-5.6-Terra(流式输出)","display":"ChatGPT-5.6-Terra","stop":"0","id":"45","reason":false},
+  {"name":"ChatGPT-OSS(流式输出)","display":"ChatGPT-OSS","stop":"0","id":"46","reason":false},
+  {"name":"Twhhsc(生图模型)","display":"Twhhsc","stop":"0","id":"47","reason":false},
+  {"name":"MiniMax-M3(流式输出)","display":"MiniMax-M3","stop":"0","id":"48","reason":true},
+  {"name":"Claude-Sonnet-4.6(流式输出)","display":"Claude-Sonnet-4.6","stop":"0","id":"49","reason":false},
+  {"name":"Qwen-3.5-Plus(流式输出)","display":"Qwen-3.5-Plus","stop":"0","id":"50","reason":true}
 ];

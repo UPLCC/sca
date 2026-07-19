@@ -18,8 +18,26 @@ const note=[
     "version":"1.0.50",
     "content":[
       "1. 新增 更多大模型。",
-      "2.优化 可拓展性。",
+      "2. 优化 可拓展性。",
       "<p style='color: gray;'>提示：大多数模型因为是Token计费，对于成本考虑，因此未加入上下文记忆功能。支持的模型详情请<span style='color: #56a9ff;' onclick='settw(`note`,1);setTimeout(()=>settw(`memory`,0),300);'>点击此处跳转</span>查看。</p>"
+    ]
+  },
+  {
+    "version":"1.0.60",
+    "content":[
+      "1. 新增 实时公式转译。",
+      "2. 修复 API返回出错的问题。",
+      "<p style='color: gray;'>提示：开启实时公式转译功能(默认开启)后，可能导致卡顿。你可以前往 设置>界面>实时公式转译 设置或者<span style='color: #56a9ff;' onclick='settw(`note`,1);setTimeout(()=>settw(`ui`,0),300);'>点击此处前往</span>。</p>"
+    ]
+  },
+  {
+    "version":"1.0.61",
+    "content":[
+      "1. 加入 更多模型",
+      "2. 删减 不可用模型",
+      "3. 新增 开发者的话",
+      "4. 优化 状态锁逻辑",
+      "5. 新增 加载动画"
     ]
   }
 ];
