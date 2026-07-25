@@ -419,6 +419,7 @@
       .twoex{
         position:fixed;
         z-index:55;
+        backdrop-filter:url(#glass) blur(1px);
         background:linear-gradient(
           45deg,
           rgba(255,255,255,0.8) 0%,
@@ -433,7 +434,6 @@
           inset -6px 6px 1px -6px rgba(255,255,255,0.55),
           inset 0 0 2px rgba(0,0,0,0.8),
           0 4px 8px rgba(0,0,0,0.2);
-        backdrop-filter:blur(1px);
         border:1px double rgba(51,51,51,0.08);
         border-radius:16px;
         padding:4px;
@@ -448,7 +448,7 @@
       .twoex:active{
         background-color:rgba(255,255,255,0.5);
         transform:scale(0.97);
-        backdrop-filter:blur(2px);
+        backdrop-filter:url(#glass) blur(2px);
         background-size:19px;
       }
       .settt{
@@ -719,6 +719,75 @@
         transition:opacity 0.2s ease;
         margin:3px;
       }
+      liquid-glass{
+        -webkit-tap-highlight-color:transparent;
+        -webkit-touch-callout:none;
+        -webkit-user-select:none;
+        user-select:none;
+        border-radius:100px;
+        background:transparent !important;
+      }
+      liquid-glass canvas{
+        -webkit-tap-highlight-color:transparent;
+      }
+      #sliderContent{
+        position:absolute;
+        top:130px;
+        left:50%;
+        transform:translateX(-50%);
+        font-size:25px;
+      }
+      #timeWarn{
+        position:absolute;
+        color:#ffb216;
+        left:50%;
+        transform:translateX(-50%);
+        top:160px;
+        width:300px;
+        text-align:center;
+        user-select:none;
+        opacity:0;
+        transition:opacity 0.15s ease;
+      }
+      .alertDiv{
+        position:fixed;
+        width:300px;
+        min-height:220px;
+        max-height:260px;
+        border-radius:32px;
+        background-color:rgba(255,255,255,1);
+        backdrop-filter:blur(10px);
+        top:50%;
+        left:50%;
+        overflow:hidden;
+        transform:translate(-50%,-50%);
+        z-index:99999;
+        user-select:none;
+      }
+      .alertTitle{
+        margin:16px;
+        font-size:24px;
+      }
+      .alertContent{
+        margin:16px;
+        margin-top:0px;
+        word-wrap:break-word;
+        word-break:break-all;
+      }
+      .alertClose{
+        position:fixed;
+        bottom:-32px;
+        right:-34px;
+        width:150px;
+        height:130px;
+      }
+      .alertShade{
+        position:fixed;
+        width:100vw;
+        height:100vh;
+        background-color:rgba(0,0,0,0.2);
+        z-index:99998;
+      }
     </style>
     <script>
       MathJax = {
@@ -736,8 +805,15 @@
       };
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <script src="liquidGlass.js"></script>
   </head>
   <body>	
+    <svg style="display:none">
+      <filter id="glass">
+        <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="2" seed="5" result="turbulence"/>
+        <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="80"/>
+      </filter>
+    </svg>
     <div id="comphide"><h3 id="comptext">正在加载资源</h3></div>
     <div id="topdiv">
       <span id="mdname" onclick="editSetting(0,0,'-49vh');setTimeout(()=>settw('mdDiv'),50);">新对话</span>
@@ -771,6 +847,7 @@
         <div id="setto" class="sett" onclick="settw('toa');"><p id="settop" class="setp">公式转译</p></div>
         <div id="setticklingdiv" class="sett" onclick="window.open('tickling.html');"><p id="settickling" class="setp">反馈</p></div>
         <div id="setuidiv" class="sett" onclick="settw('ui');"><p id="setui" class="setp">界面</p></div>
+        <div id="setatobdiv" class="sett" onclick="slider.setSliderValue('slider1',setTime/100);document.getElementById('sliderContent').innerText=setTime+'ms';settw('atobTime');"><p id="setui" class="setp">转译间隔</p></div>
         <div id="setnotediv" class="sett" onclick="settw('note');"><p id="setnote" class="setp">更新日志</p></div>
       </div>
       <div id="newsa" class="settwo">
@@ -859,7 +936,14 @@
         <h3 style="margin-left:2%;margin-top:40px;">上下文记忆(Beta)</h3>
         <div id="setct" class="settt"><p id="setctp" class="setp">上下文记忆</p><div id="stmea" class="setx" onclick="if(!openMemories){stmeb.style.left='17px';this.style.backgroundColor='#56a9ff';openMemories=true;}else{stmeb.style.left='2px';this.style.backgroundColor='rgba(0,0,0,0.1)';openMemories=false;}"><div id="stmeb" class="setxa"></div></div></div>
         <div id="newChat" class="settt" onclick="memories=[];tip('开启新对话');"><p id="openNewChat" class="setp">开启新对话</p></div>
-        <p style="color:gray;margin-left:8px;font-size:15px;">开启后可以进行连续对话，但是可能造成回答速度变慢、容易出错等问题。<br>此外，由于部分模型API没有System Prompt和成本考虑，所以不支持连续对话。以下是支持连续对话的模型：<br>GLM-Z1。<br>提示：如果一直提示API返回出错，可尝试开启新对话以解决。</p>
+        <p style="color:gray;margin-left:8px;font-size:15px;">开启后可以进行连续对话，但是可能造成回答速度变慢、容易出错等问题。<br>此外，由于部分模型API没有System Prompt和成本考虑，所以不支持连续对话。以下是支持连续对话的模型：<br>GLM-Z1、DeepSeek-R1。<br>提示：如果一直提示API返回出错，可尝试开启新对话以解决。</p>
+      </div>
+      <div id="atobTime" class="settwo" style="overflow-x:auto;">
+        <button id="atobex" class="twoex" onclick="settw('atobTime',1);"></button>
+        <h3 style="margin-left:2%;margin-top:40px;" id="noteTitle">转译间隔</h3>
+        <liquid-glass mode="single-slider" style="width:300px;height:100px;" id="timeSlider"></liquid-glass>
+        <p id="sliderContent">50ms</p>
+        <span id="timeWarn">过短的间隔可能导致页面卡死</span>
       </div>
      </div>
     </div>
@@ -877,6 +961,56 @@
     <script src="updateNote.js"></script>
     <script src="signText.js"></script>
     <script>
+      const pastAlert=window.alert;
+      let alertId=0;
+      window.alert=(c,t)=>{
+        const animationTime=0.3;
+        const alertDiv=document.createElement("div");
+        alertDiv.className="alertDiv";
+        alertDiv.id="alertDiv"+alertId;
+        alertDiv.style.opacity=0;
+        alertDiv.style.transition=`opacity ${animationTime}s ease`;
+        const alertTitle=document.createElement("h3");
+        alertTitle.className="alertTitle";
+        alertTitle.innerText=t==undefined?"提示":t;
+        const alertContent=document.createElement("p");
+        alertContent.className="alertContent";
+        alertContent.innerText=c==undefined?"":c;
+        const alertClose=document.createElement("liquid-glass");
+        alertClose.setAttribute("mode","buttons");
+        alertClose.className="alertClose";
+        alertClose.id="alertClose"+alertId;
+        alertDiv.append(alertTitle,alertContent,alertClose);
+        const alertShade=document.createElement("div");
+        alertShade.className="alertShade";
+        alertShade.id="alertShade"+alertId;
+        alertShade.style.opacity=0;
+        alertShade.style.transition=`opacity ${animationTime}s ease`;
+        document.body.append(alertDiv,alertShade);
+        alertDiv.style.opacity=1;
+        alertShade.style.opacity=1;
+        function setEvent(){
+          if(document.getElementById(`alertClose${alertId}`)&&document.getElementById(`alertClose${alertId}`).setButtons){
+            document.getElementById(`alertClose${alertId}`).setButtons([
+              {"id":`alertButton${alertId}`,"label":"关闭","style":"blue"}
+            ]);
+            document.getElementById(`alertClose${alertId}`).addEventListener("lg-buttontap",e=>{
+              alertDiv.style.opacity=0;
+              alertDiv.style.pointerEvents="none";
+              alertShade.style.opacity=0;
+              alertShade.style.pointerEvents="none";
+              setTimeout(()=>{
+                alertDiv.remove();
+                alertShade.remove();
+              },animationTime*1000);
+            });
+          }else{
+            requestAnimationFrame(setEvent);
+          }
+        }
+        setEvent();
+        alertId++;
+      }
       var ph, cx;
       const gxpx=100;
       var fh = "";
@@ -910,6 +1044,14 @@
         "UPLCC-V1-Mini","GLM4.6-OCR","Qwen3-VL","Kwaipilot","DeepSeek-V4","英汉互译","ChatGPT-5.5-Codex","Qwen3.5-Flash",
         "智谱GLM-Z1"
       ];
+      let setTime=50;
+      const storageTime=localStorage.getItem("uplcc_sca_atobTime");
+      if(storageTime===null){
+        localStorage.setItem("uplcc_sca_atobTime",String(setTime));
+      }else{
+        const parsed=Number(storageTime);
+        setTime=isNaN(parsed)?50:parsed;
+      }
       let loadingAnimation;
       let nonStreamAnswer=false;
       for(let listIndex=0;listIndex<modelList.length;listIndex++){
@@ -1123,7 +1265,7 @@
               eisAll(1500);
               return;
             }else{
-              tip("上一个模型还在加载");
+              alert("上一个模型还在加载");
               return;
             }
           }
@@ -1349,7 +1491,7 @@ ${cdword}的充电功率(${a[sysd].split(";")[2]})相较于其他机型更高。
             document.getElementById(`loadingID${loadingNumber}`).style.opacity=1;
             document.getElementById(`loadingID${pastLoading}`).style.opacity=0;
             loadingNumber++;
-          },200);
+          },300);
         }
       }
       function hd(str){
@@ -1670,16 +1812,19 @@ null,
           hdliuid.innerHTML=str;
           hdliustr=str;
           if(isTo){
-            if(!hdliuid._mathjaxTimeout){
-              hdliuid._mathjaxTimeout=setTimeout(()=>{
-                renderMathJax(hdliuid);
-                hdliuid._mathjaxTimeout=null;
-              },50);
+            if(hdliuid._mathjaxTimeout){
+              clearTimeout(hdliuid._mathjaxTimeout);
+              hdliuid._mathjaxTimeout=null;
             }
+            hdliuid._mathjaxTimeout=setTimeout(()=>{
+              renderMathJax(hdliuid);
+              hdliuid._mathjaxTimeout=null;
+            },setTime);
           }
         }
       }
       let sse;
+      let already=false;
       async function bdeep() {
         if(isMsg){
           const isStop=window.confirm("确定停止上一个模型输出？");
@@ -1687,12 +1832,17 @@ null,
             sse.close();
             isMsg=false;
             isAnswer=false;
+            if(!already){
+              clearInterval(loadingAnimation);
+              hdliu("",2);
+            }
             addUserMessage(sr.value);
           }else{
-            tip("请等待模型输出完成");
+            alert("请等待模型输出完成");
             return;
           }
         }
+        already=false;
         isMsg=true;
         isAnswer=true;
         let msg = sr.value.trim();
@@ -1733,7 +1883,7 @@ null,
           }
         }else if(deep==35){
           if(openMemories){
-            const systemContent=`上下文信息：${memories.join("\n")}`;
+            const systemContent=`上下文信息：${memories.join("\n")||"无上下文信息"}`;
             const encodedSystem=encodeURIComponent(systemContent);
             sse=new EventSource(`https://yunzhiapi.cn/API/glm-z1.php?token=${bkb}&type=true&question=${msg}&system=${encodedSystem}`);
           }else{
@@ -1756,17 +1906,31 @@ null,
         }else if(deep==43){
           sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=HunYuan-2.0-Think`);
         }else if(deep==44){
-          sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=DeepSeek-R1`);
+          if(openMemories){
+            const systemContent=`上下文信息：${memories.join("\n")||"无上下文信息"}`;
+            const encodedSystem=encodeURIComponent(systemContent);
+            sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&system=${encodedSystem}&model=DeepSeek-R1`);
+          }else{
+            sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=DeepSeek-R1`);
+          }
         }else if(deep==45){
           sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=GPT-5.6-Terra`);
         }else if(deep==46){
-          sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=GPT-OSS-120B`);
+          if(openMemories){
+            const systemContent=`上下文信息：${memories.join("\n")||"无上下文信息"}`;
+            const encodedSystem=encodeURIComponent(systemContent);
+            sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&system=${encodedSystem}&model=GPT-OSS-120B`);
+          }else{
+            sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=GPT-OSS-120B`);
+          }
         }else if(deep==48){
           sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=MiniMax-M3`);
         }else if(deep==49){
-          sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=Claude-Sonnet-4.6`);
+          sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=Claude-Sonnet-5`);
         }else if(deep==50){
           sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=Qwen-3.5-Plus`);
+        }else if(deep==51){
+          sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=Claude-Opus-4.6`);
         }
         var ifbde=false;
         let endReason=false;
@@ -1777,10 +1941,12 @@ null,
             hdliu("",2);
           }
           firstAnswer=false;
+          already=true;
           if (e.data === '[DONE]') {
             sse.close();
             isMsg=false;
             isAnswer=false;
+            already=false;
             if(ctwzif)ctwz.push(`${hdliustr}`);
             if(waitAdd&&deep!==0){
               memories.push(`用户:${waitAdd}`);
@@ -1823,13 +1989,14 @@ null,
         });
         sse.addEventListener('error',e=>{
           sse.close();
+          already=false;
           if(firstAnswer){
             clearInterval(loadingAnimation);
             hdliu("",2);
           }
           isMsg=false;
           isAnswer=false;
-          tip("API返回出错了，请重试！");
+          alert("API返回出错了，请重试！");
           console.error(e);
           if(ctwzif&&hdliustr)ctwz.push(`${hdliustr}`);
           if(waitAdd&&deep!==0){
@@ -2246,6 +2413,47 @@ null,
         localStorage.setItem("uplcc_sca_share_code",JSON.stringify({time:0,code:usharecode}));
         window.open("https://uplcc.github.io/code","_blank");
       }
+      const slider = document.getElementById("timeSlider");
+      document.getElementById("sliderContent").innerText=setTime+"ms";
+      if(setTime<=5){
+        document.getElementById("timeWarn").style.opacity=1;
+      }else{
+        document.getElementById("timeWarn").style.opacity=0;
+      }
+      setTimeout(()=>{
+        slider.setSliderValue("slider1",setTime/100);
+      },200);
+      function updateSlider(){
+        slider.setSliderValue("slider1",setTime/100);
+      }
+      document.getElementById("timeSlider").addEventListener("lg-getValue",e=>{
+        var v=e.detail.sliderValue;
+        if(v!==undefined){
+          v=Math.round(v);
+          document.getElementById('sliderContent').innerText=v+'ms';
+          setTime=v;
+          localStorage.setItem("uplcc_sca_atobTime",String(setTime));
+          if(setTime<=5){
+            document.getElementById("timeWarn").style.opacity=1;
+          }else{
+            document.getElementById("timeWarn").style.opacity=0;
+          }
+        }
+      });
+      document.getElementById("timeSlider").addEventListener("lg-statechange",e=>{
+        var v=e.detail.sliderValue;
+        if(v!==undefined){
+          v=Math.round(v);
+          document.getElementById('sliderContent').innerText=v+'ms';
+          setTime=v;
+          localStorage.setItem("uplcc_sca_atobTime",String(setTime));
+          if(setTime<=5){
+            document.getElementById("timeWarn").style.opacity=1;
+          }else{
+            document.getElementById("timeWarn").style.opacity=0;
+          }
+        }
+      });
     </script>
   </body>
 </html>
