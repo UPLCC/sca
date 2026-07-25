@@ -788,6 +788,24 @@
         background-color:rgba(0,0,0,0.2);
         z-index:99998;
       }
+      table{
+        border-collapse: collapse;
+        margin: 1em 0;
+      }
+      th,td{
+        border: 1px solid #d0d7de;
+        padding: 6px 13px;
+      }
+      blockquote{
+        padding:0 1em;
+        color:#656d76;
+        border-left:0.25em solid #d0d7de;
+        margin-left:0;
+      }
+      .tableDiv{
+        width:100%;
+        overflow-x:auto;
+      }
     </style>
     <script>
       MathJax = {
@@ -806,6 +824,7 @@
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
     <script src="liquidGlass.js"></script>
+    <script src="marked.js"></script>
   </head>
   <body>	
     <svg style="display:none">
@@ -843,7 +862,7 @@
         <div id="setnews" class="sett" onclick="settw('newsa');"><p id="setnewsp" class="setp">消息</p></div>
         <div id="setmd" class="sett" onclick="settw('mdDiv');"><p id="mdxz" class="setp">回答模型</p><p id="mdDisplay" style="display:inline;" class="settext">默认</p></div>
         <div id="setmemoryDiv" class="sett" onclick="settw('memory');"><p id="setme" class="setp">上下文记忆</p></div>
-        <div id="setsql" class="sett" onclick="settw('sqla');"><p id="setsqlp" class="setp">数据库检索</p></div>
+        <div id="setsql" class="sett" onclick="settw('sqla');" style="display:none;"><p id="setsqlp" class="setp">数据库检索</p></div>
         <div id="setto" class="sett" onclick="settw('toa');"><p id="settop" class="setp">公式转译</p></div>
         <div id="setticklingdiv" class="sett" onclick="window.open('tickling.html');"><p id="settickling" class="setp">反馈</p></div>
         <div id="setuidiv" class="sett" onclick="settw('ui');"><p id="setui" class="setp">界面</p></div>
@@ -2110,84 +2129,54 @@ null,
       let sharecode=false;
       let usharecode;
       function changeString(str){
-        const langList = [
-          'html', 'css', 'js', 'javascript', 'python', 'java', 'cpp', 'csharp', 'php',
-          'ruby', 'go', 'rust', 'swift', 'kotlin', 'typescript', 'sql', 'bash', 'shell',
-          'json', 'xml', 'yaml', 'markdown', 'c', 'c\\+\\+', 'c\\#', 'node', 'tsx', 'jsx'
-        ];
-        const langPattern = langList.map(l=>l.replace(/[+\-#]/g,'\\$&')).join('|');
-        const singleLineRegex = new RegExp(`^(\\s*)(${langPattern})\\s+([^\\n]+)$`, 'gim');
-        str = str.replace(singleLineRegex, (match, indent, lang, code) => {
-          if(code.length<2)return match;
-          const hasCodeChars = /[<>{}();=+\-*/&|!]/.test(code);
-          if(!hasCodeChars)return match;
-          return `${indent}\`\`\`${lang}\n${code.trim()}\n\`\`\``;
+        str=str.replace(/\\begin\{align\*\}([\s\S]*?)\\end\{align\*\}/g,(match,content)=>{
+          return `$$\\begin{aligned}${content}\\end{aligned}$$`;
         });
-        const multiLineRegex = new RegExp(`^(\\s*)(${langPattern})\\s*\\n((?:\\s{2,}.*\\n?)+)`, 'gim');
-        str = str.replace(multiLineRegex, (match, indent, lang, codeBlock) => {
-          let cleanedCode = codeBlock.replace(/\s+$/, '');
-          return `${indent}\`\`\`${lang}\n${cleanedCode}\n\`\`\``;
+        str=str.replace(/\\begin\{align\}([\s\S]*?)\\end\{align\}/g,(match,content)=>{
+            return `$$\\begin{aligned}${content}\\end{aligned}$$`;
         });
-        str = str
-          .replace(/\[代码\:([^\]])+?\]([\s\S]*?)\[\/代码\]/g,"```$1$2```")
-          .replace(/「(.+?)」/g,"`$1`")
-          .replace(/```[\s\S]*?```/g,t=>{
-            return "CODE://"+t.replace(/```(\w+)?/gi,t=>{
-              const lang=t.match(/^```(\w+)\s*/);
-              const ifhtml=lang?lang[1]:"";
-              if(/(html|htm)/gi.test(ifhtml)){
-                sharecode=true;
-              }
-              return "```";
-            }).slice(3,-3).replace(/CODE:\/\//g,"CODEQ://").replace(/\/\/:CODE/g,"CODEH://").replace(/`/g,`YINHAO://`)+"//:CODE";
-          })
-          .replace(/```(\w+)([\s\S]+)(?!```)$/gi,(t,l,c)=>{
-            return "CODE://"+c.replace(/CODE:\/\//g,"CODEQ://").replace(/\/\/:CODE/g,"CODEH://").replace(/`/g,`YINHAO://`)+"//:CODE";
-          })
-          .replace(/\n/g,"BR://")
-          .replace(/CODE:\/\/([\s\S]*?)\/\/:CODE/g,(_, c)=>{
-            const recode=`<div class="codea"><pre>${c
-              .replace(/[&<>]/g,(m)=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))
-              .replace(/\*\*(.*?)\*\*/g,`TRING://$1//:TRING`)
-              .replace(/#/g,`JINGHAO://`)
-              .replace(/&/g,`AHAO://`)
-              .replace(/`/g,`YINHAO://`)
-              .replace(/\*/g,`XINGHAO://`)
-              .replace(/\-/g,`JIANHAO://`)}</pre></div>`;
-            if(sharecode){
-              sharecode=false;
-              usharecode=c.replace(/BR:\/\//g,`
-`);
-              return recode+`<button class="ushare" onclick="viewhtml();">在线预览</button>`;
-            }
-            return recode;
-          })
-          .replace(/BR:\/\//g, '<br>')
-          .replace(/\*\*(.*?)\*\*/g,`<span style="font-weight:900;">$1</span>`)
-          .replace(/`(.+?)`/g,(t)=>{
-            return `<div class="codeb">`+t.slice(1,-1).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\-/g,`JIANHAO://`)+`</div>`;
-          })
-          .replace(/######(.*?)(?:$|<br>|BR:\/\/)/gm,`<h3 style="font-size:17px;">$1</h3>`)
-          .replace(/#####(.*?)(?:$|<br>|BR:\/\/)/gm,`<h3 style="font-size:18px;">$1</h3>`)
-          .replace(/####(.*?)(?:$|<br>|BR:\/\/)/gm,`<h3 style="font-size:19px;">$1</h3>`)
-          .replace(/###(.*?)(?:$|<br>|BR:\/\/)/gm,`<h3 style="font-size:20px;">$1</h3>`)
-          .replace(/##(.*?)(?:$|<br>|BR:\/\/)/gm,`<h3 style="font-size:21px;">$1</h3>`)
-          .replace(/#(.*?)(?:$|<br>|BR:\/\/)/gm,`<h3 style="font-size:22px;">$1</h3>`)
-          .replace(/<br>\-\-\-<br>/g,"<hr/>")
-          .replace(/<think>([\s\S]+?)<\/think>/g,`<span style='color:rgba(0,0,0,0.3);'>$1</span>`)
-          .replace(/<think>([\s\S]+?)/g,`<span style='color:rgba(0,0,0,0.3);'>$1</span>`)
-          .replace(/TRING:\/\/([\s\S]*?)\/\/:TRING/g,`**$1**`)
-          .replace(/JINGHAO:\/\//g,`#`)
-          .replace(/AHAO:\/\//g,`&`)
-          .replace(/YINHAO:\/\//g,"`")
-          .replace(/XINGHAO:\/\//g,"*")
-          .replace(/CODEQ:\/\//g,"CODE://")
-          .replace(/CODEH:\/\//g,"//:CODE")
-          .replace(/JIANHAO:\/\//g,"-");
-        if(isTo){
-          str=`<span class="mathjax-content">${str}</span>`;
+        str=str.replace(/\\begin\{equation\*\}([\s\S]*?)\\end\{equation\*\}/g,(match,content)=>{
+          return `$$${content}$$`;
+        });
+        str=str.replace(/\\begin\{equation\}([\s\S]*?)\\end\{equation\}/g,(match,content)=>{
+          return `$$${content}$$`;
+        });
+        str=str.replace(/\\begin\{cases\}([\s\S]*?)\\end\{cases\}/g,(match,content)=>{
+          return `$$\\begin{cases}${content}\\end{cases}$$`;
+        });
+        str=str.replace(/\\\[([\s\S]*?)\\\]/g,(match,content)=>{
+          return `$$${content}$$`;
+        });
+        str=str.replace(/\\\(([\s\S]*?)\\\)/g,(match,content)=>{
+          return `$${content}$`;
+        });
+        str=str.replace(/\$\$([\s\S]+?)\$\$/g,(match,content)=>{
+          return `$$${content}$$`;
+        });
+        str=str.replace(/\$([^$\n]+?)\$/g,(match,content)=>{
+          return `$${content}$`;
+        });
+        str=str.replace(/\[([^\]]+?)\]/g,(match,content)=>{
+          return `$$${content}$$`;
+        });
+        str=str.replace(/\\documentclass\{[^}]*\}/g,'');
+        str=str.replace(/\\usepackage\{[^}]*\}/g,'');
+        str=str.replace(/\\begin\{document\}/g,'');
+        str=str.replace(/\\end\{document\}/g,'');
+        str=str.replace(/\\section\*?\{[^}]*\}/g,'');
+        str=str.replace(/\n{3,}/g,'\n\n');
+        let html=marked.parse(str,{breaks:true,gfm:true,headerIds:false,mangle:false});
+        html=html.replace(/BR:\/\//g,'\n').replace(/「(.+?)」/g,'`$1`').replace(/<think>([\s\S]+?)<\/think>/g,`<span style='color:rgba(0,0,0,0.3);'>$1</span>`).replace(/<think>([\s\S]+?)/g,`<span style='color:rgba(0,0,0,0.3);'>$1</span>`);
+        if(isTo)html=`<span class="mathjax-content">${html}</span>`;
+        return html;
+      }
+      function viewhtml(code){
+        if(code){
+          localStorage.setItem('uplcc_sca_share_code',JSON.stringify({time:0,code:code}));
+        }else if(typeof usharecode!=='undefined'){
+          localStorage.setItem('uplcc_sca_share_code',JSON.stringify({time:0,code:usharecode}));
         }
-        return str;
+        window.open('https://uplcc.github.io/code','_blank');
       }
       function mdsca(md){
         if(!md.trim()){
@@ -2409,10 +2398,6 @@ null,
         signTitle.style.fontWeight="400";
         signTitle.style.fontSize="16px";
       };
-      function viewhtml(){
-        localStorage.setItem("uplcc_sca_share_code",JSON.stringify({time:0,code:usharecode}));
-        window.open("https://uplcc.github.io/code","_blank");
-      }
       const slider = document.getElementById("timeSlider");
       document.getElementById("sliderContent").innerText=setTime+"ms";
       if(setTime<=5){
