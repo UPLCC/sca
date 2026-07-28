@@ -892,6 +892,8 @@
       }
       #viewPhoto{
         height:100%;
+        display:block;
+        margin:0 auto;
       }
       button{
         -webkit-tap-highlight-color:transparent;
@@ -924,7 +926,7 @@
       </filter>
     </svg>
     <div id="cameraPreview" style="display:none;position:fixed;z-index:10001;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;background:rgba(255,255,255,1);border-radius:32px;padding:16px;box-shadow:0 0 20px 10px rgba(0,0,0,0.1);backdrop-filter:blur(1px);">
-      <video id="video" autoplay playsinline style="width:100%;height:200px;border-radius:16px;object-fit:cover;background:#000;"></video>
+      <video id="video" autoplay playsinline style="width:100%;aspect-ratio:3 / 4;border-radius:16px;object-fit:cover;background:#000;"></video>
       <div style="display:flex;gap:10px;margin-top:12px;">
         <button onclick="closeCamera()" style="flex:1;padding:10px;border-radius:16px;border:1px solid rgba(0,0,0,0.1);background:rgba(0,0,0,0.03);font-size:15px;cursor:pointer;">取消</button>
         <button onclick="capturePhoto()" style="flex:1;padding:10px;border-radius:16px;border:none;background:#56a9ff;color:white;font-size:15px;font-weight:600;cursor:pointer;">拍照</button>
@@ -2639,8 +2641,8 @@ null,
           const stream=await navigator.mediaDevices.getUserMedia({
             video:{
               facingMode:'environment',
-              width:{ideal:1920},
-              height:{ideal:1080}
+              width:{ideal:1280},
+              height:{ideal:960}
             },
             audio:false
           });
@@ -2653,7 +2655,7 @@ null,
           setTimeout(()=>{
             document.getElementById("choiceDiv").style.display="none";
           },300);
-        }catch (err){
+        }catch(err){
           alert('无法打开相机，请检查相机权限');
         }
       }
@@ -2669,11 +2671,11 @@ null,
       function capturePhoto() {
         const video = document.getElementById('video');
         const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth || 1920;
-        canvas.height = video.videoHeight || 1080;
+        canvas.width = video.videoWidth || 1280;
+        canvas.height = video.videoHeight || 960;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const imageDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+        const imageDataUrl = canvas.toDataURL('image/jpeg', 0.85);
         closeCamera();
         uploading(imageDataUrl);
       }
