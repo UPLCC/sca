@@ -16,5 +16,5 @@ const modelList=[
   {"name":"Qwen-3.5-Plus(流式输出)","display":"Qwen-3.5-Plus","stop":"0","id":"50","reason":true},
   {"name":"Claude-Opus-4.8(流式输出)","display":"Claude-Opus-4.8","stop":"0","id":"51","reason":false},
   {"name":"Qwen3-VL(多模态)","display":"Qwen3-VL","stop":"0","id":"52","reason":false},
-  {"name":"Claude-Fable-5(流式输出)","display":"Claude-Fable-5","stop":"0","id":"53","reason":false}
+  {"name":"Claude-Fable-5(流式输出)","display":"Claude-Fable-5","stop":"1","id":"53","reason":false}
 ];
