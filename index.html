@@ -846,6 +846,8 @@
         padding:4px;
         user-select:none;
         display:none;
+        overflow-x:hidden;
+        overflow-y:auto;
         transition:all 0.3s ease;
       }
       .choice{
@@ -883,14 +885,15 @@
         opacity:0;
         display:none;
       }
-      #limitPhoto{
+      .limitPhoto{
+        display:inline-block;
         margin:8px;
         width:70px;
         height:70px;
         border-radius:12px;
         overflow:hidden;
       }
-      #viewPhoto{
+      .viewPhoto{
         height:100%;
         display:block;
         margin:0 auto;
@@ -941,8 +944,7 @@
     <div id="choiceDiv">
       <div class="choice" id="openCamera"><p>相机</p></div>
       <div class="choice" id="openPhoto"><p>相册</p></div>
-      <input type="file" accept="image/*" id="userChoice"/>
-      <div id="limitPhoto"><img src="" id="viewPhoto"/></div>
+      <input type="file" id="userChoice" accept="image/*" multiple>
     </div>
     <div id="choiceShade"></div>
     <div id="comphide"><h3 id="comptext">正在加载资源</h3></div>
@@ -1172,6 +1174,7 @@
       let isTo=true;
       let waitAdd="";
       let memories=[];
+      let imgArray=[];
       const mdD=[
         "默认","DeepSeek","Gemma","Gemma(连续对话)","Qwen","GLM-4-Flash","DeepSeek(流式输出)","Qwen(连续对话)","CogView",
         "ChatGPT-4","Qwen3","MiniMax-M2","DeepSeek-R1","Kimi-K2","Seed","Grok4","Gemini-2.5","FLUX.1","Cluade4.5",
@@ -1192,7 +1195,8 @@
       for(let listIndex=0;listIndex<modelList.length;listIndex++){
         const ele=modelList[listIndex];
         mdD.push(ele.display);
-        document.getElementById("mdDiv").innerHTML+=`<div class="settt" id="mdv${ele.id}" onclick="deep=${ele.id};mdEx();" data-md="${ele.name}" data-stop="${ele.stop}" data-reason=${ele.reason}><p class="setp">${ele.name}</p></div>`;
+        ele.model=ele.model?ele.model:0;
+        document.getElementById("mdDiv").innerHTML+=`<div class="settt" id="mdv${ele.id}" onclick="deep=${ele.id};mdEx();" data-md="${ele.name}" data-stop="${ele.stop}" data-reason=${ele.reason} data-model="${ele.model}"><p class="setp">${ele.name}</p></div>`;
       }
       for(var mdstop=0;mdstop<mdD.length;mdstop++){
         const thisdom=document.getElementById("mdv"+mdstop);
@@ -1309,7 +1313,7 @@
         }else{
           localStorage.setItem('uplcc_sca_information',JSON.stringify(ctwz));
         }
-        if(deep==52){
+        if(document.getElementById(`mdv${deep}`).dataset.md.includes("多模态")){
           document.getElementById("sr").style.width=parseFloat(getComputedStyle(document.getElementById("inp")).width)-84+"px";
           document.getElementById("displayMore").style.display="block";
         }else{
@@ -1376,6 +1380,13 @@
           return;
         }
         if(eisautoif&&deep!==0){
+          if(document.getElementById(`mdv${deep}`).dataset.md.includes("多模态")){
+            if(!nonStreamAnswer){
+              askByPOST(document.getElementById(`mdv${deep}`).dataset.model,sr.value,imgArray);
+              eisAll(1500);
+              return;
+            }
+          }
           if(deep==6||deep==11||deep==12||deep==14||deep==19||deep==24||deep==25||deep==52||document.getElementById(`mdv${deep}`).dataset.md.includes("流式输出")){
             if(!nonStreamAnswer){
               bdeep();
@@ -1580,8 +1591,14 @@ ${cdword}的充电功率(${a[sysd].split(";")[2]})相较于其他机型更高。
         const userMsgDiv = document.createElement('div');
         userMsgDiv.className = 'userx';
         userMsgDiv.id="bothdv"+newsnum;
-        if(deep==52&&picUrl){
-          userMsgDiv.innerHTML = `<div style="width:150px;height:150px;overflow:hidden;border-radius:13px;"><img src="${picUrl}" style="height:150px;display:block;margin:0 auto;" onclick="bigphoto.style.display='block';phoex.style.display='block';document.getElementById('bigphoto').src=this.src;bigphoto.style.animationName='bod';bigphoto.style.animationDuration='0.3s';phoex.style.animationName='bod';phoex.style.animationDuration='0.3s';"/></div><br>`+message;
+        if(document.getElementById(`mdv${deep}`).dataset.md.includes("多模态")){
+          let userMsgRes="";
+          for(let j=0;j<imgArray.length;j++){
+            userMsgRes+=`<div style="width:100px;height:100px;overflow:hidden;border-radius:13px;display:inline-block;"><img src="${imgArray[j]}" style="height:100px;display:block;margin:0 auto;" onclick="bigphoto.style.display='block';phoex.style.display='block';document.getElementById('bigphoto').src=this.src;bigphoto.style.animationName='bod';bigphoto.style.animationDuration='0.3s';phoex.style.animationName='bod';phoex.style.animationDuration='0.3s';"/></div>`;
+          }
+          if(imgArray.length!==0)userMsgRes+="<br>";
+          userMsgRes+=message;
+          userMsgDiv.innerHTML = userMsgRes;
         }else{
           userMsgDiv.innerHTML = message;
         }
@@ -2582,50 +2599,200 @@ null,
           }
         }
       });
-      async function uploading(pic){
-        const purePic=pic.split(',')[1]||pic;
-        const fd=new FormData();
-        fd.append('key',"bd40b90d6eecbdc1e32eff2f26001bf9");
-        fd.append('image',purePic);
-        fd.append('expiration','1200');
-        const res=await fetch('https://api.imgbb.com/1/upload',{
-          method:'POST',
-          body:fd
-        });
-        const data = await res.json();
-        canSend=true;
-        if(!data.success)alert("上传失败，请稍后再试");
-        picUrl=data.data.url;
-        document.getElementById("viewPhoto").src=picUrl;
-        alert("上传成功");
-      }
-      document.getElementById("viewPhoto").onclick=()=>{
-        const isConfirm=window.confirm("确认删除该图片?");
-        if(isConfirm){
-          document.getElementById("viewPhoto").src="";
-          picUrl="";
-          tip("删除成功");
+      let firstAnswerOnPOST=true;
+      async function askByPOST(model,msg,imgArr){
+        if(isAnswer)return;
+        if(!model||!msg)return;
+        if(!Array.isArray(imgArr)){
+          imgArr = imgArr?[imgArr]:[];
         }
+        let response;
+        let isThinking=false;
+        if(document.getElementById(`mdv${deep}`).dataset.reason==="true")isThinking=true;
+        if(imgArr.length>0){
+          const content=[
+            {type:"text",text:msg}
+          ];
+          imgArr.forEach(base64=>{
+            content.push({
+              type:"image_url",
+              image_url:base64
+            });
+          });
+          const body={
+            model: model,
+            content:[
+              {
+                role: "user",
+                content: content
+              }
+            ]
+          };
+          response=await fetch("https://agent.uplcc.deno.net/",{
+            method:"POST",
+            headers:{
+              "Content-Type":"application/json"
+            },
+            body:JSON.stringify(body)
+          });
+        }else{
+          response=await fetch("https://agent.uplcc.deno.net/",{
+            method:"POST",
+            headers:{
+              "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+              "model":model,
+              "content":[
+                {"role":"user","content":msg}
+              ]
+            })
+          });
+        }
+        if (!response.ok) {
+          tip(`API请求失败！`);
+          isAnswer=false;
+          clearInterval(loadingAnimation);
+          hdliu("",2);
+          return;
+        }
+        firstAnswerOnPOST=true;
+        imgArray=[];
+        document.querySelectorAll('.limitPhoto').forEach(el=>el.remove());
+        document.querySelectorAll('.viewPhoto').forEach(el=>el.remove());
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder("utf-8");
+        let buffer = "";
+        let fullContent = "";
+        let firstThinking=true;
+        let firstEnd=false;
+        try{
+          while(true){
+            if(firstAnswerOnPOST){
+              clearInterval(loadingAnimation);
+              hdliu("",2);
+              hdliu("",0);
+              firstAnswerOnPOST=false;
+            }
+            const {done,value}=await reader.read();
+            if(done){
+              isAnswer=false;
+              firstAnswerOnPOST=true;
+              firstThinking=true;
+              firstEnd=false;
+              if(ctwzif)ctwz.push({"user":userMsg,"content":hdliustr});
+              if(waitAdd&&deep!==0){
+                memories.push(`用户:${waitAdd}`);
+                waitAdd="";
+              }
+              if(openMemories&&deep!==0){
+                memories.push(`回答:${didnotHdliuString}`);
+              }
+              return;
+            }
+            isAnswer=true;
+            buffer += decoder.decode(value, { stream: true });
+            const events = buffer.split("\n\n");
+            buffer = events.pop() || "";
+            for(const event of events){
+              if(event.trim()){
+                const lines = event.split("\n");
+                for(const line of lines){
+                  if(line.startsWith("data: ")){
+                    const data = line.slice(6);
+                    if (data === "[DONE]"){
+                      return fullContent;
+                    }
+                    const json = JSON.parse(data);
+                    if(isThinking){
+                      const reason = json.choices?.[0]?.delta?.reasoning_content;
+                      const content = json.choices?.[0]?.delta?.content;
+                      if(reason&&!content){
+                        if(firstThinking){
+                          firstThinking=false;
+                          const realResult=reason.replace(/\n/,`\n<span style='color:rgba(0,0,0,0.3);'>`);
+                          fullContent+="<span style='color:rgba(0,0,0,0.3);'>"+realResult;
+                        }else{
+                          const realResult=reason.replace(/\n/,`</span>\n<span style='color:rgba(0,0,0,0.3);'>`);
+                          fullContent+=realResult;
+                        }
+                        hdliu(fullContent,1);
+                      }else if(reason==""&&reason){
+                        if(!firstEnd){
+                          fullContent+="</span><br>";
+                          firstEnd=true;
+                        }
+                        if(content)fullContent+=content;
+                        hdliu(fullContent,1);
+                      }else{
+                        if(!firstEnd){
+                          fullContent+="</span><br>";
+                          firstEnd=true;
+                        }
+                        if(content)fullContent+=content;
+                        hdliu(fullContent,1);
+                      }
+                    }else{
+                      const content = json.choices?.[0]?.delta?.content;
+                      if(content){
+                        fullContent+=content;
+                        hdliu(fullContent,1);
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }catch(e){
+          isAnswer=false;
+          alert("解析失败");
+        }finally{
+          isAnswer=false;
+          firstAnswerOnPOST=true;
+          firstThinking=true;
+          firstEnd=false;
+        }
+      }
+      function uploading(res) {
+        if(!res)return;
+        imgArray.push(res);
+        const limitPhoto=document.createElement("div");
+        const viewPhoto=document.createElement("img");
+        limitPhoto.className="limitPhoto";
+        viewPhoto.className="viewPhoto";
+        viewPhoto.src=res;
+        viewPhoto.addEventListener("click",()=>{
+          const isConfirm=window.confirm("确认删除这张图片?");
+          if(isConfirm){
+            const realIndex=imgArray.indexOf(res);
+            if(realIndex!==-1){
+              imgArray.splice(realIndex,1);
+            }
+            limitPhoto.remove();
+            viewPhoto.remove();
+            tip("删除成功");
+          }
+        });
+        limitPhoto.appendChild(viewPhoto);
+        document.getElementById("choiceDiv").appendChild(limitPhoto);
       }
       document.getElementById("openPhoto").onclick=()=>{
         document.getElementById("userChoice").click();
       }
       document.getElementById("userChoice").addEventListener("change",e=>{
-        const file=e.target.files[0];
-        if(!file)return;
-        document.getElementById("choiceDiv").style.transform="translate(-50%,-50%) scale(0.9)";
-        document.getElementById("choiceDiv").style.opacity=0;
-        document.getElementById("choiceShade").style.display="none";
-        setTimeout(()=>{
-          document.getElementById("choiceDiv").style.display="none";
-        },300);
-        const r=new FileReader();
-        r.onload=event=>{
-          canSend=false;
-          const res=event.target.result;
-          uploading(res);
+        const file=e.target.files;
+        if(!file||file.length==0)return;
+        for(let i=0;i<file.length;i++){
+          const r=new FileReader();
+          r.onload=event=>{
+            canSend=false;
+            const res=event.target.result;
+            uploading(res);
+          }
+          r.readAsDataURL(file[i]);
         }
-        r.readAsDataURL(file);
+        e.target.value="";
       });
       document.getElementById("choiceShade").onclick=()=>{
         document.getElementById("choiceDiv").style.transform="translate(-50%,-50%) scale(0.9)";
@@ -2655,12 +2822,7 @@ null,
           const video=document.getElementById('video');
           video.srcObject=stream;
           video.play();
-          document.getElementById("cameraPreview").style.display="block";
-          document.getElementById("choiceDiv").style.transform="translate(-50%,-50%) scale(0.9)";
-          document.getElementById("choiceDiv").style.opacity=0;
-          setTimeout(()=>{
-            document.getElementById("choiceDiv").style.display="none";
-          },300);
+          document.getElementById("choiceDiv").style.display="none";
         }catch(err){
           alert('无法打开相机，请检查相机权限');
         }
@@ -2672,7 +2834,6 @@ null,
           video.srcObject = null;
         }
         document.getElementById("cameraPreview").style.display="none";
-        document.getElementById("choiceShade").style.display="none";
       }
       function capturePhoto() {
         const video = document.getElementById('video');
@@ -2681,8 +2842,9 @@ null,
         canvas.height = video.videoHeight || 960;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const imageDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        const imageDataUrl = canvas.toDataURL('image/jpeg',0.85);
         closeCamera();
+        document.getElementById("choiceDiv").style.display="block";
         uploading(imageDataUrl);
       }
       document.getElementById("openCamera").onclick=()=>{
