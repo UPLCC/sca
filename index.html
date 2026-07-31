@@ -1166,6 +1166,7 @@
       let mdif=false;
       let ctwzif=true;
       let isMsg=false;
+      let isPOSTAnswer=false;
       let msgStop=false;
       let lowFilter=false;
       let openMemories=true;
@@ -1352,7 +1353,7 @@
         if (!sr.value.trim()) {
           return;
         }
-        if(!isAnswer&&!nonStreamAnswer){
+        if(!isAnswer&&!nonStreamAnswer&&!isPOSTAnswer){
           addUserMessage(sr.value);
         }
         if(!ifh){
@@ -1369,7 +1370,7 @@
         cx = 0;
         ph = 0;
         const t = sr.value.toLowerCase().replace(/[\s]+/gi, "").trim();
-        if (sr.value == "随便说一个") {
+        if (sr.value == "随便说一个"){
           const ra = Math.round(Math.random() * (a.length - 0.5));
           const rb = Math.round(Math.random() * 3);
           hd(`${a[ra].split(";")[0]}${mb[rb]}${a[ra].split(";")[rb+1]}。`);
@@ -1394,7 +1395,7 @@
               return;
             }
           }else{
-            if(!nonStreamAnswer){
+            if(!nonStreamAnswer&&!isAnswer){
               hddeep();
               eisAll(1500);
               return;
@@ -1406,6 +1407,7 @@
         }else if(!eisautoif&&deep!==0){
           return;
         }
+        if(isAnswer||nonStreamAnswer&&isPOSTAnswer)return;
         for(var r = 0; r < a.length; r++) {
           const aliases = a[r].split(";")[5].split(",");
           for (var alias of aliases) {
@@ -1431,24 +1433,17 @@
           hd("你好！");
           return;
         }
-        if(!sj&&p("全部数据",t)){
-          var codeaaa="";
-          for(var sjaaa=0;sjaaa<a.length;sjaaa++){
-            if(sjaaa!==a.length-1){
-            codeaaa+=`"`+a[sjaaa]+`",`+`
-`;
-            }else{
-            codeaaa+=`"`+a[sjaaa]+`"`+`
-`;
-            }
-          }
-          hd(`以下为本工具的全部手机数据，发现不对的数据可以指正~<br>CODE://var a=[
-${codeaaa}];//:CODE`);
-          return;
-        }
         if(!sj&&p("帧率",t)||p("fps",t)||p("屏幕刷新率",t)){
-          !iffps?hd("正在测量中..."):hd("你点的次数太多了。");
-          fpsnow(fnow=>hd("当前屏幕刷新率(仅供参考)："+fnow+"FPS。"));
+          clearInterval(loadingAnimation);
+          hdliu("",2);
+          if(!iffps){
+            hdliu("",0);
+            hdliu("正在测量中...",1)
+          }else{
+            tip("请等待测量完成");
+            return;
+          }
+          fpsnow(fnow=>hdliu("当前屏幕刷新率(仅供参考)："+fnow+"FPS。",1));
           return;
         }
         if(devchoose||dev.some(Boolean)){
@@ -1498,64 +1493,58 @@ ${codeaaa}];//:CODE`);
           all();
         }
       }
-function db() {
-    const input = sr.value.trim().toLowerCase().replace(/[\s]+/g, " ");
-    const rows = [];
-    const socdb=[];
-    for (let r = 0; r < a.length; r++) {
-        const aliases = a[r].split(";")[5].split(",");
-        let bestLen = 0;
-        for (let al of aliases) {
+      function db(){
+        const input = sr.value.trim().toLowerCase().replace(/[\s]+/g, " ");
+        const rows = [];
+        const socdb=[];
+        for(let r = 0; r < a.length; r++){
+          const aliases = a[r].split(";")[5].split(",");
+          let bestLen = 0;
+          for(let al of aliases){
             const re = new RegExp(`(^|[^a-z0-9])${al}([^a-z0-9]|$)`, 'i');
-            if (p(al,input)&&re.test(input) && al.length > bestLen) {
-                bestLen = al.length;
+            if(p(al,input)&&re.test(input)&&al.length>bestLen){
+              bestLen = al.length;
             }
+          }
+          if(bestLen)rows.push(r);
         }
-        if (bestLen) rows.push(r);
-    }
-if(rows.length<2){
-hd(`对比最低需要2款机型，还需要至少${2-rows.length}个机型才能进行对比哦！`);
-return;
-}
-for(let aaa=0;aaa<rows.length;aaa++){
-socdb.push(Number(mapa.get(a[rows[aaa]].split(";")[1])));
-}
-var dx=0;
-var sy=0;
-var dxdc=0,sydc=0;
-var dxsd=0,sysd=0;
-let socword="",dcword="",cdword="";
-for(var aac=0;aac<socdb.length;aac++){
-if(socdb[aac]>dx){
-dx=socdb[aac];
-sy=rows[aac];
-socword=a[sy].split(";")[0];
-}else if(socdb[aac]==dx){
-socword+="、"+a[rows[aac]].split(";")[0];
-}
-if(Number(a[rows[aac]].split(";")[3].replace(/[a-z\s]+/gi,""))>Number(dxdc)){
-dxdc=Number(a[rows[aac]].split(";")[3].replace(/[a-z\s]+/gi,""));
-sydc=rows[aac];
-dcword=a[sydc].split(";")[0];
-}else if(Number(a[rows[aac]].split(";")[3].replace(/[a-z\s]+/gi,""))==Number(dxdc)){
-dcword+="、"+a[rows[aac]].split(";")[0];
-}
-if(Number(a[rows[aac]].split(";")[2].replace(/[a-z\s]+/gi,""))>Number(dxsd)){
-dxsd=Number(a[rows[aac]].split(";")[2].replace(/[a-z\s]+/gi,""));
-sysd=rows[aac];
-cdword=a[sysd].split(";")[0];
-}else if(Number(a[rows[aac]].split(";")[2].replace(/[a-z\s]+/gi,""))==Number(dxsd)){
-cdword+="、"+a[rows[aac]].split(";")[0];
-}
-}
-hd(`<h3>处理器：${socword}</h3>
-${socword}的处理器(${a[sy].split(";")[1]})相较于其他机型更好。
-<h3>电池：${dcword}</h3>
-${dcword}的电池容量(${a[sydc].split(";")[3]})相较于其他机型更高。
-<h3>充电功率：${cdword}</h3>
-${cdword}的充电功率(${a[sysd].split(";")[2]})相较于其他机型更高。
-`);
-}
+        if(rows.length<2){
+          hd(`对比最低需要2款机型，还需要至少${2-rows.length}个机型才能进行对比哦！`);
+          return;
+        }
+        for(let aaa=0;aaa<rows.length;aaa++){
+          socdb.push(Number(mapa.get(a[rows[aaa]].split(";")[1])));
+        }
+        var dx=0;
+        var sy=0;
+        var dxdc=0,sydc=0;
+        var dxsd=0,sysd=0;
+        let socword="",dcword="",cdword="";
+        for(var aac=0;aac<socdb.length;aac++){
+          if(socdb[aac]>dx){
+            dx=socdb[aac];
+            sy=rows[aac];
+            socword=a[sy].split(";")[0];
+          }else if(socdb[aac]==dx){
+            socword+="、"+a[rows[aac]].split(";")[0];
+          }
+          if(Number(a[rows[aac]].split(";")[3].replace(/[a-z\s]+/gi,""))>Number(dxdc)){
+            dxdc=Number(a[rows[aac]].split(";")[3].replace(/[a-z\s]+/gi,""));
+            sydc=rows[aac];
+            dcword=a[sydc].split(";")[0];
+          }else if(Number(a[rows[aac]].split(";")[3].replace(/[a-z\s]+/gi,""))==Number(dxdc)){
+            dcword+="、"+a[rows[aac]].split(";")[0];
+          }
+          if(Number(a[rows[aac]].split(";")[2].replace(/[a-z\s]+/gi,""))>Number(dxsd)){
+            dxsd=Number(a[rows[aac]].split(";")[2].replace(/[a-z\s]+/gi,""));
+            sysd=rows[aac];
+            cdword=a[sysd].split(";")[0];
+          }else if(Number(a[rows[aac]].split(";")[2].replace(/[a-z\s]+/gi,""))==Number(dxsd)){
+            cdword+="、"+a[rows[aac]].split(";")[0];
+          }
+        }
+        hd(`<h3>处理器：${socword}</h3><br>${socword}的处理器(${a[sy].split(";")[1]})相较于其他机型更好。<br><h3>电池：${dcword}</h3><br>${dcword}的电池容量(${a[sydc].split(";")[3]})相较于其他机型更高。<br><h3>充电功率：${cdword}</h3><br>${cdword}的充电功率(${a[sysd].split(";")[2]})相较于其他机型更高。`);
+      }
       function pe(){
         const areaText=sr.value.toLowerCase().trim();
         let ifhu=false;
@@ -2602,12 +2591,14 @@ null,
       let firstAnswerOnPOST=true;
       async function askByPOST(model,msg,imgArr){
         if(isAnswer)return;
+        if(isPOSTAnswer)return;
         if(!model||!msg)return;
         if(!Array.isArray(imgArr)){
           imgArr = imgArr?[imgArr]:[];
         }
         let response;
         let isThinking=false;
+        isPOSTAnswer=true;
         if(document.getElementById(`mdv${deep}`).dataset.reason==="true")isThinking=true;
         if(imgArr.length>0){
           const content=[
@@ -2652,6 +2643,7 @@ null,
         if (!response.ok) {
           tip(`API请求失败！`);
           isAnswer=false;
+          isPOSTAnswer=false;
           clearInterval(loadingAnimation);
           hdliu("",2);
           return;
@@ -2677,6 +2669,7 @@ null,
             const {done,value}=await reader.read();
             if(done){
               isAnswer=false;
+              isPOSTAnswer=false;
               firstAnswerOnPOST=true;
               firstThinking=true;
               firstEnd=false;
@@ -2691,6 +2684,7 @@ null,
               return;
             }
             isAnswer=true;
+            isPOSTAnswer=true;
             buffer += decoder.decode(value, { stream: true });
             const events = buffer.split("\n\n");
             buffer = events.pop() || "";
@@ -2746,12 +2740,14 @@ null,
           }
         }catch(e){
           isAnswer=false;
+          isPOSTAnswer=false;
           alert("解析失败");
         }finally{
           isAnswer=false;
           firstAnswerOnPOST=true;
           firstThinking=true;
           firstEnd=false;
+          isPOSTAnswer=false;
         }
       }
       function uploading(res) {
@@ -2835,6 +2831,8 @@ null,
           video.srcObject = null;
         }
         document.getElementById("cameraPreview").style.display="none";
+        document.getElementById("choiceDiv").style.display="block";
+        document.getElementById("choiceShade").style.display="block";
       }
       function capturePhoto() {
         const video = document.getElementById('video');
@@ -2845,7 +2843,6 @@ null,
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         const imageDataUrl = canvas.toDataURL('image/jpeg',0.85);
         closeCamera();
-        document.getElementById("choiceDiv").style.display="block";
         uploading(imageDataUrl);
       }
       document.getElementById("openCamera").onclick=()=>{
