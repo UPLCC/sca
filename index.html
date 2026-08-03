@@ -502,10 +502,10 @@
         background-color:rgba(255,255,255,1);
         transform:scale(0.97);
       }
-      #stcta,#stmea,#sttoa{
+      #stcta,#sttoa{
         background-color:#56a9ff;
       }
-      #stctb,#stmeb,#stto{
+      #stctb,#stto{
         left:17px;
       }
       #includeDiv{
@@ -614,6 +614,14 @@
         top:50%;
         transform:translate(0%,-50%);
       }
+      #chatPng{
+        position:absolute;
+        display:none;
+        left:12px;
+        width:24px;
+        top:50%;
+        transform:translate(0%,-50%);
+      }  
       #mdname{
         position:absolute;
         top:50%;
@@ -902,6 +910,7 @@
         -webkit-tap-highlight-color:transparent;
       }
       .cameraBtn{
+        user-select:none;
         transition:transform 0.2s ease;
       }
       .cameraBtn:active{
@@ -949,6 +958,7 @@
     <div id="choiceShade"></div>
     <div id="comphide"><h3 id="comptext">正在加载资源</h3></div>
     <div id="topdiv">
+      <img src="newChat.png" id="chatPng" onclick="openNewChat();"/>
       <span id="mdname" onclick="editSetting(0,0,'-49vh');setTimeout(()=>settw('mdDiv'),50);">新对话</span>
       <img src="setting.png" id="setpng" onclick="editSetting(0,'49vw','-49vh');"/>
     </div>
@@ -975,7 +985,7 @@
         <div id="setxgqw" class="sett" onclick="settw('qwenset');" style="display:none;"><p id="qwexga" class="setp">修改Qwen3参数</p></div>
         <div id="setnews" class="sett" onclick="settw('newsa');"><p id="setnewsp" class="setp">消息</p></div>
         <div id="setmd" class="sett" onclick="settw('mdDiv');"><p id="mdxz" class="setp">回答模型</p><p id="mdDisplay" style="display:inline;" class="settext">默认</p></div>
-        <div id="setmemoryDiv" class="sett" onclick="settw('memory');"><p id="setme" class="setp">上下文记忆</p></div>
+        <div id="setmemoryDiv" class="sett" onclick="settw('memory');"><p id="setme" class="setp">多轮对话</p></div>
         <div id="setsql" class="sett" onclick="settw('sqla');" style="display:none;"><p id="setsqlp" class="setp">数据库检索</p></div>
         <div id="setto" class="sett" onclick="settw('toa');"><p id="settop" class="setp">公式转译</p></div>
         <div id="setticklingdiv" class="sett" onclick="window.open('tickling.html');"><p id="settickling" class="setp">反馈</p></div>
@@ -1066,10 +1076,11 @@
       </div>
       <div id="memory" class="settwo">
         <button id="memoryex" class="twoex" onclick="settw('memory',1);"></button>
-        <h3 style="margin-left:2%;margin-top:40px;">上下文记忆(Beta)</h3>
-        <div id="setct" class="settt"><p id="setctp" class="setp">上下文记忆</p><div id="stmea" class="setx" onclick="if(!openMemories){stmeb.style.left='17px';this.style.backgroundColor='#56a9ff';openMemories=true;}else{stmeb.style.left='2px';this.style.backgroundColor='rgba(0,0,0,0.1)';openMemories=false;}"><div id="stmeb" class="setxa"></div></div></div>
-        <div id="newChat" class="settt" onclick="memories=[];tip('开启新对话');"><p id="openNewChat" class="setp">开启新对话</p></div>
-        <p style="color:gray;margin-left:8px;font-size:15px;">开启后可以进行连续对话，但是可能造成回答速度变慢、容易出错等问题。<br>此外，由于部分模型API没有System Prompt和成本考虑，所以不支持连续对话。以下是支持连续对话的模型：<br>GLM-Z1、DeepSeek-R1。<br>提示：如果一直提示API返回出错，可尝试开启新对话以解决。</p>
+        <h3 style="margin-left:2%;margin-top:40px;">多轮对话</h3>
+        <div id="setct" class="settt"><p id="setctp" class="setp">多轮对话</p><div id="stmea" class="setx" onclick="if(!openMemories){stmeb.style.left='17px';this.style.backgroundColor='#56a9ff';openMemories=true;document.getElementById('setkeep').style.display='block';document.getElementById('chatPng').style.display='block';}else{stmeb.style.left='2px';this.style.backgroundColor='rgba(0,0,0,0.1)';openMemories=false;document.getElementById('setkeep').style.display='none';document.getElementById('chatPng').style.display='none';if(keepMemories){keepMemories=false;localStorage.setItem('uplcc_sca_memories_state','false');document.getElementById('stmec').style.backgroundColor='rgba(0,0,0,0.1)';document.getElementById('stmed').style.left='2px';}}"><div id="stmeb" class="setxa"></div></div></div>
+        <div id="setkeep" class="settt" style="display:none;"><p id="setkeepp" class="setp">默认开启</p><div id="stmec" class="setx" onclick="if(!keepMemories){stmed.style.left='17px';this.style.backgroundColor='#56a9ff';keepMemories=true;localStorage.setItem('uplcc_sca_memories_state','true');}else{stmed.style.left='2px';this.style.backgroundColor='rgba(0,0,0,0.1)';keepMemories=false;localStorage.setItem('uplcc_sca_memories_state','false');}"><div id="stmed" class="setxa"></div></div></div>
+        <div id="newChat" class="settt" onclick="openNewChat();"><p id="openNewChat" class="setp">开启新对话</p></div>
+        <p style="color:gray;margin-left:8px;font-size:15px;">开启后可以进行多轮对话，但是可能造成响应速度变慢等问题。<br>关闭多轮对话功能后网站将会在支持模型的每一轮对话请求开始时清空上下文。<br>多轮对话的上下文信息多模型间互通。<br>多轮对话如果API返回出错，那么网站会自动删除最近的一轮对话以防止格式错误。<br>此外，由于部分模型API为了成本考虑及实现难度考虑，所以不支持多轮对话。以下是支持多轮对话的模型：<br>Gemini-3.1-Pro(多模态)、Gemini-3.6-Flash(多模态)、ChatGPT-5.6-Terra(多模态)、Xiaomi-MiMo-V2.5(官方渠道)、DeepSeek-V4-Flash(官方渠道)。<br>提示：如果API一直返回出错，可尝试开启新对话以解决。</p>
       </div>
       <div id="atobTime" class="settwo" style="overflow-x:auto;">
         <button id="atobex" class="twoex" onclick="settw('atobTime',1);"></button>
@@ -1169,11 +1180,28 @@
       let isPOSTAnswer=false;
       let msgStop=false;
       let lowFilter=false;
-      let openMemories=true;
+      let openMemories=false;
+      let keepMemories=false;
+      const isKeepMemories=localStorage.getItem("uplcc_sca_memories_state");
+      if(isKeepMemories!==null){
+        if(isKeepMemories==="true"){
+          openMemories=true;
+          keepMemories=true;
+          document.getElementById("stmea").style.backgroundColor="#56a9ff";
+          document.getElementById("stmeb").style.left="17px";
+          document.getElementById("setkeep").style.display="block";
+          document.getElementById("stmec").style.backgroundColor="#56a9ff";
+          document.getElementById("stmed").style.left="17px";
+          document.getElementById('chatPng').style.display='block';
+        }
+      }else{
+        localStorage.setItem("uplcc_sca_memories_state","false");
+      }
       let picUrl="";
       let isAgent=false;
       let isTo=true;
       let waitAdd="";
+      let agreement=false;
       let memories=[];
       let imgArray=[];
       const mdD=[
@@ -1183,6 +1211,15 @@
         "UPLCC-V1-Mini","GLM4.6-OCR","Qwen3-VL","Kwaipilot","DeepSeek-V4","英汉互译","ChatGPT-5.5-Codex","Qwen3.5-Flash",
         "智谱GLM-Z1"
       ];
+      const agreeStorage=localStorage.getItem("uplcc_sca_agreement");
+      if(agreeStorage==="true"){
+        agreement=true;
+      }else{
+        if(agreeStorage===null){
+          localStorage.setItem("uplcc_sca_agreement","false");
+        }
+        agreement=false;
+      }
       let setTime=50;
       const storageTime=localStorage.getItem("uplcc_sca_atobTime");
       if(storageTime===null){
@@ -1314,7 +1351,7 @@
         }else{
           localStorage.setItem('uplcc_sca_information',JSON.stringify(ctwz));
         }
-        if(document.getElementById(`mdv${deep}`).dataset.md.includes("多模态")){
+        if(document.getElementById(`mdv${deep}`).dataset.md.includes("多模态")||deep==58){
           document.getElementById("sr").style.width=parseFloat(getComputedStyle(document.getElementById("inp")).width)-84+"px";
           document.getElementById("displayMore").style.display="block";
         }else{
@@ -1349,8 +1386,19 @@
       let devchoose=false;
       let dev=[false];
       let isAnswer=false;
-      function give() {
-        if (!sr.value.trim()) {
+      function give(){
+        if(!agreement){
+          const isAgree=window.confirm(userAgreement.content);
+          if(isAgree){
+            agreement=true;
+            localStorage.setItem("uplcc_sca_agreement","true");
+          }else{
+            document.body.innerHTML="";
+            document.body.style.pointerEvents="none";
+            return;
+          }
+        }
+        if(!sr.value.trim()){
           return;
         }
         if(!isAnswer&&!nonStreamAnswer&&!isPOSTAnswer){
@@ -1381,7 +1429,7 @@
           return;
         }
         if(eisautoif&&deep!==0){
-          if(document.getElementById(`mdv${deep}`).dataset.md.includes("多模态")){
+          if(document.getElementById(`mdv${deep}`).dataset.md.includes("多模态")||document.getElementById(`mdv${deep}`).dataset.md.includes("官方渠道")){
             if(!nonStreamAnswer){
               askByPOST(document.getElementById(`mdv${deep}`).dataset.model,sr.value,imgArray);
               eisAll(1500);
@@ -1580,10 +1628,10 @@
         const userMsgDiv = document.createElement('div');
         userMsgDiv.className = 'userx';
         userMsgDiv.id="bothdv"+newsnum;
-        if(document.getElementById(`mdv${deep}`).dataset.md.includes("多模态")){
+        if(document.getElementById(`mdv${deep}`).dataset.md.includes("多模态")||deep==58){
           let userMsgRes="";
           for(let j=0;j<imgArray.length;j++){
-            userMsgRes+=`<div style="width:100px;height:100px;overflow:hidden;border-radius:13px;display:inline-block;"><img src="${imgArray[j]}" style="height:100px;display:block;margin:0 auto;" onclick="bigphoto.style.display='block';phoex.style.display='block';document.getElementById('bigphoto').src=this.src;bigphoto.style.animationName='bod';bigphoto.style.animationDuration='0.3s';phoex.style.animationName='bod';phoex.style.animationDuration='0.3s';"/></div>`;
+            userMsgRes+=`<div style="width:100px;height:100px;overflow:hidden;border-radius:8px;display:inline-block;"><img src="${imgArray[j]}" style="height:100px;display:block;margin:0 auto;" onclick="bigphoto.style.display='block';phoex.style.display='block';document.getElementById('bigphoto').src=this.src;bigphoto.style.animationName='bod';bigphoto.style.animationDuration='0.3s';phoex.style.animationName='bod';phoex.style.animationDuration='0.3s';"/></div>`;
           }
           if(imgArray.length!==0)userMsgRes+="<br>";
           userMsgRes+=message;
@@ -1612,7 +1660,6 @@
             userMsg=message;
           }
         }
-        if(openMemories&&deep!==0)waitAdd=message;
         if(xz.scrollHeight - xz.scrollTop - xz.clientHeight < gxpx&&xz.scrollHeight > ifgxa){gx();ifgxa=xz.scrollHeight}
         if(!nonStreamAnswer){
           let loadingNumber=0;
@@ -1649,13 +1696,6 @@
         str=changeString(str);
         typeWriter(botMsgDiv, str, 0, 10);
         if(ctwzif)ctwz.push({"user":userMsg,"content":str});
-        if(waitAdd&&deep!==0){
-          memories.push(`用户:${waitAdd}`);
-          waitAdd="";
-        }
-        if(openMemories&&deep!==0){
-          memories.push(`回答:${didnotToString}`);
-        }
       }
       function typeWriter(element, text, index, speed) {
         if (index < text.length) {
@@ -1910,7 +1950,7 @@ null,
             hdliu("",2);
             hdliu("",0);
             hdliu(`<img src="${jsonData.data?.[0]?.image_url}" class="photos" onload="this.style.animation='none';this.style.animationName='bod';this.style.animationDuration='0.5s';" onclick="bigphoto.style.display='block';phoex.style.display='block';document.getElementById('bigphoto').src=this.src;bigphoto.style.animationName='bod';bigphoto.style.animationDuration='0.3s';phoex.style.animationName='bod';phoex.style.animationDuration='0.3s';"/>`,1);
-            if(ctwzif)ctwz.push(`${jsonData.data?.[0]?.image_url}`);
+            if(ctwzif)ctwz.push({"user":userMsg,"content":`${jsonData.data?.[0]?.image_url}`});
           }else{
             clearInterval(loadingAnimation);
             hdliu("",2);
@@ -2016,21 +2056,9 @@ null,
         }else if(deep==33){
           sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=GPT-5.5-Codex`);
         }else if(deep==34){
-          if(openMemories){
-            const systemContent=`上下文信息：${memories.join("\n")}`;
-            const encodedSystem=encodeURIComponent(systemContent);
-            sse=new EventSource(`https://yunzhiapi.cn/API/qwen3.5-flash.php?token=${bkb}&type=true&question=${msg}&system=${encodedSystem}`);
-          }else{
-            sse=new EventSource(`https://yunzhiapi.cn/API/qwen3.5-flash.php?token=${bkb}&type=true&question=${msg}`);
-          }
+          sse=new EventSource(`https://yunzhiapi.cn/API/qwen3.5-flash.php?token=${bkb}&type=true&question=${msg}`);
         }else if(deep==35){
-          if(openMemories){
-            const systemContent=`上下文信息：${memories.join("\n")||"无上下文信息"}`;
-            const encodedSystem=encodeURIComponent(systemContent);
-            sse=new EventSource(`https://yunzhiapi.cn/API/glm-z1.php?token=${bkb}&type=true&question=${msg}&system=${encodedSystem}`);
-          }else{
-            sse=new EventSource(`https://yunzhiapi.cn/API/glm-z1.php?token=${bkb}&type=true&question=${msg}`);
-          }
+          sse=new EventSource(`https://yunzhiapi.cn/API/glm-z1.php?token=${bkb}&type=true&question=${msg}`);
         }else if(deep==36){
           sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=DeepSeek-V4-Flash`);
         }else if(deep==37){
@@ -2048,23 +2076,11 @@ null,
         }else if(deep==43){
           sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=HunYuan-2.0-Think`);
         }else if(deep==44){
-          if(openMemories){
-            const systemContent=`上下文信息：${memories.join("\n")||"无上下文信息"}`;
-            const encodedSystem=encodeURIComponent(systemContent);
-            sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&system=${encodedSystem}&model=DeepSeek-R1`);
-          }else{
-            sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=DeepSeek-R1`);
-          }
+          sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=DeepSeek-R1`);
         }else if(deep==45){
           sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=GPT-5.6-Terra`);
         }else if(deep==46){
-          if(openMemories){
-            const systemContent=`上下文信息：${memories.join("\n")||"无上下文信息"}`;
-            const encodedSystem=encodeURIComponent(systemContent);
-            sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&system=${encodedSystem}&model=GPT-OSS-120B`);
-          }else{
-            sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=GPT-OSS-120B`);
-          }
+          sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=GPT-OSS-120B`);
         }else if(deep==48){
           sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=MiniMax-M3`);
         }else if(deep==49){
@@ -2072,7 +2088,7 @@ null,
         }else if(deep==50){
           sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=Qwen-3.5-Plus`);
         }else if(deep==51){
-          sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=Claude-Opus-4.8`);
+          sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=Claude-Opus-5`);
         }else if(deep==52){
           if(canSend){
             if(picUrl){
@@ -2110,13 +2126,6 @@ null,
             isAnswer=false;
             already=false;
             if(ctwzif)ctwz.push({"user":userMsg,"content":hdliustr});
-            if(waitAdd&&deep!==0){
-              memories.push(`用户:${waitAdd}`);
-              waitAdd="";
-            }
-            if(openMemories&&deep!==0){
-              memories.push(`回答:${didnotHdliuString}`);
-            }
             return;
           }
           if(!ifbde){
@@ -2167,13 +2176,6 @@ null,
           isAnswer=false;
           alert("API返回出错了，请重试！");
           if(ctwzif&&hdliustr)ctwz.push({"user":userMsg,"content":hdliustr});
-          if(waitAdd&&deep!==0){
-            memories.push(`用户:${waitAdd}`);
-            waitAdd="";
-          }
-          if(openMemories&&deep!==0){
-            memories.push(`回答:${didnotHdliuString}`);
-          }
         });
       }
       function mdEx(){
@@ -2596,56 +2598,105 @@ null,
         if(!Array.isArray(imgArr)){
           imgArr = imgArr?[imgArr]:[];
         }
+        if(!openMemories)memories=[];
         let response;
         let isThinking=false;
         isPOSTAnswer=true;
         if(document.getElementById(`mdv${deep}`).dataset.reason==="true")isThinking=true;
-        if(imgArr.length>0){
-          const content=[
-            {type:"text",text:msg}
-          ];
-          imgArr.forEach(base64=>{
-            content.push({
-              type:"image_url",
-              image_url:base64
+        if(document.getElementById(`mdv${deep}`).dataset.md.includes("多模态")){
+          if(imgArr.length>0){
+            const content=[
+              {type:"text",text:msg}
+            ];
+            imgArr.forEach(base64=>{
+              content.push({
+                type:"image_url",
+                image_url:base64
+              });
             });
-          });
-          const body={
-            model: model,
-            content:[
-              {
-                role: "user",
-                content: content
-              }
-            ]
-          };
-          response=await fetch("https://agent.uplcc.deno.net/",{
-            method:"POST",
-            headers:{
-              "Content-Type":"application/json"
-            },
-            body:JSON.stringify(body)
-          });
+            memories.push({"role":"user","content":content});
+            const body={
+              model: model,
+              content: memories
+            };
+            response=await fetch("https://agent.uplcc.deno.net/",{
+              method:"POST",
+              headers:{
+                "Content-Type":"application/json"
+              },
+              body:JSON.stringify(body)
+            });
+          }else{
+            memories.push({"role":"user","content":msg});
+            response=await fetch("https://agent.uplcc.deno.net/",{
+              method:"POST",
+              headers:{
+                "Content-Type":"application/json"
+              },
+              body:JSON.stringify({
+                "model":model,
+                "content":memories
+              })
+            });
+          }
         }else{
-          response=await fetch("https://agent.uplcc.deno.net/",{
-            method:"POST",
-            headers:{
-              "Content-Type":"application/json"
-            },
-            body:JSON.stringify({
-              "model":model,
-              "content":[
-                {"role":"user","content":msg}
-              ]
-            })
-          });
+          if(deep==58){
+            if(imgArr.length>0){
+              const content=[
+                {type:"text",text:msg}
+              ];
+              imgArr.forEach(base64=>{
+                content.push({
+                  type:"image_url",
+                  image_url:base64
+                });
+              });
+              memories.push({"role":"user","content":content});
+              const body={
+                model: model,
+                content: memories
+              };
+              response=await fetch("https://tofetch.uplcc.deno.net/",{
+                method:"POST",
+                headers:{
+                  "Content-Type":"application/json"
+                },
+                body:JSON.stringify(body)
+              });
+            }else{
+              memories.push({"role":"user","content":msg});
+              response=await fetch("https://tofetch.uplcc.deno.net/",{
+                method:"POST",
+                headers:{
+                  "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                  "model":model,
+                  "content":memories
+                })
+              });
+            }
+          }else{
+            memories.push({"role":"user","content":msg});
+            response=await fetch("https://tofetch.uplcc.deno.net/",{
+              method:"POST",
+              headers:{
+                "Content-Type":"application/json"
+              },
+              body:JSON.stringify({
+                "model":model,
+                "content":memories
+              })
+            });
+          }
         }
-        if (!response.ok) {
+        if(!response.ok){
           tip(`API请求失败！`);
           isAnswer=false;
           isPOSTAnswer=false;
           clearInterval(loadingAnimation);
           hdliu("",2);
+          memories.pop();
           return;
         }
         firstAnswerOnPOST=true;
@@ -2658,6 +2709,8 @@ null,
         let fullContent = "";
         let firstThinking=true;
         let firstEnd=false;
+        let isKeep=false;
+        let isSuccess=true;
         try{
           while(true){
             if(firstAnswerOnPOST){
@@ -2674,15 +2727,15 @@ null,
               firstThinking=true;
               firstEnd=false;
               if(ctwzif)ctwz.push({"user":userMsg,"content":hdliustr});
-              if(waitAdd&&deep!==0){
-                memories.push(`用户:${waitAdd}`);
-                waitAdd="";
+              if(openMemories&&!isKeep){
+                memories.push({"role":"assistant","content":fullContent});
+                isKeep=true;
               }
-              if(openMemories&&deep!==0){
-                memories.push(`回答:${didnotHdliuString}`);
-              }
+              isSuccess=true;
+              if(!openMemories)memories=[];
               return;
             }
+            if(!value)continue;
             isAnswer=true;
             isPOSTAnswer=true;
             buffer += decoder.decode(value, { stream: true });
@@ -2694,8 +2747,20 @@ null,
                 for(const line of lines){
                   if(line.startsWith("data: ")){
                     const data = line.slice(6);
-                    if (data === "[DONE]"){
-                      return fullContent;
+                    if(data === "[DONE]"){
+                      isAnswer=false;
+                      isPOSTAnswer=false;
+                      firstAnswerOnPOST=true;
+                      firstThinking=true;
+                      firstEnd=false;
+                      isSuccess=true;
+                      if(ctwzif)ctwz.push({"user":userMsg,"content":hdliustr});
+                      if(openMemories&&!isKeep){
+                        memories.push({"role":"assistant","content":fullContent});
+                        isKeep=true;
+                      }
+                      if(!openMemories)memories=[];
+                      return;
                     }
                     const json = JSON.parse(data);
                     if(isThinking){
@@ -2742,12 +2807,20 @@ null,
           isAnswer=false;
           isPOSTAnswer=false;
           alert("解析失败");
+          isSuccess=false;
         }finally{
           isAnswer=false;
           firstAnswerOnPOST=true;
           firstThinking=true;
           firstEnd=false;
           isPOSTAnswer=false;
+          if(openMemories&&!isKeep){
+            memories.push({"role":"assistant","content":fullContent});
+            isKeep=true;
+            if(!isSuccess)memories.pop();
+          }
+          if(!isSuccess&&!isKeep)memories.pop();
+          if(!openMemories)memories=[];
         }
       }
       function uploading(res) {
@@ -2847,6 +2920,10 @@ null,
       }
       document.getElementById("openCamera").onclick=()=>{
         openCamera();
+      }
+      function openNewChat(){
+        memories=[];
+        tip('开启新对话');
       }
     </script>
   </body>

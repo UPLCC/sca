@@ -14,11 +14,13 @@ const modelList=[
   {"name":"MiniMax-M3(流式输出)","display":"MiniMax-M3","stop":"0","id":"48","reason":true},
   {"name":"Claude-Sonnet-5(流式输出)","display":"Claude-Sonnet-5","stop":"0","id":"49","reason":false},
   {"name":"Qwen-3.5-Plus(流式输出)","display":"Qwen-3.5-Plus","stop":"0","id":"50","reason":true},
-  {"name":"Claude-Opus-4.8(流式输出)","display":"Claude-Opus-4.8","stop":"0","id":"51","reason":false},
+  {"name":"Claude-Opus-5(流式输出)","display":"Claude-Opus-5","stop":"0","id":"51","reason":false},
   {"name":"Qwen3-VL(多模态)","display":"Qwen3-VL","stop":"1","id":"52","reason":false},
   {"name":"Claude-Fable-5(流式输出)","display":"Claude-Fable-5","stop":"1","id":"53","reason":false},
   {"name":"Gemini-3.1-Pro(多模态)","display":"Gemini-3.1-Pro","stop":"0","id":"54","reason":false,"model":"Gemini-3.1-Pro"},
   {"name":"Gemini-3.6-Flash(多模态)","display":"Gemini-3.6-Flash","stop":"0","id":"55","reason":false,"model":"Gemini-3.6-Flash"},
   {"name":"ChatGPT-5.6-Terra(多模态)","display":"ChatGPT-5.6-Terra","stop":"0","id":"56","reason":false,"model":"GPT-5.6-Terra"},
-  {"name":"Claude-Sonnet-5(多模态)","display":"Claude-Sonnet-5","stop":"0","id":"57","reason":false,"model":"Claude-Sonnet-5"}
+  {"name":"Claude-Sonnet-5(多模态)","display":"Claude-Sonnet-5","stop":"1","id":"57","reason":false,"model":"Claude-Sonnet-5"},
+  {"name":"Xiaomi-MiMo-V2.5(官方渠道)","display":"Xiaomi-MiMo-V2.5","stop":"0","id":"58","reason":false,"model":"mimo-v2.5"},
+  {"name":"DeepSeek-V4-Flash(官方渠道)","display":"DeepSeek-V4-Flash","stop":"0","id":"59","reason":false,"model":"deepseek-v4-flash"}
 ];
