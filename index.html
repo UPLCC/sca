@@ -740,12 +740,12 @@
       .loadingElement {
         display:inline-block;
         opacity:0;
-        width:15px;
-        height:15px;
+        width:12px;
+        height:12px;
         border-radius:100px;
         background-color:black;
         transition:opacity 0.2s ease;
-        margin:3px;
+        margin:2px;
       }
       liquid-glass{
         -webkit-tap-highlight-color:transparent;
@@ -916,6 +916,19 @@
       .cameraBtn:active{
         transform:scale(0.94);
       }
+      mjx-container{
+        display: inline-block !important;
+        max-width: 100%;
+        vertical-align: middle;
+        overflow-x: auto;
+        overflow-y: hidden;
+      }
+      mjx-container[display="true"]{
+        display: block !important;
+        margin: 1em 0;
+        text-align: center;
+        overflow-x: auto;
+      }
     </style>
     <script>
       MathJax = {
@@ -1038,7 +1051,7 @@
         <div class="settt" id="mdv30" onclick="deep=30;mdEx();" data-md="Kwaipilot(流式输出)" data-stop="1"><p id="mdKwaipilot" class="setp">Kwaipilot(流式输出)</p></div>
         <div class="settt" id="mdv31" onclick="deep=31;mdEx();" data-md="DeepSeek-V4(联网搜索)" data-stop="1"><p id="mdDeepSeekV4" class="setp">DeepSeek-V4(联网搜索)</p></div>
         <div class="settt" id="mdv32" onclick="deep=32;mdEx();" data-md="英汉互译" data-stop="1"><p id="mdTranslate" class="setp">英汉互译</p></div>
-        <div class="settt" id="mdv33" onclick="deep=33;mdEx();" data-md="ChatGPT-5.5-Codex(流式输出)"><p id="mdGptOss" class="setp">ChatGPT-5.5-Codex(流式输出)</p></div>
+        <div class="settt" id="mdv33" onclick="deep=33;mdEx();" data-md="ChatGPT-5.5-Codex(流式输出)" data-stop="1"><p id="mdGptOss" class="setp">ChatGPT-5.5-Codex(流式输出)</p></div>
         <div class="settt" id="mdv34" onclick="deep=34;mdEx();" data-md="Qwen3.5-Flash(流式输出)" data-stop="1"><p id="mdQwenFlash" class="setp">Qwen3.5-Flash(流式输出)</p></div>
         <div class="settt" id="mdv35" onclick="deep=35;mdEx();" data-md="智谱GLM-Z1(流式输出)"><p id="mdGptOss" class="setp">智谱GLM-Z1(流式输出)</p></div>
       </div>
@@ -1080,7 +1093,7 @@
         <div id="setct" class="settt"><p id="setctp" class="setp">多轮对话</p><div id="stmea" class="setx" onclick="if(!openMemories){stmeb.style.left='17px';this.style.backgroundColor='#56a9ff';openMemories=true;document.getElementById('setkeep').style.display='block';document.getElementById('chatPng').style.display='block';}else{stmeb.style.left='2px';this.style.backgroundColor='rgba(0,0,0,0.1)';openMemories=false;document.getElementById('setkeep').style.display='none';document.getElementById('chatPng').style.display='none';if(keepMemories){keepMemories=false;localStorage.setItem('uplcc_sca_memories_state','false');document.getElementById('stmec').style.backgroundColor='rgba(0,0,0,0.1)';document.getElementById('stmed').style.left='2px';}}"><div id="stmeb" class="setxa"></div></div></div>
         <div id="setkeep" class="settt" style="display:none;"><p id="setkeepp" class="setp">默认开启</p><div id="stmec" class="setx" onclick="if(!keepMemories){stmed.style.left='17px';this.style.backgroundColor='#56a9ff';keepMemories=true;localStorage.setItem('uplcc_sca_memories_state','true');}else{stmed.style.left='2px';this.style.backgroundColor='rgba(0,0,0,0.1)';keepMemories=false;localStorage.setItem('uplcc_sca_memories_state','false');}"><div id="stmed" class="setxa"></div></div></div>
         <div id="newChat" class="settt" onclick="openNewChat();"><p id="openNewChat" class="setp">开启新对话</p></div>
-        <p style="color:gray;margin-left:8px;font-size:15px;">开启后可以进行多轮对话，但是可能造成响应速度变慢等问题。<br>关闭多轮对话功能后网站将会在支持模型的每一轮对话请求开始时清空上下文。<br>多轮对话的上下文信息多模型间互通。<br>多轮对话如果API返回出错，那么网站会自动删除最近的一轮对话以防止格式错误。<br>此外，由于部分模型API为了成本考虑及实现难度考虑，所以不支持多轮对话。以下是支持多轮对话的模型：<br>Gemini-3.1-Pro(多模态)、Gemini-3.6-Flash(多模态)、ChatGPT-5.6-Terra(多模态)、Xiaomi-MiMo-V2.5(官方渠道)、DeepSeek-V4-Flash(官方渠道)。<br>提示：如果API一直返回出错，可尝试开启新对话以解决。</p>
+        <p style="color:gray;margin-left:8px;font-size:15px;">开启后可以进行多轮对话，但是可能造成响应速度变慢等问题。<br>关闭多轮对话功能后网站将会在支持模型的每一轮对话请求开始时清空上下文。<br>多轮对话的上下文信息多模型间互通。<br>多轮对话如果API返回出错，那么网站会自动删除最近的一轮对话以防止格式错误。<br>此外，由于部分模型API为了成本考虑及实现难度考虑，所以不支持多轮对话。以下是支持多轮对话的模型：<br>Gemini-3.1-Pro(多模态)、Gemini-3.6-Flash(多模态)、ChatGPT-5.6-Terra(多模态)、Xiaomi-MiMo-V2.5(官方渠道)、DeepSeek-V4-Flash(官方渠道)、ChatGPT-5.6-Sol(多模态)。<br>提示：如果API一直返回出错，可尝试开启新对话以解决。</p>
       </div>
       <div id="atobTime" class="settwo" style="overflow-x:auto;">
         <button id="atobex" class="twoex" onclick="settw('atobTime',1);"></button>
@@ -2060,7 +2073,7 @@ null,
         }else if(deep==35){
           sse=new EventSource(`https://yunzhiapi.cn/API/glm-z1.php?token=${bkb}&type=true&question=${msg}`);
         }else if(deep==36){
-          sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=DeepSeek-V4-Flash`);
+          sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=DeepSeek-V4-Flash-0731`);
         }else if(deep==37){
           sse=new EventSource(`https://scaapis.uplcc.deno.net/gpt?msg=${msg}&model=DouBao-Seed-1.5`);
         }else if(deep==38){

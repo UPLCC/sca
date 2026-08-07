@@ -6,7 +6,7 @@ const modelList=[
   {"name":"Grok-4.5-High(流式输出)","display":"Grok-4.5-High","stop":"0","id":"40","reason":false},
   {"name":"Claude-Haiku-4.5(流式输出)","display":"Claude-Haiku-4.5","stop":"0","id":"41","reason":false},
   {"name":"Mimo-V2.5-Pro(流式输出)","display":"Mimo-V2.5-Pro","stop":"1","id":"42","reason":true},
-  {"name":"混元-2.0-Think(流式输出)","display":"混元-2.0-Think","stop":"0","id":"43","reason":false},
+  {"name":"混元-2.0-Think(流式输出)","display":"混元-2.0-Think","stop":"1","id":"43","reason":false},
   {"name":"DeepSeek-R1(流式输出)","display":"DeepSeek-R1","stop":"0","id":"44","reason":false},
   {"name":"ChatGPT-5.6-Terra(流式输出)","display":"ChatGPT-5.6-Terra","stop":"0","id":"45","reason":false},
   {"name":"ChatGPT-OSS(流式输出)","display":"ChatGPT-OSS","stop":"1","id":"46","reason":false},
@@ -22,5 +22,6 @@ const modelList=[
   {"name":"ChatGPT-5.6-Terra(多模态)","display":"ChatGPT-5.6-Terra","stop":"0","id":"56","reason":false,"model":"GPT-5.6-Terra"},
   {"name":"Claude-Sonnet-5(多模态)","display":"Claude-Sonnet-5","stop":"1","id":"57","reason":false,"model":"Claude-Sonnet-5"},
   {"name":"Xiaomi-MiMo-V2.5(官方渠道)","display":"Xiaomi-MiMo-V2.5","stop":"0","id":"58","reason":false,"model":"mimo-v2.5"},
-  {"name":"DeepSeek-V4-Flash(官方渠道)","display":"DeepSeek-V4-Flash","stop":"0","id":"59","reason":false,"model":"deepseek-v4-flash"}
+  {"name":"DeepSeek-V4-Flash(官方渠道)","display":"DeepSeek-V4-Flash","stop":"0","id":"59","reason":false,"model":"deepseek-v4-flash"},
+  {"name":"ChatGPT-5.6-Sol(多模态)","display":"ChatGPT-5.6-Sol","stop":"0","id":"60","reason":false,"model":"GPT-5.6-Sol"}
 ];
