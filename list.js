@@ -58,6 +58,7 @@ const modelList=[
   {"name":"ChatGPT-5.6-Terra(多模态)","display":"ChatGPT-5.6-Terra","stop":"1","id":"56","reason":false,"model":"GPT-5.6-Terra"},
   {"name":"Claude-Sonnet-5(多模态)","display":"Claude-Sonnet-5","stop":"1","id":"57","reason":false,"model":"Claude-Sonnet-5"},
   {"name":"Xiaomi-MiMo-V2.5(官方渠道)","display":"Xiaomi-MiMo-V2.5","stop":"0","id":"58","reason":false,"model":"mimo-v2.5"},
-  {"name":"DeepSeek-V4-Flash(官方渠道)","display":"DeepSeek-V4-Flash","stop":"0","id":"59","reason":false,"model":"deepseek-v4-flash"},
-  {"name":"ChatGPT-5.6-Sol(多模态)","display":"ChatGPT-5.6-Sol","stop":"1","id":"60","reason":false,"model":"GPT-5.6-Sol"}
+  {"name":"DeepSeek-V4-Flash(官方渠道)","display":"DeepSeek-V4-Flash","stop":"0","id":"59","reason":false,"model":"deepseek-v4-flash","notMulti":true},
+  {"name":"ChatGPT-5.6-Sol(多模态)","display":"ChatGPT-5.6-Sol","stop":"1","id":"60","reason":false,"model":"GPT-5.6-Sol"},
+  {"name":"DeepSeek-V4-Flash(官方渠道)","display":"DeepSeek-V4-Flash","stop":"0","id":"61","reason":false,"model":"deepseek-v4-flash-vision-exp"},
 ];
